@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Working With Models &mdash; SyNAP 3.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/synaptics_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/synaptics_theme.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Framework API" href="framework_api.html" />
+    <link rel="prev" title="Statistics And Usage" href="statistics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SyNAP
+          </a>
+              <div class="version">
+                3.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nnapi.html">Using Online Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">Reference Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics And Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Working With Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#model-conversion">Model Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-docker">Installing Docker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#linux-ubuntu">Linux/Ubuntu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macos-docker">MacOS - Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macos-colima">MacOS - Colima</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-synap-tools">Installing SyNAP Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-synap-tools">Running SyNAP Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conversion-metafile">Conversion Metafile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preprocessing">Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#type"><code class="docutils literal notranslate"><span class="pre">type</span></code><sup>(*)</sup></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#size"><code class="docutils literal notranslate"><span class="pre">size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#crop"><code class="docutils literal notranslate"><span class="pre">crop</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#model-quantization">Model Quantization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#quantization-images-resize">Quantization Images Resize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-normalizaton">Data Normalizaton</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quantization-and-accuracy">Quantization And Accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#per-channel-quantization">Per-Channel Quantization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mixed-quantization">Mixed Quantization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#heterogeneous-inference">Heterogeneous Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-conversion-tutorial">Model Conversion Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-profiling">Model Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compatibility-with-synap-2-x">Compatibility With SyNAP 2.X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-pytorch-models">Working With PyTorch Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#importing-yolo-pytorch-models">Importing YOLO PyTorch Models</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="framework_api.html">Framework API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="npu_operators.html">Neural Network Processing Unit Operator Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="java.html">Direct Access In Android Applications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SyNAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Working With Models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="working-with-models">
+<h1>Working With Models<a class="headerlink" href="#working-with-models" title="Permalink to this headline"></a></h1>
+<section id="model-conversion">
+<h2>Model Conversion<a class="headerlink" href="#model-conversion" title="Permalink to this headline"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">SyNAP</span></code> toolkit allows to convert a model from its original format to
+an internal representation optimized for the target hardware.
+The conversion tool and utilities can run on Linux, MacOS or Windows hosts inside a <em>Docker</em> container.
+Only <cite>Docker</cite> and the <code class="docutils literal notranslate"><span class="pre">toolkit</span></code> image are required, no additional dependencies have to be installed.</p>
+<p>The following network model formats are supported:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Tensorflow Lite (<code class="docutils literal notranslate"><span class="pre">.tflite</span></code> extension)</p></li>
+<li><p>ONNX (<code class="docutils literal notranslate"><span class="pre">.onnx</span></code> extension)</p></li>
+<li><p>TorchScript (<code class="docutils literal notranslate"><span class="pre">.torchscript</span></code>, <code class="docutils literal notranslate"><span class="pre">.pt</span></code>, <code class="docutils literal notranslate"><span class="pre">.pth</span></code> extensions)</p></li>
+<li><p>Tensorflow (<code class="docutils literal notranslate"><span class="pre">.pb</span></code> extension)</p></li>
+<li><p>Caffe (<code class="docutils literal notranslate"><span class="pre">.prototxt</span></code> extension)</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>PyTorch models can be saved in different formats, only <cite>TorchScript</cite> format is supported.
+see <code class="xref std std-numref docutils literal notranslate"><span class="pre">working-with-pytorch-models-label</span></code> for more information.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only standard Caffe 1.0 models are supported.
+Custom variants such as <em>Caffe-SSD</em> or <em>Caffe-LSTM</em> models or legacy (pre-1.0) models require
+specific parsers which are currently not available in SyNAP toolkit.
+<em>Caffe2</em> models are not supported as well.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The support for <code class="docutils literal notranslate"><span class="pre">.pb</span></code> and <code class="docutils literal notranslate"><span class="pre">.prototxt</span></code> formats will be removed in the future.</p>
+</div>
+</section>
+<section id="installing-docker">
+<span id="using-docker-label"></span><h2>Installing Docker<a class="headerlink" href="#installing-docker" title="Permalink to this headline"></a></h2>
+<p>A few installation hints here below, please note that these are not a replacement for the official
+<cite>Docker</cite> documentation, for more details please refer to <code class="docutils literal notranslate"><span class="pre">https://docs.docker.com/get-docker/</span></code> .</p>
+<section id="linux-ubuntu">
+<span id="using-docker-ubuntu-label"></span><h3>Linux/Ubuntu<a class="headerlink" href="#linux-ubuntu" title="Permalink to this headline"></a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>apt-get install docker.io
+</pre></div>
+</div>
+<p>To be able to run docker without super user also run the two commands here below once after
+docker installation (for more info refer to <a class="reference external" href="https://docs.docker.com/engine/install/linux-postinstall/">https://docs.docker.com/engine/install/linux-postinstall/</a>)</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the docker group if it doesn&#39;t already exist</span>
+sudo groupadd docker
+<span class="c1"># Add the current user &quot;$USER&quot; to the docker group</span>
+sudo usermod -aG docker <span class="nv">$USER</span>
+</pre></div>
+</div>
+</section>
+<section id="macos-docker">
+<h3>MacOS - Docker<a class="headerlink" href="#macos-docker" title="Permalink to this headline"></a></h3>
+<p>The easiest way to install Docker on MacOS is via the <code class="docutils literal notranslate"><span class="pre">brew</span></code> package manager.
+If you don’t have it installed yet please follow the official <cite>brew</cite> website: <a class="reference external" href="https://brew.sh/">https://brew.sh/</a>
+After brew is installed you can install Docker.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>On macOS the Docker GUI is not free for use for commercial application, a valid alternative is <cite>Colima</cite>.</p>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>brew install docker
+</pre></div>
+</div>
+<p>See the note in the linux installation above to run docker without super user.</p>
+</section>
+<section id="macos-colima">
+<h3>MacOS - Colima<a class="headerlink" href="#macos-colima" title="Permalink to this headline"></a></h3>
+<p><cite>Colima</cite> is a free container runtimes on macOS that can be used a replacement for Docker.
+(<a class="reference external" href="https://github.com/abiosoft/colima">https://github.com/abiosoft/colima</a>).
+It doesn’t have a GUI but nevertheless is easy to install and configure.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>brew install colima
+mkdir -p ~/.docker/cli-plugins
+brew install docker-Buildx
+ln -sfn <span class="k">$(</span>brew --prefix<span class="k">)</span>/opt/docker-buildx/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
+colima start --vm-type vz --mount-type virtiofs --cpu <span class="m">4</span> --memory <span class="m">8</span> --disk <span class="m">80</span>
+</pre></div>
+</div>
+<p>After the above commands, you can use <cite>Colima</cite> to work with Docker containers, the settings are
+stored in a config file <code class="docutils literal notranslate"><span class="pre">~/.colima/default/colima.yaml</span></code> and can be modified by editing the file
+if needed.
+Colima has to be started after each restart of the Mac:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>colima start
+</pre></div>
+</div>
+</section>
+<section id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline"></a></h3>
+<p>The suggested way to run Docker on Windows is to install it inside a Linux Virtual Machine
+using <em>WSL2</em> available from Windows 10.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Running Docker directly in Windows is incompatible with the presence of a VM.
+For this reason using a Linux VM in WSL2 is usually the best option.</p>
+</div>
+<p><em>WSL2</em> installation steps:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Run <em>Windows PowerShell</em> App as Administrator and execute the following command
+to install WSL2:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">wsl</span> <span class="pre">--install</span></code></p>
+<p>When completed restart the computer.</p>
+</li>
+<li><p>Run <em>Windows PowerShell</em> App as before and install <em>Ubuntu-22.04</em>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">wsl</span> <span class="pre">--install</span> <span class="pre">-d</span> <span class="pre">Ubuntu-22.04</span></code></p>
+</li>
+<li><p>Run <em>Windows Terminal</em> App and select the <em>Ubuntu-22.04</em> distribution.
+From there install Docker and the <em>SyNAP</em> toolkit following the instructions
+in <code class="xref std std-numref docutils literal notranslate"><span class="pre">using-docker-ubuntu-label</span></code> above</p></li>
+</ol>
+</div></blockquote>
+<p>For more information on WSL2 installation and setup please refer to the official Microsoft documentation:
+<a class="reference external" href="https://learn.microsoft.com/en-us/windows/wsl/install">https://learn.microsoft.com/en-us/windows/wsl/install</a> and <a class="reference external" href="https://learn.microsoft.com/en-us/windows/wsl/setup/environment">https://learn.microsoft.com/en-us/windows/wsl/setup/environment</a></p>
+</section>
+</section>
+<section id="installing-synap-tools">
+<h2>Installing SyNAP Tools<a class="headerlink" href="#installing-synap-tools" title="Permalink to this headline"></a></h2>
+<p>Before installing the SyNAP toolkit, please be sure that you have a working Docker installation.
+The simplest way to do this is to run the <code class="docutils literal notranslate"><span class="pre">hello-world</span></code> image:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ docker run hello-world
+
+Unable to find image <span class="s1">&#39;hello-world:latest&#39;</span> locally
+latest: Pulling from library/hello-world
+...
+...
+...
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+...
+...
+</pre></div>
+</div>
+<p>If the above command doesn’t produce the expected output please check the instructions
+in the previous section or refer to the official Docker documentation for your platform.
+If all is well you can proceed with the installation of the toolkit.</p>
+<p>The SyNAP toolkit is distributed as a Docker image, to install it just download the image from the
+SyNAP github repository:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker pull ghcr.io/synaptics-synap/toolkit:3.1.0
+</pre></div>
+</div>
+<p>This image contains not only the conversion tool itself but also all the required dependencies and
+additional support utilities.</p>
+<p>You can find the latest version of the toolkit in: <a class="reference external" href="https://github.com/synaptics-synap/toolkit/pkgs/container/toolkit">https://github.com/synaptics-synap/toolkit/pkgs/container/toolkit</a></p>
+</section>
+<section id="running-synap-tools">
+<span id="running-toolkit-label"></span><h2>Running SyNAP Tools<a class="headerlink" href="#running-synap-tools" title="Permalink to this headline"></a></h2>
+<p>Once Docker and the <em>SyNAP toolkit</em> image are installed, the model conversion tool can be executed
+directly inside a docker container.
+The source and converted models can be accessed on the host filesystem by mounting the
+corresponding directories when running the container. For this reason it is important to run the
+container using the same user/group that owns the files to be converted. To avoid manually specifying
+these options at each execution it’s suggested to create a simple alias and add it to the user’s
+startup file (e.g. <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code>):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">alias</span> <span class="pre">synap=</span></code>'<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-i</span> <span class="pre">--rm</span> <span class="pre">-u</span> <span class="pre">$(id</span> <span class="pre">-u):$(id</span> <span class="pre">-g)</span> <span class="pre">-v</span> <span class="pre">$HOME:$HOME</span> <span class="pre">-w</span> <span class="pre">$(pwd)</span> <span class="pre">ghcr.io/synaptics-synap/toolkit:3.1.0</span></code>'</p></li>
+</ul>
+</div></blockquote>
+<p>The options have the following meaning:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">-i</span></code>:</dt><dd><p>run the container interactively (required for commands that read data from <em>stdin</em>, such as <code class="docutils literal notranslate"><span class="pre">image_od</span></code>)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">--rm</span></code>:</dt><dd><p>remove the container when it exits (stopped containers are not needed anymore)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">$(id</span> <span class="pre">-u):$(id</span> <span class="pre">-g)</span></code>:</dt><dd><p>run the container as the current user (so files will have the correct access rights)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">$HOME:$HOME</span></code>:</dt><dd><p>mount the user’s home directory so that its entire content is visible inside the container.
+If some models or data are located outside the home directory, additional directories can be mounted
+by repeating the <code class="docutils literal notranslate"><span class="pre">-v</span></code> option, for example add: <code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">/mnt/data:/mnt/data</span></code>.
+It’s important to specify the same path outside and inside the container so absolute paths
+work as expected.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">-w</span> <span class="pre">$(pwd)</span></code>:</dt><dd><p>set the working directory of container to the current directory, so that relative paths
+specified in the command line are resolved correctly</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>With the above alias, the desired <em>SyNAP</em> tool command line is just passed as a parameter, for example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ synap help
+
+SyNAP Toolkit
+
+Docker alias:
+    alias synap=&#39;docker run -i --rm -u $(id -u):$(id -g) -v $HOME:$HOME -w $(pwd) \
+                 ghcr.io/synaptics-synap/toolkit:3.1.0&#39;
+    Use multiple -v options if needed to mount additional directories eg: -v /mnt/dat:/mnt/dat
+
+Usage:
+    synap COMMAND ARGS
+    Run &#39;synap COMMAND --help&#39; for more information on a command.
+
+Commands:
+    convert           Convert and compile model
+    help              Show help
+    image_from_raw    Convert image file to raw format
+    image_to_raw      Generate image file from raw format
+    image_od          Superimpose object-detection boxes to an image
+    version           Show version
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>as already noted there is no need to be <code class="docutils literal notranslate"><span class="pre">root</span></code> to run docker. In case you get a
+<em>Permission Denied</em> error when executing the above command, please refer to <code class="xref std std-numref docutils literal notranslate"><span class="pre">using-docker-ubuntu-label</span></code></p>
+</div>
+<p>The toolkit provides a number of tools to convert and manipulate models and images.</p>
+<p>Model conversion can be performed using the <code class="docutils literal notranslate"><span class="pre">convert</span></code> command.
+It takes in input:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a network model</p></li>
+<li><p>the target HW for which to convert the model (e.g. VS680 or VS640)</p></li>
+<li><p>the name of the directory where to generate the converted model</p></li>
+<li><p>an optional yaml metafile that can be used to specify customized conversion options
+(mandatory for .pb models)</p></li>
+</ul>
+</div></blockquote>
+<p>In output it generates three files:</p>
+<blockquote>
+<div><ul>
+<li><p><strong>model.synap</strong> the converted network model</p></li>
+<li><p><strong>model_info.txt</strong>  additional information about the generated model for user reference, including:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>input/output tensors attributes</p></li>
+<li><p>subgraph splitting</p></li>
+<li><p>layer table</p></li>
+<li><p>operation table</p></li>
+<li><p>memory usage</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><dl class="simple">
+<dt><strong>quantization_info.txt</strong></dt><dd><p>additional quantization information (only if the model is quantized using the toolkit)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>An additional <code class="docutils literal notranslate"><span class="pre">cache</span></code> directory is also generated to speedup future compilations of the same model.</p>
+<p>Example:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ synap convert --model mobilenet_v1_quant.tflite --target VS680 --out-dir mnv1
+$ ls mnv1
+model_info.txt  model.synap  cache
+</pre></div>
+</div>
+<p>In the case of <code class="docutils literal notranslate"><span class="pre">Caffe</span></code> models the weights are not in the <code class="docutils literal notranslate"><span class="pre">.prototxt</span></code> file but
+stored in a separate file, generally with <code class="docutils literal notranslate"><span class="pre">.caffemodel</span></code> extension. This file has to be provided
+in input to the converter tool as well. Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ synap convert --model mnist.prototxt --weights mnist.caffemodel --target VS680 --out-dir out
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The model file and the output directory specified must be inside or below a directory mounted
+inside the Docker container (see <code class="docutils literal notranslate"><span class="pre">-v</span></code> option in the <code class="docutils literal notranslate"><span class="pre">synap</span></code> alias above).</p>
+</div>
+</section>
+<section id="conversion-metafile">
+<span id="id1"></span><h2>Conversion Metafile<a class="headerlink" href="#conversion-metafile" title="Permalink to this headline"></a></h2>
+<p>When converting a model it is possible to provide a yaml metafile to customize the generated model,
+for example it is possible to specify:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the data representation in memory (nhwc or nchw)</p></li>
+<li><p>model quantization options</p></li>
+<li><p>output dequantization</p></li>
+<li><p>input preprocessing options</p></li>
+<li><p>delegate to be used for inference (npu, gpu, cpu)</p></li>
+</ul>
+</div></blockquote>
+<p>Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ synap convert --model mobilenet_v1_quant.tflite --meta mobilenet.yaml \
+  --target VS680 --out-dir mnv1
+</pre></div>
+</div>
+<p>This metafile is mandatory when converting a Tensorflow <code class="docutils literal notranslate"><span class="pre">.pb</span></code> model. It can be completely
+omitted when converting a quantized <code class="docutils literal notranslate"><span class="pre">.tflite</span></code> model.</p>
+<p>The best way to understand the content of a metafile is probably to first look at an example,
+here below the one for a typical <em>mobilenet_v1</em> model, followed by a detailed description of each
+field. Most of the fields are optional, mandatory fields are explicitly marked.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">delegate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npu</span><span class="w"></span>
+
+<span class="nt">data_layout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nhwc</span><span class="w"></span>
+
+<span class="nt">security</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">secure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../security.yaml</span><span class="w"></span>
+
+<span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">input</span><span class="w"></span>
+<span class="w">    </span><span class="nt">shape</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">224</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">224</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">means</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">128</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">128</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">128</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128</span><span class="w"></span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rgb</span><span class="w"></span>
+<span class="w">    </span><span class="nt">security</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span><span class="w"></span>
+<span class="w">    </span><span class="nt">preprocess</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nv21</span><span class="w"></span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1920</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1080</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">        </span><span class="nt">crop</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+
+<span class="nt">outputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MobilenetV1/Predictions/Reshape_1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confidence_array</span><span class="w"></span>
+
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard</span><span class="w"></span>
+<span class="w">    </span><span class="nt">algorithm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard</span><span class="w"></span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dataset</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../../sample/*_224x224.jpg</span><span class="w"></span>
+</pre></div>
+</div>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">delegate</span></code></p>
+<blockquote>
+<div><p>Select the delegate to use for inference. Available delegates are:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">default</span></code> (default, automatically select delegate according to the target HW)</p>
+<p><code class="docutils literal notranslate"><span class="pre">npu</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">gpu</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">cpu</span></code></p>
+</div></blockquote>
+<p>If not specified the default delegate for the target hardware is used.
+It is also possible to specify the delegate on a layer-by-layer basis.
+See section <code class="xref std std-numref docutils literal notranslate"><span class="pre">heterogeneous_inference</span></code>.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_layout</span></code></p>
+<blockquote>
+<div><p>The data layout in memory, allowed values are:  <code class="docutils literal notranslate"><span class="pre">default</span></code>, <code class="docutils literal notranslate"><span class="pre">nchw</span></code> and <code class="docutils literal notranslate"><span class="pre">nhwc</span></code>.</p>
+<p>For Tensorflow and Tensorflow Lite models the default is <code class="docutils literal notranslate"><span class="pre">nhwc</span></code>. Forcing the converted
+model to be <code class="docutils literal notranslate"><span class="pre">nchw</span></code> might provide some performance advantage when the input data is already
+in this format since no additional data reorganization is needed.</p>
+<p>For Caffe and ONNX models the default is <code class="docutils literal notranslate"><span class="pre">nchw</span></code>. In this case it is not possible to force to
+<code class="docutils literal notranslate"><span class="pre">nhwc</span></code>.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">input_format</span></code></p>
+<blockquote>
+<div><p>Format of the input tensors. This is an optional string that will be attached as an attribute
+to all the network input tensors for which a “format” field has not been specified.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_format</span></code></p>
+<blockquote>
+<div><p>Format of the ouput tensors. This is an optional string that will be attached as an attribute
+to all the network ouput tensors for which a “format” field has not been specified.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">security</span></code></p>
+<blockquote>
+<div><p>This section contains security configuration for the model.
+If this section is not present, security is disabled.
+Security is only supported with the <code class="docutils literal notranslate"><span class="pre">npu</span></code> delegate.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">secure</span></code></p>
+<blockquote>
+<div><p>If true enable security for the model.
+For secure models it is also possible to specify the security policy for each input and output.
+A secure model is encrypted and signed at conversion time so that its structure and weights will
+not be accessible and its authenticity can be verified. This is done by a set of keys and
+certificates files whose path is contained in a security file.</p>
+</div></blockquote>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">file</span></code></dt><dd><p>Path to the security file. This is a <code class="docutils literal notranslate"><span class="pre">yaml</span></code> file with the following fields:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>encryption_key: &lt;path-to-encryption-key-file&gt;
+signature_key: &lt;path-to-signature-key-file&gt;
+model_certificate: &lt;path-to-model-certificate-file&gt;
+vendor_certificate: &lt;path-to-vendor-certificate-file&gt;
+</pre></div>
+</div>
+<p>Both relative and absolute paths can be used.
+Relative paths are considered relative to the location of the security file itself.
+The same fields can also be specified directly in the model metafile in place of the ‘file’ field.
+For detailed information on the security policies and how to generate and authenticate a
+secure model please refer to SyNAP_SyKURE.pdf</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">inputs</span></code></dt><dd><p><sup>(pb)</sup></p>
+<p>Must contain one entry for each input of the network. Each entry has the following fields:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>
+<sup>(pb)</sup></p>
+<p>Name of the input in the network graph. For <code class="docutils literal notranslate"><span class="pre">tflite</span></code> and <code class="docutils literal notranslate"><span class="pre">onnx</span></code> models this field is not
+required but can still be used to specify a different input layer than the default input of the
+network. This feature allows to convert just a subset of a network without having to
+manually edit the source model. For <code class="docutils literal notranslate"><span class="pre">.pb</span></code> models or when <code class="docutils literal notranslate"><span class="pre">name</span></code> is not specified
+the inputs must be in the same order as they appear in the model.
+When this field is specified the <code class="docutils literal notranslate"><span class="pre">shape</span></code> field is mandatory.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shape</span></code>
+<sup>(pb)</sup></p>
+<p>Shape of the input tensor. This is a list of dimensions, the order is given by the layout
+of the input tensor in the model (even if a different layout is selected for the compiled model).
+The first dimension must represent by convention the number of samples <em>N</em> (also known as
+“batch size”) and is ignored in the generated model which always works with a batch-size of 1.
+When this field is specified the <code class="docutils literal notranslate"><span class="pre">name</span></code> field is mandatory.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">means</span></code></p>
+<p>Used to normalize the range of input values.
+A list of mean values, one for each channel in the corresponding input.
+If a single value is specified instead of a list, it will be used for all
+the channels. If not specified a mean of <code class="docutils literal notranslate"><span class="pre">0</span></code> is assumed.</p>
+<p>The <em>i-th</em> channel of each input is normalized as: <code class="docutils literal notranslate"><span class="pre">norm</span> <span class="pre">=</span> <span class="pre">(in</span> <span class="pre">-</span> <span class="pre">means[i])</span> <span class="pre">/</span> <span class="pre">scale</span></code></p>
+<p>Normalization is necessary to bring the input values in the range used when the model has
+been trained. SyNAP does this computation in three occasions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>to normalize data from <em>image</em> quantization files when the network is quantized
+(note that this doesn’t apply to <em>numpy</em> quantization files, in this case it is assumed that
+the numpy files have already been normalized)</p></li>
+<li><p>to normalize input data at inference time in the NPU when the network is compiled with
+preprocessing enabled (see the <code class="docutils literal notranslate"><span class="pre">preprocess</span></code> option here below)</p></li>
+<li><p>to normalize input data in SW when the network is compiled <em>without</em> preprocessing
+and input data is assigned using the <code class="docutils literal notranslate"><span class="pre">Tensor</span> <span class="pre">assign()</span></code> method in the SyNAP library</p></li>
+</ul>
+</div></blockquote>
+<p>Note: when converting an 8-bits pre-quantized model and no <code class="docutils literal notranslate"><span class="pre">means</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code>
+are specified they are automatically inferred from the quantization information under
+the assumption that the input is an 8-bits image.
+This allows to convert a pre-quantized model without having to explicitly specify the
+preprocessing information.
+In this case an unspecified mean and scale is not equivalent to specifying a scale of 1 and a mean of 0.
+To avoid any ambiguity it’s suggested to always specify both means and scale explicitly.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scale</span></code></p>
+<p>Used to normalize the range of input values.
+The scale is a single value for all the channels in the corresponding input.
+If not specified a scale of <code class="docutils literal notranslate"><span class="pre">1</span></code> is assumed.
+More details on normalization in the description of the <code class="docutils literal notranslate"><span class="pre">means</span></code> field here above.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">format</span></code></p>
+<p>Information about the type and organization of the data in the tensor.
+The content and meaning of this string is custom-defined, however SyNAP Toolkit and
+SyNAP <code class="docutils literal notranslate"><span class="pre">Preprocessor</span></code> recognize by convention an initial format type optionally followed
+by one or more named attributes:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;format-type&gt;</span> <span class="pre">[&lt;key&gt;=value]...</span></code></p>
+<p>Recognised types are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">rgb</span></code> (default): 8-bits RGB or RGBA or grayscale image</p>
+<p><code class="docutils literal notranslate"><span class="pre">bgr</span></code>: 8-bits BGR image or BGRA or grayscale image</p>
+<p>Recognised attributes are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">keep_proportions=1</span></code> (default): preserve aspect-ratio when resizing an image using <code class="docutils literal notranslate"><span class="pre">Preprocessor</span></code> or during quantization.
+<code class="docutils literal notranslate"><span class="pre">keep_proportions=0</span></code>: don’t preserve aspect-ratio when resizing an image using <code class="docutils literal notranslate"><span class="pre">Preprocessor</span></code> or during quantization</p>
+<p>Any additional attribute if present is ignored by SyNAP.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">preprocess</span></code></p>
+<p>Input preprocessing options for this input tensor. It can contain the following fields:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code>: format of the input data (e.g. <code class="docutils literal notranslate"><span class="pre">rgb</span></code>, <code class="docutils literal notranslate"><span class="pre">nv12</span></code>) see the table below</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: size of the input image as a list [H, W]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">crop</span></code>: enable runtime cropping of the input image</p></li>
+</ul>
+</div></blockquote>
+<p>The meaning of each field is explained in detail in the preprocessing section here below.
+Preprocessing is only supported with the <code class="docutils literal notranslate"><span class="pre">npu</span></code> delegate.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">security</span></code></p>
+<p>Security policy for this input tensor. This field is only considered for secure models and
+can have the following values:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">any</span></code> (default): the input can be either in secure or non-secure memory</p>
+<p><code class="docutils literal notranslate"><span class="pre">secure</span></code>: the input must be in secure memory</p>
+<p><code class="docutils literal notranslate"><span class="pre">non-secure</span></code>: the input must be in non-secure memory</p>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">outputs</span></code></dt><dd><p><sup>(pb)</sup></p>
+<p>Must contain one entry for each input of the network. Each entry has the following fields:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>
+<sup>(pb)</sup></p>
+<p>Name of the output in the network graph. For <code class="docutils literal notranslate"><span class="pre">tflite</span></code> and <code class="docutils literal notranslate"><span class="pre">onnx</span></code> models this field is not
+required but can still be used to specify a different output layer than the default output of the
+network. This feature allows to convert just a subset of a network without having to
+manually edit the source model. For <code class="docutils literal notranslate"><span class="pre">.pb</span></code> and <code class="docutils literal notranslate"><span class="pre">.onnx</span></code> models or when <code class="docutils literal notranslate"><span class="pre">name</span></code> is not specified
+the outputs must be in the same order as they appear in the model.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dequantize</span></code></p>
+<p>The output of the network is internally dequantized and converted to <code class="docutils literal notranslate"><span class="pre">float</span></code>. This is more
+efficient then performing the conversion in software.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">format</span></code></p>
+<p>Information about the type and organization of the data in the tensor.
+The content and meaning of this string is custom-defined, however SyNAP <code class="docutils literal notranslate"><span class="pre">Classifier</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Detector</span></code> postprocessors recognize by convention an initial format type optionally followed
+by one or more named attributes:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;format-type&gt;</span> <span class="pre">[&lt;key&gt;=value]...</span></code></p>
+<p>All fields are separated by one or more spaces. No spaces allowed between the key and the value.
+Example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">confidence_array</span> <span class="pre">class_index_base=0</span></code></p>
+<p>See the <code class="docutils literal notranslate"><span class="pre">Classifier</span></code> and <code class="docutils literal notranslate"><span class="pre">Detector</span></code> classes for a description of the specific attributes supported.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">security</span></code></p>
+<p>Security policy for this output tensor. This field is only considered for secure models and
+can have the following values:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">secure-if-input-secure</span></code> (default): the output buffer must be in secure memory if at least one input is in secure memory</p>
+<p><code class="docutils literal notranslate"><span class="pre">any</span></code>: the output can be either in secure or non-secure memory</p>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">quantization</span></code></dt><dd><p><sup>(q)</sup></p>
+<p>Quantization options are required when quantizing a model during conversion, they are
+not needed when importing a model which is already quantized.
+Quantization is only supported with the <code class="docutils literal notranslate"><span class="pre">npu</span></code> delegate.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_type</span></code></p>
+<p>Data type used to quantize the network. The same data type is used for both activation data
+and weights. Available data types are:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">uint8</span></code> (default)</p>
+<p><code class="docutils literal notranslate"><span class="pre">int8</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">int16</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">float16</span></code></p>
+</div></blockquote>
+<p>Quantizing to 8 bits provides the best performance in terms of inference speed.
+Quantizing to <code class="docutils literal notranslate"><span class="pre">int16</span></code> can provide higher inference accuracy at the price of higher inference
+times. Interesting tradeoffs between speed and accuracy can be achieved using <em>mixed quantization</em>,
+that is specifying the data type on a layer-by-layer basis. See section <code class="xref std std-numref docutils literal notranslate"><span class="pre">mixed_quantization</span></code>.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scheme</span></code></p>
+<p>Select the quantization scheme.
+Available schemes are:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">default</span></code> (default)</p>
+<p><code class="docutils literal notranslate"><span class="pre">asymmetric_affine</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">dynamic_fixed_point</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">perchannel_symmetric_affine</span></code></p>
+</div></blockquote>
+<p>Scheme <code class="docutils literal notranslate"><span class="pre">asymmetric_affine</span></code> is only supported for data types <code class="docutils literal notranslate"><span class="pre">int8</span></code> and <code class="docutils literal notranslate"><span class="pre">uint8</span></code>.
+Scheme <code class="docutils literal notranslate"><span class="pre">dynamic_fixed_point</span></code> is only supported for data types <code class="docutils literal notranslate"><span class="pre">int8</span></code> and <code class="docutils literal notranslate"><span class="pre">int16</span></code>.
+Scheme <code class="docutils literal notranslate"><span class="pre">perchannel_symmetric_affine</span></code> is only supported for data type <code class="docutils literal notranslate"><span class="pre">int8</span></code>.
+If the scheme is not specfied or set to <code class="docutils literal notranslate"><span class="pre">default</span></code>, if will be automatically selected according to the
+data type: <code class="docutils literal notranslate"><span class="pre">asymmetric_affine</span></code> will be used for <code class="docutils literal notranslate"><span class="pre">uint8</span></code>, <code class="docutils literal notranslate"><span class="pre">dynamic_fixed_point</span></code> for signed
+types <code class="docutils literal notranslate"><span class="pre">int8</span></code> and <code class="docutils literal notranslate"><span class="pre">int16</span></code>.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mode</span></code></p>
+<p>Select the quantization mode.
+Available modes are:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">standard</span></code> (default)</p>
+<p><code class="docutils literal notranslate"><span class="pre">full</span></code></p>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">standard</span></code> mode should be used most of the times. In this mode only the layer-types for
+which this makes sense are quantized. Other layer types where quantization is not helpful
+are left unchanged (e.g. layers which just change the layout of the data).
+The <code class="docutils literal notranslate"><span class="pre">full</span></code> mode forces the quantization of all layers. This can in some cases reduce the
+inference accuracy so should be used only when needed. One case where this is useful is for
+example when the standard quantization doesn’t quantize the initial layer so that the input
+remains in float16 which would require data type conversion in software.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">algorithm</span></code></p>
+<p>Select the quantization algorithm.
+Available algorithms are:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">standard</span></code> (default)</p>
+<p><code class="docutils literal notranslate"><span class="pre">kl_divergence</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">moving_average</span></code></p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code></p>
+<p>Special options for fine tuning the quantization in specific cases. Normally not needed.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dataset</span></code>
+<sup>(q)</sup></p>
+<p>Quantization dataset(s), that it the set of input files to be used to quantize the model.
+In case of multi-input networks, it is necessary to specify one dataset per input.
+Each dataset will consist of the sample files to be applied to the corresponding input during
+quantization.</p>
+<p>A sample file can be provided in one of two forms:</p>
+<ol class="arabic simple">
+<li><p>as an image file (<code class="docutils literal notranslate"><span class="pre">.jpg</span></code> or <code class="docutils literal notranslate"><span class="pre">.png</span></code>)</p></li>
+<li><p>as a NumPy file (<code class="docutils literal notranslate"><span class="pre">.npy</span></code>)</p></li>
+</ol>
+<p>Image files are suitable when the network inputs are images, that is 4-dimensional tensors
+(NCHW or NHWC). In this case the <code class="docutils literal notranslate"><span class="pre">means</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> values specified for the corresponding
+input are applied to each input image before it is used to quantize the model. Furthermore
+each image is resized to fit the input tensor.</p>
+<p>NumPy files can be used for all kind of network inputs.
+A NumPy file shall contain an array of data with the same shape as the corresponding network input.
+In this case it is not possible to specify a <code class="docutils literal notranslate"><span class="pre">means</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> for the input,
+any preprocessing if needed has to be done when the NumPy file is generated.</p>
+<p>To avoid having to manually list the files in the quantization dataset for each input, the
+quantization dataset is instead specified with a list of <em>glob expressions</em>, one glob
+expression for each input. This makes it very easy to specify as quantization dataset
+for one input the entire content of a directory, or a subset of it.
+For example all the <em>jpeg</em> files in directory <em>samples</em> can be indicated with:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">samples/*.jpg</span></code></p>
+</div></blockquote>
+<p>Both relative and absolute paths can be used. Relative paths are considered relative to
+the location of the metafile itself. It is not possible to specify a mix of image and <code class="docutils literal notranslate"><span class="pre">.npy</span></code>
+files for the same input.
+For more information on the glob specification syntax, please refer to the python
+documentation: <a class="reference external" href="https://docs.python.org/3/library/glob.html">https://docs.python.org/3/library/glob.html</a></p>
+<p>If the special keyword <code class="docutils literal notranslate"><span class="pre">random</span></code> is specified, a random data file will be automatically generated
+for this input. This option is useful for preliminary timing tests, but not for actual quantization.</p>
+<p>If this field is not specified, quantization is disabled.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The fields marked <sup>(pb)</sup> are mandatory when converting <code class="docutils literal notranslate"><span class="pre">.pb</span></code> models.
+The fields marked <sup>(q)</sup> are mandatory when quantizing models.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The metafile also supports limited variable expansion: <code class="docutils literal notranslate"><span class="pre">${ENV:name}</span></code> anywhere in the metafile
+is replaced with the content of the environment variable <em>name</em> (or with the empty string if the
+variable doesn’t exist). <code class="docutils literal notranslate"><span class="pre">${FILE:name}</span></code> in a format string is replaced with the content of the
+corresponding file (the file path is relative to that of the conversion metafile itself).
+This feature should be used sparingly as it makes the metafile not self-contained.</p>
+</div>
+</section>
+<section id="preprocessing">
+<span id="id2"></span><h2>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline"></a></h2>
+<p>The size, layout, format and range of the data to be provided in the input tensor(s) of a network
+is defined when the network model is created and trained.
+For example a typical <cite>mobilenet-v1</cite> <cite>.tflite</cite> model will expect an input image of size 224x224,
+with NHWC layout and channels organized in RGB order, with each pixel value normalized (rescaled)
+in the range [-1, 1].</p>
+<p>Unfortunately, in real world usage, the image to be processed is rarely available in this exact format.
+For example the image may come from a camera in 1920x1080 YUV format. This image must then be converted
+to RGB, resized and normalized to match the expected input.
+Many libraries exist to perform this kind of conversion, but the problem is that these computations
+are quite compute-intensive, so even if deeply optimized, doing this on the CPU will often require
+more time than that required by the inference itself.</p>
+<p>Another option is to retrain the network to accept in input the same data format that will be available
+at runtime. This option, while sometimes a good idea, also presents its own problems. For example
+it might not always be possible or practical to retrain a network, especially if the task has to
+be repeated for several input sizes and formats.</p>
+<p>To simplify and speedup this task, SyNAP Toolkit allows to automatically insert input preprocessing
+code when a model is converted. This code is executed directly in the NPU and in some cases can be an order
+of magnitude faster than the equivalent operation in the CPU. An alternative to adding the preprocessing
+to the original model is to create a separate “preprocessing model” whose only purpose is to convert
+the input image to the desired format and size, and then execute the two models in sequence without
+any additional data copy, see <a class="reference internal" href="framework_api.html#buffer-sharing"><span class="std std-ref">Buffer Sharing</span></a>
+This can be convenient if the original model is large and the input can come in a variety of possible
+formats. Preprocessing models for the most common cases already come preinstalled.</p>
+<p>The available preprocessing options are designed for images and support 5 kinds of transformations:</p>
+<ul class="simple">
+<li><p>format conversion (e.g YUV to RGB, or RGB to BGR)</p></li>
+<li><p>cropping</p></li>
+<li><p>resize and downscale (without preserving proportions)</p></li>
+<li><p>normalization to the required value range (e.g. normalize [0, 255] to [-1, 1])</p></li>
+<li><p>data-type conversion (from uint8 to the data type of the network input layer, eg float16 or int16)</p></li>
+</ul>
+<p>Preprocessing is enabled by specifying the <code class="docutils literal notranslate"><span class="pre">preprocess</span></code> section in the input specification
+in the <cite>.yaml</cite> file. This section contains the following fields (the fields marked <sup>(*)</sup> are mandatory).
+Note that the <em>mean</em> and <em>scale</em> used to normalize the input values don’t appear here because they are
+the same used to quantize the model (see <code class="docutils literal notranslate"><span class="pre">means</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> fields in the input specification).</p>
+<section id="type">
+<h3><code class="docutils literal notranslate"><span class="pre">type</span></code><sup>(*)</sup><a class="headerlink" href="#type" title="Permalink to this headline"></a></h3>
+<p>This field specifies the format of the input data that will be provided to the network.
+Only image formats are supported at the moment. The SyNAP toolkit will add the required operations to
+convert the input data to the <code class="docutils literal notranslate"><span class="pre">format</span></code> and layout expected by the network input tensor.
+If the <code class="docutils literal notranslate"><span class="pre">format</span></code> of the network input tensor is not specified, it is assumed to be <code class="docutils literal notranslate"><span class="pre">rgb</span></code> by default.
+If this field is set to the empty string or to “<code class="docutils literal notranslate"><span class="pre">none</span></code>”, no preprocessing is applied.</p>
+<p>Not all conversion are supported: <code class="docutils literal notranslate"><span class="pre">gray</span></code> input can only be used if the input tensor has 1 channel.
+All the other input formats except <code class="docutils literal notranslate"><span class="pre">float32</span></code> can only be used if the input tensor has 3 channels.</p>
+<p>Some input formats generates multiple data inputs for one network tensor. For example if <code class="docutils literal notranslate"><span class="pre">nv12</span></code>
+is specified the converted network will have two inputs: the first for the <code class="docutils literal notranslate"><span class="pre">y</span></code> channel,
+the second for the <code class="docutils literal notranslate"><span class="pre">uv</span></code> channels. The  preprocessing code will combine the data from these two
+inputs to feed the single <code class="docutils literal notranslate"><span class="pre">rgb</span></code> or <code class="docutils literal notranslate"><span class="pre">bgr</span></code> input tensor of the network.</p>
+<p>The following table contains a summary of all the supported input formats and for each the properties
+and meaning of each generated input tensor.
+Note that the layout of the input data is always <code class="docutils literal notranslate"><span class="pre">NHWC</span></code> except for the <code class="docutils literal notranslate"><span class="pre">rgb888-planar</span></code>
+and <code class="docutils literal notranslate"><span class="pre">float32</span></code> formats.
+In all cases <cite>H</cite> and <cite>W</cite> represent the height and width of the input image.
+If the size of the input image is not explicitly specified these are taken from the <code class="docutils literal notranslate"><span class="pre">H</span></code> and <code class="docutils literal notranslate"><span class="pre">W</span></code>
+of the network input tensor. In all cases each pixel component is represented with 8 bits.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">float32</span></code> type is a bit special in the sense that in this case the input is not considered
+to be an 8-bits image but raw 32-bits floating point values which are converted to the actual data type
+of the tensor. For this reason any tensor shape is allowed and resizing via the <code class="docutils literal notranslate"><span class="pre">size</span></code> field is not supported.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 12%" />
+<col style="width: 14%" />
+<col style="width: 12%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Preprocessing Type</p></th>
+<th class="head"><p>Input#</p></th>
+<th class="head"><p>Shape</p></th>
+<th class="head"><p>Format</p></th>
+<th class="head"><p>Input Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td rowspan="3"><p>yuv444</p></td>
+<td><p>0</p></td>
+<td><p>NHW1</p></td>
+<td><p>y8</p></td>
+<td><p>Y component</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>NHW1</p></td>
+<td><p>u8</p></td>
+<td><p>U component</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>NHW1</p></td>
+<td><p>v8</p></td>
+<td><p>V component</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="3"><p>yuv420</p></td>
+<td><p>0</p></td>
+<td><p>NHW1</p></td>
+<td><p>y8</p></td>
+<td><p>Y component</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>N(H/2)(W/2)1</p></td>
+<td><p>u8</p></td>
+<td><p>U component</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>N(H/2)(W/2)1</p></td>
+<td><p>v8</p></td>
+<td><p>V component</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>nv12</p></td>
+<td><p>0</p></td>
+<td><p>NHW1</p></td>
+<td><p>y8</p></td>
+<td><p>Y component</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>N(H/2)(W/2)2</p></td>
+<td><p>uv8</p></td>
+<td><p>UV components interleaved</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>nv21</p></td>
+<td><p>0</p></td>
+<td><p>NHW1</p></td>
+<td><p>y8</p></td>
+<td><p>Y component</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>N(H/2)(W/2)2</p></td>
+<td><p>vu8</p></td>
+<td><p>VU components interleaved</p></td>
+</tr>
+<tr class="row-even"><td><p>gray</p></td>
+<td><p>0</p></td>
+<td><p>NHW1</p></td>
+<td><p>y8</p></td>
+<td><p>Y component</p></td>
+</tr>
+<tr class="row-odd"><td><p>rgb</p></td>
+<td><p>0</p></td>
+<td><p>NHW3</p></td>
+<td><p>rgb</p></td>
+<td><p>RGB components interleaved</p></td>
+</tr>
+<tr class="row-even"><td><p>bgra</p></td>
+<td><p>0</p></td>
+<td><p>NHW4</p></td>
+<td><p>bgra</p></td>
+<td><p>BGRA components interleaved</p></td>
+</tr>
+<tr class="row-odd"><td><p>rgb888p</p></td>
+<td><p>0</p></td>
+<td><p>N3HW</p></td>
+<td><p>rgb</p></td>
+<td><p>RGB components planar</p></td>
+</tr>
+<tr class="row-even"><td rowspan="3"><p>rgb888p3</p></td>
+<td><p>0</p></td>
+<td><p>NHW1</p></td>
+<td><p>r8</p></td>
+<td><p>Red component</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>NHW1</p></td>
+<td><p>g8</p></td>
+<td><p>Green component</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>NHW1</p></td>
+<td><p>b8</p></td>
+<td><p>Blue component</p></td>
+</tr>
+<tr class="row-odd"><td><p>float32</p></td>
+<td><p>0</p></td>
+<td><p>any</p></td>
+<td></td>
+<td><p>Floating point data</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Specifying a <em>dummy</em> preprocessing (for example from <code class="docutils literal notranslate"><span class="pre">rgb</span></code> input to <code class="docutils literal notranslate"><span class="pre">rgb</span></code> tensor) can be
+a way to implement normalization and data-type conversion using the NPU HW instead of doing the
+same operations in SW.</p>
+</div>
+</section>
+<section id="size">
+<h3><code class="docutils literal notranslate"><span class="pre">size</span></code><a class="headerlink" href="#size" title="Permalink to this headline"></a></h3>
+<p>This optional field allows to specify the size of the input image as a list containing the H and W
+dimensions in this order. Preprocessing will rescale the input image to the size of the corresponding
+input tensor of the network. The proportions of the input image are not preserved.
+If this field is not specified the <cite>WxH</cite> dimension of the input image will be the same as the
+W and H of the network tensor.</p>
+</section>
+<section id="crop">
+<h3><code class="docutils literal notranslate"><span class="pre">crop</span></code><a class="headerlink" href="#crop" title="Permalink to this headline"></a></h3>
+<p>Enable cropping. If specified, 4 additional scalar input tensors are added to the model (they can be
+seen in the generated <code class="docutils literal notranslate"><span class="pre">model_info.txt</span></code>).
+These inputs contain a single 32 bits integer each and are used to specify at runtime
+the dimension and origin of the cropping rectangle inside the input image.
+If security is enabled these additional inputs will have security attribute “any” so that
+it is always possible to specify the cropping coordinates from the user application even if
+the model and the other input / output tensors are secure.
+The cropping inputs are added after the original model input in the following order:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>width of the cropping rectangle</p></li>
+<li><p>height of the cropping rectangle</p></li>
+<li><p>left coordinate of the cropping rectangle</p></li>
+<li><p>top coordinate of the cropping rectangle</p></li>
+</ul>
+</div></blockquote>
+<p>These inputs should be written using the <code class="docutils literal notranslate"><span class="pre">Tensor</span></code> scalar <code class="docutils literal notranslate"><span class="pre">assign()</span></code> method which accepts
+a value in pixels and converts it to the internal representation.
+Preprocessing will rescale the specified cropping rectangle to the size of the corresponding
+input tensor of the network. The proportions of the input image are not preserved.
+The area of the image outside the cropping rectangle is ignored.
+The cropping coordinates must be inside the dimension of the input image, oherwise the content
+of the resulting image is undefined.</p>
+</section>
+</section>
+<section id="model-quantization">
+<h2>Model Quantization<a class="headerlink" href="#model-quantization" title="Permalink to this headline"></a></h2>
+<p>In order to efficiently run a model on the NPU HW it has to be <em>quantized</em>.
+Quantization consist of reducing the precision of the weights and activations of the model, so that
+computations can be done using 8-bits or 16-bits integer values, instead of the much more computationally
+intensive 32 bits floating point.
+A common side-effect of quantization is often to reduce the accuracy of the results, so it must be done
+with care.</p>
+<p>There are three ways in which a model can be quantized:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>during training, using quantization-aware training features available in recent training
+framework such as Tensorflow and Pytorch. These techniques allow to compensate for the
+reduced precision induced by quantization during the training phase itself, thus providing
+in priciple better results.</p></li>
+<li><p>after training, using the same training framework, to convert a trained floating point model
+into a quantized one (e.g. convert the model to a quantized <code class="docutils literal notranslate"><span class="pre">uint8</span></code> <code class="docutils literal notranslate"><span class="pre">.tflite</span></code> model.
+The advantage of both these methods is that they benefit from advances
+in the quantization techniques in these frameworks and the generated model is still a standard
+model, so the effect of quantization can be tested and evaluated using standard tools.</p></li>
+<li><p>when converting the model using the SyNAP toolkit. This is the most convenient way to quantize
+models outside any traning framework and to take advantage of specific features of the SyNAP
+NPU and toolkit (e.g. 16-bits or mixed-type quantization).</p></li>
+</ul>
+</div></blockquote>
+<p>In order to quantize a model it is necessary to determine an estimate of the range
+of the output values of each layer. This can be done by running the model on a set of sample
+input data and analyzing the resulting activations for each layer.
+To achieve a good quantization these sample inputs should be as representative as possible of
+the entire set of expected inputs. For example for a classification network the quantization
+dataset should contain at least one sample for each class. This would be the bare minimum,
+better quantization results can be achieved by providing multiple samples for each class,
+for example in different conditions of size, color and orientation. In case of multi-input
+networks, each input must be fed with an appropriate sample at each inference.</p>
+<section id="quantization-images-resize">
+<h3>Quantization Images Resize<a class="headerlink" href="#quantization-images-resize" title="Permalink to this headline"></a></h3>
+<p>The image files in the quantization dataset don’t have to match the size of the input tensor.
+SyNAP toolkit automatically resizes each image to fit the input tensor. Starting from SyNAP 2.6.0
+this transformation is done by preserving the aspect-ratio of the image content. If the image and
+the tensor have different aspect ratios, gray bands are added to the input
+image so that the actual content is not distorted.
+This corresponds to what is normally done at runtime and is important in order to achieve a
+reliable quantization. The aspect ratio is not preserved if the <code class="docutils literal notranslate"><span class="pre">format</span></code> string of the
+corresponding input contains the <code class="docutils literal notranslate"><span class="pre">keep_proportions=0</span></code> attribute: in this case the image is simply
+resized to fill the entire input tensor.</p>
+</section>
+<section id="data-normalizaton">
+<h3>Data Normalizaton<a class="headerlink" href="#data-normalizaton" title="Permalink to this headline"></a></h3>
+<p>When a model is trained the input data are often normalized in order to bring them to a range
+more suitable for training. It’s quite common to bring them in a range [-1, 1] by subtracting the mean
+of the data distribution and dividing by the range (or standard deviation).
+A different mean value can be used for each channel.</p>
+<p>In order to perform quantization correctly it is important to apply the same transformation to the
+input images or input samples used. If this is not done, the model will be quantized using
+a data distribution that is not the same as that used during training (and during inference)
+with poor results. This information has to be specified in the <code class="docutils literal notranslate"><span class="pre">means</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> fields
+in the conversion metafile and will be applied to all input <em>image</em> files in the quantization
+dataset for the corresponding input using the formula:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>norm = (in - means[channel]) / scale
+</pre></div>
+</div>
+<p>For <em>data</em> (<cite>.npy`</cite>) files this is not done, it is assumed that they are already normalized.</p>
+<p>In addition, the same transformation must also be applied at runtime on the input data when doing
+inference. If the model has been compiled with preprocessing enabled, data normalization is
+embedded in the model and will take place during inference inside the NPU.
+Otherwise data has to be normalized in SW. The <code class="docutils literal notranslate"><span class="pre">Tensor</span></code> class provides an <code class="docutils literal notranslate"><span class="pre">assign()</span></code> method
+that does exactly this, using the same <code class="docutils literal notranslate"><span class="pre">means</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> fields specified
+in the conversion metafile (this method is smart enough to skip SW normalization when normalization
+is embedded in the model).</p>
+<p>HW and SW normalization can be used interchangeably, and provide the same result.
+NPU normalization is generally somewhat faster, but this has to be checked case by case.
+In case of SW normalization, using the same mean for all the channels or using a mean of 0
+and scale of 1 can in some cases improve performance: for example if affine quantization is used
+the normalization and quantization formula (<code class="docutils literal notranslate"><span class="pre">qval</span> <span class="pre">=</span> <span class="pre">(normalized_in</span> <span class="pre">+</span> <span class="pre">zero_point)</span> <span class="pre">*</span> <span class="pre">qscale</span></code>)
+can become one the inverse of the other thus resulting in a very efficient direct data copy.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Tensor::assign()</span></code> method is optimized to handle each case in the most efficient way possible.
+If needed this could be further improved by the customer by taking advantage of the
+ARM NEON SIMD instructions.</p>
+</section>
+<section id="quantization-and-accuracy">
+<h3>Quantization And Accuracy<a class="headerlink" href="#quantization-and-accuracy" title="Permalink to this headline"></a></h3>
+<p>As already noted quantizing a model, even if done correctly, will often result is some sort of
+accuracy loss when compared to the original floating point model.
+This effect can be reduced by quantizing the model to 16 bits, but the inference time will be higher.
+As a rule of thumb quantizing a model to 16 bits will double the inference time compared to the same
+model quantized to 8 bits.</p>
+<p>The quantization errors introduced are not uniform across all the layers, they might be small for
+some layer and relevant for others. The <em>Quantization Entropy</em> is a measure of the error introduced
+in each layer.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">quantizaton_entropy.txt</span></code> file can be generated by quantizing a model with the <code class="docutils literal notranslate"><span class="pre">kl_divergence</span></code>
+algorithm. This file will contain the quantization entropy for each weight and activation tensor
+in the network. It can be used as a guide to understand where errors are introduced in the network.
+Each entropy value is in the range [0, 1], the closer to 1 the higher the quantization
+error introduced.  The <code class="docutils literal notranslate"><span class="pre">kl_divergence</span></code> algorithm is an iterative algorithm based on
+<a class="reference external" href="https://arxiv.org/pdf/1501.07681v1.pdf">https://arxiv.org/pdf/1501.07681v1.pdf</a> and tries to minimize the Kullback-Leibler divergence
+between the original and quantized outputs. It is slower than the standard algorithm but
+can produce more accurate results.</p>
+<p>The quantization error for problematic layers can be reduced by keeping them in float16 or
+quantizing them to 16 bits integer using mixed quantization.</p>
+</section>
+<section id="per-channel-quantization">
+<h3>Per-Channel Quantization<a class="headerlink" href="#per-channel-quantization" title="Permalink to this headline"></a></h3>
+<p>SyNAP supports per-channel quantization by specifiying the <code class="docutils literal notranslate"><span class="pre">perchannel_symmetric_affine</span></code> quantization scheme.
+With this scheme weights scales are computed per-channel (each channel has its own scale),
+while activations will still have a single scale and bias for the entire tensor an in <code class="docutils literal notranslate"><span class="pre">asymmetric_affine</span></code> quantization.
+When weight values distribution changes a lot from one channel to the other, having a separate scale
+for each channel can provide a more accurate approximation of the original weights and so an improved
+inference accuracy</p>
+</section>
+<section id="mixed-quantization">
+<span id="id3"></span><h3>Mixed Quantization<a class="headerlink" href="#mixed-quantization" title="Permalink to this headline"></a></h3>
+<p>Mixed quantization is a feature of the SyNAP toolkit that allows to choose the data type to be used
+for each layer when a network is quantized during conversion.
+This allows to achieve a custom balance between inference speed and accuracy.</p>
+<p>Different approaches are possible:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>quantize the entire network to 16 bits and keep just the input in 8 bits.
+This provides the best accuracy possible and can be convenient when the input is an 8-bits image
+since it avoids the need to perform the 8-to-16 bits conversion is SW (note that this is not
+needed if preprocessing is used as it will also take care of the type conversion)</p></li>
+<li><p>quantize most of the network in 8 bits and just the <em>problematic</em> layers with <code class="docutils literal notranslate"><span class="pre">int16</span></code> or
+even <code class="docutils literal notranslate"><span class="pre">float16</span></code>.
+The quantization entropy can provide a guide to select the layers which would get
+more benefit from 16 bits. Note however that each change in data-type requires a conversion
+layer before and after it, so it is normally a good idea to avoid changing data-type too
+many times</p></li>
+<li><p>quantize the initial part (<em>backbone</em>) of the network in <code class="docutils literal notranslate"><span class="pre">uint8</span></code> and switch to <code class="docutils literal notranslate"><span class="pre">int16</span></code> for the
+last part (<em>head</em>). This is often a good choice when the input of the network is an 8-bits
+image, as networks should not be too sensitive in general to small noise in the input.
+Using 16 bits processing in the head allows to compute the final results (e.g. bounding boxes)
+with much greater precision without adding too much in term of inference time</p></li>
+</ul>
+</div></blockquote>
+<p>To see how this is done let’s consider the very simple model in <a class="reference internal" href="#quant-sample-model"><span class="std std-numref">Figure 4</span></a>.</p>
+<figure class="align-default" id="id6">
+<span id="quant-sample-model"></span><p class="plantuml">
+<a href="_images/plantuml-b347df810e9081e4b6709a1fda9629b3a934d505.png"><img src="_images/plantuml-b347df810e9081e4b6709a1fda9629b3a934d505.png" alt="skinparam monochrome true
+skinparam handwritten false
+hide members
+hide methods
+hide fields
+interface input1
+class conv1
+class conv2
+class conv3
+class conv4
+class conv5
+class conv6
+
+input1  --&gt; conv1
+conv1  --&gt; conv2
+conv2  --&gt; conv3
+conv3  --&gt; conv4
+conv2  --&gt; conv5
+conv5  --&gt; conv6" style="width: 90.5px; height: 209.0px"/></a>
+</p>
+<figcaption>
+<p><span class="caption-number">Figure 4 </span><span class="caption-text">Sample Model</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>This model has one input and six convolutions.
+We’ve already seen how to compile it with uniform quantization, for example using 16 bits integers:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Instead of a single type, the <code class="docutils literal notranslate"><span class="pre">data_type</span></code> field can contain an association map between
+layer-names and layer-types. Layer names are those that appear in the model to be converted, it’s
+easy to see them using free tools such as <em>Netron</em>. So, the previous example is equivalent to:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">input1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+</pre></div>
+</div>
+<p>To perform mixed-type quantization just select the desired type for each layer. The only limitation
+is that <code class="docutils literal notranslate"><span class="pre">uint8</span></code> and <code class="docutils literal notranslate"><span class="pre">int8</span></code> types can’t be both present at the same time. For example we can
+choose to quantize the input and first convolution to 8 bits, the internal convolutions to 16 bits,
+and to keep the final convolutions in floating point:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">input1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float16</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Real models can often have well above one hundred layers, so writing an exhaustive list of all the layers
+can become confusing and error-prone. To keep the type specification simpler there are a few
+shortcuts that can be used. First of all, layers can be omitted: layers not explicitly
+listed will be quantized by default to <code class="docutils literal notranslate"><span class="pre">uint8</span></code>. Furthermore, some special conventions in the layer
+name specification can help:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>INPUTS : this special name is automatically expanded to the names of all the inputs of the network</p></li>
+<li><p>‘<em>&#64;layerId</em>’ : a name preceded by the ‘&#64;’ suffix is interpreted as a <em>layerID</em> (see note below)</p></li>
+<li><p><em>layername…</em> : a name followed by three dots, is expanded to the names of all the layers that
+<em>follows</em> the layer specified in the model (in execution order). Useful when for example
+we want to use the same data type for the head of the network or an entire branch.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'*'</span></code> : expanded to the names of all the layers that haven’t been explicitly specified</p></li>
+</ul>
+</div></blockquote>
+<p>The type specifications are applied in the order they are declared (except for ‘*’) so it is possible
+to further override the type of layers already specified.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>During the compilation of a model several optimizations are applied and some layers
+in the original network may be fused together or optimized away completely.
+For optimized away layers it is of course not possible to specify the data type.
+For fused layers the issue is that they will not have the same name as the original layers.
+In this case it is possible to identify them by <em>layerId</em>: a <em>layerId</em> is a unique identifier
+assigned to each compiled layer. This is also a convenient way to identify layers in case the
+original model has layers with ambiguous or empty names. It is possible to see the list of all
+layerIDs for a compiled model in the generated <code class="docutils literal notranslate"><span class="pre">quantization_info.yaml</span></code>
+or <code class="docutils literal notranslate"><span class="pre">quantization_entropy.txt</span></code> file.</p>
+</div>
+<p>Lets’s see a few examples applied to our sample network.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Quantize input1 as int8, everything else as int16</span><span class="w"></span>
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">INPUTS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int8</span><span class="w"></span>
+<span class="w">        </span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Quantize as uint8 but use int16 for conv3, conv4, conv5, conv6</span><span class="w"></span>
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv2...</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Quantize as uint8 but use int16 for conv3, conv4, conv6 but float16 for conv5</span><span class="w"></span>
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv2...</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float16</span><span class="w"></span>
+</pre></div>
+</div>
+<p>In the two examples above the specification <code class="docutils literal notranslate"><span class="pre">'*':</span> <span class="pre">uint8</span></code> could have been avoided since <code class="docutils literal notranslate"><span class="pre">uint8</span></code>
+is already the default, but helps in making the intention more explicit.</p>
+<p>If we specify the data type for a layer that has been fused, we will get a “<em>Layer name</em>” error at conversion time.
+In this case we have to look for the <em>layerId</em> of the corresponding fused layer in <code class="docutils literal notranslate"><span class="pre">quantization_info.yaml</span></code>
+and use the “&#64;” syntax as explained above. For example if in our sample model <code class="docutils literal notranslate"><span class="pre">conv5</span></code> and <code class="docutils literal notranslate"><span class="pre">conv6</span></code>
+have been fused, we will get an error if we specify the type for <code class="docutils literal notranslate"><span class="pre">conv5</span></code> alone.
+Looking in <code class="docutils literal notranslate"><span class="pre">quantization_info.yaml</span></code> we can find the ID of the fused layer, as in:
+<code class="docutils literal notranslate"><span class="pre">'&#64;Conv_Conv_5_200_Conv_Conv_6_185:weight':</span></code></p>
+<p>We can then use this layer ID in the metafile to specify the data type of the fused layers:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Quantize as uint8 but use int16 for conv3, conv4, conv6 but float16 for fused conv5+conv6</span><span class="w"></span>
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">        </span><span class="nt">conv2...</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">        </span><span class="s">&#39;@Conv_Conv_5_200_Conv_Conv_6_185&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float16</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="heterogeneous-inference">
+<span id="id4"></span><h2>Heterogeneous Inference<a class="headerlink" href="#heterogeneous-inference" title="Permalink to this headline"></a></h2>
+<p>In some cases it can be useful to execute different parts of a network on different hardware.
+For example consider an object detection network, where the initial part contains a bunch of convolutions
+and the final part some postprocessing layer such as <cite>TFLite_Detection_PostProcess</cite>.
+The NPU is heavily optimized for executing convolutions, but doesn’t support the postprocessing layer,
+so the best approach would be to execute the initial part of the network on the NPU
+and the postprocessing on the CPU.</p>
+<p>This can be achieved by specifying the delegate to be used on a per-layer basis, using the same syntax
+as we’ve seen for mixed quantization in section <code class="xref std std-numref docutils literal notranslate"><span class="pre">mixed_quantization</span></code>.
+For example, considering again the Model in <a class="reference internal" href="#quant-sample-model"><span class="std std-numref">Figure 4</span></a>, we can specify that
+all layers should be executed on the NPU, except <code class="docutils literal notranslate"><span class="pre">conv5</span></code> and the layers that follows it
+which we want to execute on the GPU:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Execute the entire model on the NPU, except conv5 and conv6</span><span class="w"></span>
+<span class="nt">delegate</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npu</span><span class="w"></span>
+<span class="w">    </span><span class="nt">conv5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpu</span><span class="w"></span>
+<span class="w">    </span><span class="nt">conv5...</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpu</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Another advantage of distributing processing to different hardware delegates is that
+when the model is organized in multiple independent branches (so that a branch can be executed
+without having to wait for the result of another branch), and each is executed on a different HW unit
+then the branches can be executed in parallel.</p>
+<p>In this way the overall inference time can be reduced to the time it takes to execute the slowest branch.
+Branch parallelization is always done automatically whenever possible.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Branch parallelization should not be confused with in-layer parallelization, which is also
+always active when possible. In the example above the two branches <cite>(conv3,conv4)</cite> and <cite>(conv5,conv6)</cite>
+are executed in parallel, the former the NPU and the latter on the GPU.
+In addition, each convolution layer is parallelized internally by taking advantage
+of the parallelism available in the NPU and GPU HW.</p>
+</div>
+</section>
+<section id="model-conversion-tutorial">
+<span id="id5"></span><h2>Model Conversion Tutorial<a class="headerlink" href="#model-conversion-tutorial" title="Permalink to this headline"></a></h2>
+<p>Let’s see how to convert and run a typical object-detection model.</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Download the sample <cite>ssd_mobilenet_v1_1_default_1.tflite</cite> object-detection model:</p>
+<p><a class="reference external" href="https://tfhub.dev/tensorflow/lite-model/ssd_mobilenet_v1/1/default/1">https://tfhub.dev/tensorflow/lite-model/ssd_mobilenet_v1/1/default/1</a></p>
+</li>
+<li><p>Create a conversion metafile <code class="docutils literal notranslate"><span class="pre">ssd_mobilenet.yaml</span></code> with the content here below
+(Important: be careful that newlines and formatting must be respected but they are lost
+when doing copy-paste from a pdf):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>outputs:
+- name: Squeeze
+  dequantize: true
+  format: tflite_detection_boxes y_scale=10 x_scale=10 h_scale=5 w_scale=5 anchors=${ANCHORS}
+- name: convert_scores
+  dequantize: true
+  format: per_class_confidence class_index_base=-1
+</pre></div>
+</div>
+<p>A few notes on the content of this file:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“<code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">Squeeze</span></code>” and “<code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">convert_scores</span></code>”</dt><dd><p>explicitly specifiy the output tensors
+where we want model conversion to stop. The last layer (<code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code>)
+is a custom layer not suitable for NPU acceleration, so it is implemented in software
+in the <code class="docutils literal notranslate"><span class="pre">Detector</span></code> postprocessor class.</p>
+</dd>
+<dt>“<code class="docutils literal notranslate"><span class="pre">dequantize:</span> <span class="pre">true</span></code>”</dt><dd><p>performs conversion from quantized to float directly in the NPU.
+This is much faster than doing conversion in software.</p>
+</dd>
+<dt>“<code class="docutils literal notranslate"><span class="pre">tflite_detection_boxes</span></code>” and “<code class="docutils literal notranslate"><span class="pre">convert_scores</span></code>”</dt><dd><p>represents the content and data organization in these tensors</p>
+</dd>
+<dt>“<code class="docutils literal notranslate"><span class="pre">y_scale=10</span></code>” “<code class="docutils literal notranslate"><span class="pre">x_scale=10</span></code>” “<code class="docutils literal notranslate"><span class="pre">h_scale=5</span></code>” “<code class="docutils literal notranslate"><span class="pre">w_scale=5</span></code>”</dt><dd><p>corresponds to the parameters in the <code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code> layer in the network</p>
+</dd>
+<dt>“<code class="docutils literal notranslate"><span class="pre">${ANCHORS}</span></code>”</dt><dd><p>is replaced at conversion time with the <code class="docutils literal notranslate"><span class="pre">anchor</span></code> tensor from the
+<code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code> layer. This is needed to be able to compute the bounding
+boxes during postprocessing.</p>
+</dd>
+<dt>“<code class="docutils literal notranslate"><span class="pre">class_index_base=-1</span></code>”</dt><dd><p>this model has been trained with an additional background class
+as index 0, so we subtract 1 from the class index during postprocessing to conform to the
+standard <cite>coco</cite> dataset labels.</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><dl>
+<dt>Convert the model (be sure that the model, meta and output dir are in a directory visible</dt><dd><p>in the container, see <code class="docutils literal notranslate"><span class="pre">-v</span></code> option in <code class="xref std std-numref docutils literal notranslate"><span class="pre">running-toolkit-label</span></code>):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ synap convert --model ssd_mobilenet_v1_1_default_1.tflite --meta ssd_mobilenet.yaml --target VS680 --out-dir compiled&quot;
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p>Push the model to the board:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ adb root
+$ adb remount
+$ adb shell mkdir /data/local/tmp/test
+$ adb push compiled/model.synap /data/local/tmp/test
+</pre></div>
+</div>
+</li>
+<li><p>Execute the model:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ adb shell
+# cd /data/local/tmp/test
+# synap_cli_od -m model.synap $MODELS/object_detection/coco/sample/sample001_640x480.jpg&quot;
+
+Input image: /vendor/firmware/.../sample/sample001_640x480.jpg (w = 640, h = 480, c = 3)
+Detection time: 5.69 ms
+#   Score  Class  Position  Size     Description
+0   0.70       2  395,103    69, 34  car
+1   0.68       2  156, 96    71, 43  car
+2   0.64       1  195, 26   287,445  bicycle
+3   0.64       2   96,102    18, 16  car
+4   0.61       2   76,100    16, 17  car
+5   0.53       2  471, 22   167,145  car
+</pre></div>
+</div>
+</li>
+</ol>
+</div></blockquote>
+</section>
+<section id="model-profiling">
+<span id="model-profiling-label"></span><h2>Model Profiling<a class="headerlink" href="#model-profiling" title="Permalink to this headline"></a></h2>
+<p>When developing and optimizing a model it can be useful to understand how the execution time is
+distributed among the layers of the network. This provides an indication of which layers are executed
+efficiently and which instead represent bottlenecks.</p>
+<p>In order to obtain this information the network has to be executed step by step so that
+each single timing can be measured. For this to be possible the network must be generated with
+additional profiling instructions by calling <code class="docutils literal notranslate"><span class="pre">synap_convert.py</span></code> with the <code class="docutils literal notranslate"><span class="pre">--profiling</span></code> option,
+for example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ synap convert --model mobilenet_v2_1.0_224_quant.tflite --target VS680 --profiling --out-dir mobilenet_profiling
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Even if the execution time of each layer doesn’t change between <em>normal</em> and <em>profiling</em> mode,
+the overall execution time of a network compiled with profiling enabled will be noticeably
+higher than that of the same network compiled without profiling, due to the fact that NPU
+execution has to be started and suspended several times to collect the profiling data.
+For this reason profiling should normally be disabled, and enabled only when needed for
+debugging purposes.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When a model is converted using SyNAP toolkit, layers can be fused, replaced with equivalent
+operations and/or optimized away, hence it is generally not possible to find a one-to-one
+correspondence between the items in the profiling information and the nodes in the original network.
+For example adjacent convolution, ReLU and Pooling layer are fused together in a single
+<em>ConvolutionReluPoolingLayer</em> layer whenever possible.
+Despite these optimizations the correspondence is normally not too difficult to find.
+The layers shown in the profiling correspond to those listed in the <cite>model_info.txt</cite> file
+generated when the model is converted.</p>
+</div>
+<p>After each execution of a model compiled in profiling mode, the profiling information will be
+available in <cite>sysfs</cite>, see <code class="xref std std-numref docutils literal notranslate"><span class="pre">sysfs-networks</span></code>. Since this information is not persistent
+but goes away when the network is destroyed, the easiest way to collect it is by using <cite>synap_cli</cite>
+program. The <code class="docutils literal notranslate"><span class="pre">--profling</span> <span class="pre">&lt;filename&gt;</span></code> option allows to save a copy of the <cite>sysfs</cite> <cite>network_profile</cite> file
+to a specified file before the network is destroyed:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ adb push mobilenet_profiling $MODELS/image_classification/imagenet/model/
+$ adb shell
+# cd $MODELS/image_classification/imagenet/model/mobilenet_profiling
+# synap_cli -m model.synap --profiling mobilenet_profiling.txt random
+
+# cat mobilenet_profiling.txt
+pid: 21756, nid: 1, inference_count: 78, inference_time: 272430, inference_last: 3108, iobuf_count: 2, iobuf_size: 151529, layers: 34
+| lyr |   cycle | time_us | byte_rd | byte_wr | type
+|   0 |  152005 |     202 |  151344 |       0 | TensorTranspose
+|   1 |  181703 |     460 |    6912 |       0 | ConvolutionReluPoolingLayer2
+|   2 |    9319 |      51 |    1392 |       0 | ConvolutionReluPoolingLayer2
+|   3 |   17426 |      51 |    1904 |       0 | ConvolutionReluPoolingLayer2
+|   4 |   19701 |      51 |    1904 |       0 | ConvolutionReluPoolingLayer2
+...
+|  28 |   16157 |      52 |    7472 |       0 | ConvolutionReluPoolingLayer2
+|  29 |  114557 |     410 |  110480 |       0 | FullyConnectedReluLayer
+|  30 |  137091 |     201 |    2864 |    1024 | Softmax2Layer
+|  31 |       0 |       0 |       0 |       0 | ConvolutionReluPoolingLayer2
+|  32 |       0 |       0 |       0 |       0 | ConvolutionReluPoolingLayer2
+|  33 |     670 |      52 |    1008 |       0 | ConvolutionReluPoolingLayer2
+</pre></div>
+</div>
+</section>
+<section id="compatibility-with-synap-2-x">
+<h2>Compatibility With SyNAP 2.X<a class="headerlink" href="#compatibility-with-synap-2-x" title="Permalink to this headline"></a></h2>
+<p>SyNAP 3.x is fully backward compatible with SyNAP 2.x.</p>
+<blockquote>
+<div><ul>
+<li><p>It is possible to execute models compiled with SyNAP 3.x toolkit with SyNAP 2.x runtime.
+The only limitation is that in this case heterogeneous compilation is not available and the
+entire model will be executed on the NPU. This can be done by specifying the <code class="docutils literal notranslate"><span class="pre">--out-format</span> <span class="pre">nb</span></code>
+option when converting the model. In this case the toolkit will generate in output the legacy
+<code class="docutils literal notranslate"><span class="pre">model.nb</span></code> and <code class="docutils literal notranslate"><span class="pre">model.json</span></code> files instead of the <code class="docutils literal notranslate"><span class="pre">model.synap</span></code> file:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ synap convert --model mobilenet_v2_1.0_224_quant.tflite --target VS680 --out-format nb --out-dir mobilenet_legacy
+</pre></div>
+</div>
+</li>
+<li><p>It is possible to execute models compiled with SyNAP 2.x toolkit with SyNAP 3.x runtime</p></li>
+<li><p>SyNAP 3.x API is an extension of SyNAP 2.x API, so all the existing applications can be used
+without any modification</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="working-with-pytorch-models">
+<span id="working-with-pytorch-models-label"></span><h2>Working With PyTorch Models<a class="headerlink" href="#working-with-pytorch-models" title="Permalink to this headline"></a></h2>
+<p>PyTorch framework supports very flexible models where the architecture and behaviour of the network
+is defined using Python classes instead of fixed graph layers as for example in <cite>TFLite</cite>.
+When saving a model, normally only the <code class="docutils literal notranslate"><span class="pre">state_dict</span></code>, that is the learnable parameters, are saved and not
+the model structure itself (<a class="reference external" href="https://pytorch.org/tutorials/beginner/saving_loading_models.html#saving-loading-model-for-inference">https://pytorch.org/tutorials/beginner/saving_loading_models.html#saving-loading-model-for-inference</a>).
+The original Python code used to define the model is needed to reload the model
+and execute it. For this reason there is no way for the toolkit to directly import a PyTorch model
+from a <cite>.pt</cite> file containing only the learnable parameters.</p>
+<p>When saving a torch model in a <cite>.pt</cite> file it is also possible to include references to the Python classes
+defining the model but even in this case it’s impossible to recreate the model from just the <cite>.pt</cite> file
+without the exaact python source tree used to generate it.</p>
+<p>A third possibility is to save the model in <cite>TorchScript</cite> format. In this case the saved model
+contains both the the learnable parameters <cite>and</cite> the model structure.</p>
+<p>This format can be imported directly using the SyNAP toolkit.</p>
+<p>For more info on how to save a model in the <cite>TorchScript</cite> format see:
+<a class="reference external" href="https://pytorch.org/tutorials/beginner/saving_loading_models.html#export-load-model-in-torchscript-format">https://pytorch.org/tutorials/beginner/saving_loading_models.html#export-load-model-in-torchscript-format</a></p>
+<p>An alternative way to save a model in TorchScript format is to use <cite>tracing</cite>.
+Tracing records the operations that are executed when a model is run and is a good way to convert
+a model when exporting with <code class="docutils literal notranslate"><span class="pre">torch.jit.script</span></code> is problematic, for example when the model
+has a dynamic structure.
+In both cases the generated file will have the same format, so models saved with tracing can also be imported directly.
+A detailed comparison of the two techniques is available online searching for “pytorch tracing vs scripting”.</p>
+<p>Here below an example of saving a torch model with scripting or tracing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchvision</span>
+
+<span class="c1"># An instance of your model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Switch the model to eval model</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="c1"># Generate a torch.jit.ScriptModule via scripting</span>
+<span class="n">mobilenet_scripted</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">script</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Save the scripted model in TorchScript format</span>
+<span class="n">mobilenet_scripted</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;mobilenet_scripted.torchscript&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># An example input you would normally provide to your model&#39;s forward() method.</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+
+<span class="c1"># Generate a torch.jit.ScriptModule via tracing</span>
+<span class="n">mobilenet_traced</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">example</span><span class="p">)</span>
+
+<span class="c1"># Save the traced model in TorchScript format</span>
+<span class="n">mobilenet_traced</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;mobilenet_traced.torchscript&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Even if there exists multiple possible ways to save a PyTorch model to a file, there is no
+agreed convention for the extension used in the different cases, and <cite>.pt</cite> or <cite>.pth</cite> extension is commonly used
+no matter the format of the file. Only <cite>TorchScript</cite> models can be imported with the SyNAP toolkit,
+if the model is in a different format the import will fail with an error message.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Working with <cite>TorchScript</cite> models is not very convenient when performing mixed quantization or
+heterogeneous inference, as the model layers sometimes don’t have names or the name is modified during the
+import process and/or there is not a one-to-one correspondence between the layers in the original
+model and the layers in the imported one. The suggestion in this case is to compile the model
+with the <code class="docutils literal notranslate"><span class="pre">--preserve</span></code> option and then look at the intermediate <code class="docutils literal notranslate"><span class="pre">build/model.onnx</span></code> file
+inside the output directory.</p>
+</div>
+<p>An even more portable alternative to exporting a model to TorchScript is to export it to ONNX format.
+The required code is very similar to the one used to trace the model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchvision</span>
+
+<span class="c1"># An instance of your model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Switch the model to eval model</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="c1"># Export the model in ONNX format</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">onnx</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span> <span class="s2">&quot;mobilenet.onnx&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="importing-yolo-pytorch-models">
+<h3>Importing YOLO PyTorch Models<a class="headerlink" href="#importing-yolo-pytorch-models" title="Permalink to this headline"></a></h3>
+<p>The popular YOLO library from <cite>ultralytics</cite> provides pretrained .pt models on their website.
+All these models are not in <cite>TorchScript</cite> format and so can’t be imported directly with the SyNAP toolkit.
+nevertheless it’s very easy to export them to <cite>ONNX</cite> or <cite>TorchScript</cite> so that they can be imported:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ultralytics</span> <span class="kn">import</span> <span class="n">YOLO</span>
+
+<span class="c1"># Load an official YOLO model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">YOLO</span><span class="p">(</span><span class="s2">&quot;yolov8s.pt&quot;</span><span class="p">)</span>
+
+<span class="c1"># Export the model in TorchScript format</span>
+<span class="n">model</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;torchscript&quot;</span><span class="p">,</span> <span class="n">imgsz</span><span class="o">=</span><span class="p">(</span><span class="mi">480</span><span class="p">,</span> <span class="mi">640</span><span class="p">))</span>
+
+<span class="c1"># Export the model in ONNX format</span>
+<span class="n">model</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;onnx&quot;</span><span class="p">,</span> <span class="n">imgsz</span><span class="o">=</span><span class="p">(</span><span class="mi">480</span><span class="p">,</span> <span class="mi">640</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>More information on exporting YOLO models to ONNX in <a class="reference external" href="https://docs.ultralytics.com/modes/export/">https://docs.ultralytics.com/modes/export/</a>
+Most public-domain machine learning packages provide similar export functions for their PyTorch models.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="statistics.html" class="btn btn-neutral float-left" title="Statistics And Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="framework_api.html" class="btn btn-neutral float-right" title="Framework API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, 2022, 2023, 2024, Synaptics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,3450 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neural Network Processing Unit Operator Support &mdash; SyNAP 3.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Direct Access In Android Applications" href="java.html" />
+    <link rel="prev" title="Framework API" href="framework_api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SyNAP
+          </a>
+              <div class="version">
+                3.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nnapi.html">Using Online Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">Reference Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics And Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working_with_models.html">Working With Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="framework_api.html">Framework API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Neural Network Processing Unit Operator Support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-operations">Basic Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#activation-operations">Activation Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#elementwise-operations">Elementwise Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#normalization-operations">Normalization Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reshape-operations">Reshape Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rnn-operations">RNN Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pooling-operations">Pooling Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#miscellaneous-operations">Miscellaneous Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="java.html">Direct Access In Android Applications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SyNAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Neural Network Processing Unit Operator Support</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="neural-network-processing-unit-operator-support">
+<h1>Neural Network Processing Unit Operator Support<a class="headerlink" href="#neural-network-processing-unit-operator-support" title="Permalink to this headline"></a></h1>
+<p>This section summarizes neural network operators supported by the SyNAP VS6x0/SL16x0 class of NPUs
+and accompanying software stack.
+For each operator type, the supported tensor types and execution engines is also documented.
+Designing networks that maximise the use of operators executed in the NN core will provide the
+best performances.</p>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-number">Table 8 </span><span class="caption-text">Legend</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 83%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Acronym</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NN</p></td>
+<td><p>Neural Network Engine</p></td>
+</tr>
+<tr class="row-odd"><td><p>PPU</p></td>
+<td><p>Parellel Processing Unit</p></td>
+</tr>
+<tr class="row-even"><td><p>TP</p></td>
+<td><p>Tensor Processor</p></td>
+</tr>
+<tr class="row-odd"><td><p>asym-u8</p></td>
+<td><p>asymmetric affine uint8</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asymmetric affine int8</p></td>
+</tr>
+<tr class="row-odd"><td><p>pc-sym-i8</p></td>
+<td><p>per channel symmetric int8</p></td>
+</tr>
+<tr class="row-even"><td><p>fp32</p></td>
+<td><p>floating point 32 bits</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp16</p></td>
+<td><p>floating point 16 bits</p></td>
+</tr>
+<tr class="row-even"><td><p>h</p></td>
+<td><p>half</p></td>
+</tr>
+<tr class="row-odd"><td><p>int16</p></td>
+<td><p>int16</p></td>
+</tr>
+<tr class="row-even"><td><p>int32</p></td>
+<td><p>int32</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>int16 dynamic fixed point convolution is supported by NN Engine in their multiplication.
+Other layers follow the tables, if asym-u8 in not available in NN column, int16 is also not available.</p>
+</div>
+<section id="basic-operations">
+<h2>Basic Operations<a class="headerlink" href="#basic-operations" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="3"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Kernel</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>CONV2D</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>CONV1D</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>DECONVOLUTION</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>DECONVOLUTION1D</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>GROUPED_CONV2D</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>convolutions are executed in the NN emgine only if they satisfy the following conditions:
+<strong>stride == 1</strong>, <strong>kernel_size &lt;= 15x15</strong>, <strong>dilation size + kernel size &lt;= 15x15</strong>
+If any of these conditions is not satisfied, the convolution will require support of the
+TP core and will run considerably slower</p>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="3"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Kernel</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="3"><p>FULLY_CONNECTED</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="activation-operations">
+<h2>Activation Operations<a class="headerlink" href="#activation-operations" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>ELU</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>HARD_SIGMOID</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SWISH</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>LEAKY_RELU</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>PRELU</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>RELU</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>RELUN</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>RSQRT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SIGMOID</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SOFTRELU</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SQRT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>TANH</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>ABS</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>CLIP</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>EXP</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>LOG</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>NEG</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>MISH</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>SOFTMAX</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>LOG_SOFTMAX</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SQUARE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SIN</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>LINEAR</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>ERF</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>GELU</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="elementwise-operations">
+<h2>Elementwise Operations<a class="headerlink" href="#elementwise-operations" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>ADD</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SUBTRACT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>MULTIPLY</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>DIVIDE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>MAXIMUM</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>MINIMUM</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>POW</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>FLOORDIV</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>MATRIXMUL</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="5"><p>RELATIONAL_OPS</p></td>
+<td><p>asym-u8</p></td>
+<td><p>bool8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>bool8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>bool8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>bool8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>bool8</p></td>
+<td><p>bool8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>LOGICAL_OPS</p></td>
+<td><p>bool8</p></td>
+<td><p>bool8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>LOGICAL_NOT</p></td>
+<td><p>bool8</p></td>
+<td><p>bool8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td rowspan="5"><p>SELECT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>bool8</p></td>
+<td><p>bool8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>ADDN</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="normalization-operations">
+<h2>Normalization Operations<a class="headerlink" href="#normalization-operations" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>BATCH_NORM</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>LRN2</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>L2_NORMALIZE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>LAYER_NORM</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>INSTANCE_NORM</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>BATCHNORM_SINGLE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="5"><p>MOMENTS</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p>GROUP_NORM</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reshape-operations">
+<h2>Reshape Operations<a class="headerlink" href="#reshape-operations" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>EXPAND_BROADCAST</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SLICE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SPLIT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>CONCAT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>STACK</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>UNSTACK</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>RESHAPE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SQUEEZE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>PERMUTE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>REORG</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SPACE2DEPTH</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="5"><p>DEPTH2SPACE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>bool8</p></td>
+<td><p>bool8</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>BATCH2SPACE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SPACE2BATCH</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>PAD</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>REVERSE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>STRIDED_SLICE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>REDUCE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="2"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>ARGMAX</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8 / int16 / int32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-u8 / int16 / int32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>int32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>asym-u8 / int16 / int32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>ARGMIN</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8 / int16 / int32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-u8 / int16 / int32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>int32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>asym-u8 / int16 / int32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SHUFFLECHANNEL</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="rnn-operations">
+<h2>RNN Operations<a class="headerlink" href="#rnn-operations" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="3"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Kernel</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>LSTMUNIT_OVXLIB</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>CONV2D_LSTM</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>CONV2D_LSTM_CELL</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>LSTM_OVXLIB</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="3"><p>Tensor Types</p></th>
+<th class="head" colspan="3"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Kernel</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>GRUCELL_OVXLIB</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>GRU_OVXLIB</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SVDF</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>pc-sym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pooling-operations">
+<h2>Pooling Operations<a class="headerlink" href="#pooling-operations" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="3"><p>Tensor Types</p></th>
+<th class="head" colspan="2"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>POOL</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>ROI_POOL</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>POOLWITHARGMAX</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>UPSAMPLE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="miscellaneous-operations">
+<h2>Miscellaneous Operations<a class="headerlink" href="#miscellaneous-operations" title="Permalink to this headline"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="3"><p>Tensor Types</p></th>
+<th class="head" colspan="2"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>PROPOSAL</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>VARIABLE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>DROPOUT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>RESIZE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>DATACONVERT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>FLOOR</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="3"><p>Tensor Types</p></th>
+<th class="head" colspan="2"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>EMBEDDING_LOOKUP</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>GATHER</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>GATHER_ND</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SCATTER_ND</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>GATHER_ND_UPDATE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>TILE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="3"><p>Tensor Types</p></th>
+<th class="head" colspan="2"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>ELTWISEMAX</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>SIGNAL_FRAME</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>CONCATSHIFT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="3"><p>UPSAMPLESCALE</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p>ROUND</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p>CEIL</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="3"><p>Tensor Types</p></th>
+<th class="head" colspan="2"><p>Execution Engine</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Output</p></th>
+<th class="head"><p>NN</p></th>
+<th class="head"><p>TP</p></th>
+<th class="head"><p>PPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="4"><p>SEQUENCE_MASK</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>REPEAT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>ONE_HOT</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>CAST</p></td>
+<td><p>asym-u8</p></td>
+<td><p>asym-u8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>asym-i8</p></td>
+<td><p>asym-i8</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp32</p></td>
+<td><p>fp32</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>fp16</p></td>
+<td><p>fp16</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="framework_api.html" class="btn btn-neutral float-left" title="Framework API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="java.html" class="btn btn-neutral float-right" title="Direct Access In Android Applications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, 2022, 2023, 2024, Synaptics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

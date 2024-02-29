@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started &mdash; SyNAP 3.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/synaptics_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/synaptics_theme.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using Online Inference" href="nnapi.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SyNAP
+          </a>
+              <div class="version">
+                3.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#synap-cli-ic-application"><code class="docutils literal notranslate"><span class="pre">synap_cli_ic</span></code> Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#synap-cli-od-application"><code class="docutils literal notranslate"><span class="pre">synap_cli_od</span></code> Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#synap-cli-ip-application"><code class="docutils literal notranslate"><span class="pre">synap_cli_ip</span></code> Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#synap-cli-ic2-application"><code class="docutils literal notranslate"><span class="pre">synap_cli_ic2</span></code> Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#synap-cli-application"><code class="docutils literal notranslate"><span class="pre">synap_cli</span></code> Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#synap-init-application"><code class="docutils literal notranslate"><span class="pre">synap_init</span></code> Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nnapi.html">Using Online Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">Reference Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics And Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working_with_models.html">Working With Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="framework_api.html">Framework API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="npu_operators.html">Neural Network Processing Unit Operator Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="java.html">Direct Access In Android Applications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SyNAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h1>
+<p>The simplest way to start experimenting with <em>Synp</em> is to use the sample precompiled models and
+applications that come preinstalled on the board.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>On Android the sample models can be found in <code class="code docutils literal notranslate"><span class="pre">/vendor/firmware/models/</span></code> while
+on Yocto Linux they are in <code class="code docutils literal notranslate"><span class="pre">/usr/share/synap/models/</span></code>.
+In this document we will refer to this directory as <code class="code docutils literal notranslate"><span class="pre">$MODELS</span></code>.</p>
+</div>
+<p>The models are organized in broad categires according to the type of data they take in input and
+the information they generate in output.
+Inside each category, models are organized per topic (for example “imagenet”) and for each
+topic a set of models and sample input data is provided.</p>
+<p>For each category a corresponding command line test application is provided.</p>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">Model Classification</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 10%" />
+<col style="width: 40%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Category</strong></p></th>
+<th class="head"><p><strong>Input</strong></p></th>
+<th class="head"><p><strong>Output</strong></p></th>
+<th class="head"><p><strong>Test App</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>image_classification</p></td>
+<td><p>image</p></td>
+<td><p>probabilities (one per class)</p></td>
+<td><p>synap_cli_ic</p></td>
+</tr>
+<tr class="row-odd"><td><p>object_detection</p></td>
+<td><p>image</p></td>
+<td><p>detections (bound.box+class+probability)</p></td>
+<td><p>synap_cli_od</p></td>
+</tr>
+<tr class="row-even"><td><p>image_processing</p></td>
+<td><p>image</p></td>
+<td><p>image</p></td>
+<td><p>synap_cli_ip</p></td>
+</tr>
+</tbody>
+</table>
+<p>In addition to the specific applications listed above <code class="docutils literal notranslate"><span class="pre">synap_cli</span></code> can be used to execute models of
+all categories. The purpose of this application is not to provide high-level outputs but to measure
+inference timings. This is the only sample application that can be used with models
+requiring secure inputs or outputs.</p>
+<section id="synap-cli-ic-application">
+<span id="synap-cli-ic"></span><h2><code class="docutils literal notranslate"><span class="pre">synap_cli_ic</span></code> Application<a class="headerlink" href="#synap-cli-ic-application" title="Permalink to this headline"></a></h2>
+<p>This command line application allows to easily execute <em>image_classification</em> models.</p>
+<p>It takes in input:</p>
+<ul class="simple">
+<li><p>the converted synap model (<em>.synap</em> extension)</p></li>
+<li><p>one or more images (<em>jpeg</em> or <em>png</em> format)</p></li>
+</ul>
+<p>It generates in output:</p>
+<ul class="simple">
+<li><p>the top5 most probable classes for each input image provided</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The jpeg/png input image(s) are resized in SW to the size of the network input tensor. This
+is not included in the classification time displayed.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cd $MODELS/image_classification/imagenet/model/mobilenet_v2_1.0_224_quant
+$ synap_cli_ic -m model.synap ../../sample/goldfish_224x224.jpg
+Loading network: model.synap
+Input image: ../../sample/goldfish_224x224.jpg
+Classification time: 3.00 ms
+Class  Confidence  Description
+    1       18.99  goldfish, Carassius auratus
+  112        9.30  conch
+  927        8.70  trifle
+   29        8.21  axolotl, mud puppy, Ambystoma mexicanum
+  122        7.71  American lobster, Northern lobster, Maine lobster, Homarus americanus
+</pre></div>
+</div>
+</section>
+<section id="synap-cli-od-application">
+<h2><code class="docutils literal notranslate"><span class="pre">synap_cli_od</span></code> Application<a class="headerlink" href="#synap-cli-od-application" title="Permalink to this headline"></a></h2>
+<p>This command line application allows to easily execute <em>object_detection</em> models.</p>
+<p>It takes in input:</p>
+<ul class="simple">
+<li><p>the converted synap model (<em>.synap</em> extension)</p></li>
+<li><p>optionally the confidence threshold for detected objects</p></li>
+<li><p>one or more images (<em>jpeg</em> or <em>png</em> format)</p></li>
+</ul>
+<p>It generates in output:</p>
+<ul>
+<li><p>the list of object detected for each input image provided and for each of them the following information:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>bounding box</p></li>
+<li><p>class index</p></li>
+<li><p>confidence</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The jpeg/png input image(s) are resized in SW to the size of the network input tensor.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cd $MODELS/object_detection/people/model/mobilenet224_full1/
+$ synap_cli_od -m model.synap ../../sample/sample001_640x480.jpg
+Input image: ../../sample/sample001_640x480.jpg (w = 640, h = 480, c = 3)
+Detection time: 26.94 ms
+#   Score  Class  Position  Size     Description
+0   0.95       0   94,193    62,143  person
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The output of object detection models is not standardized, many different formats exist.
+The output format used has to be specified when the model is converted, see <a class="reference internal" href="working_with_models.html#model-conversion-tutorial"><span class="std std-ref">Model Conversion Tutorial</span></a>.
+If this information is missing or the format is unknown <code class="docutils literal notranslate"><span class="pre">synap_cli_od</span></code> doesn’t know how to
+interpret the result and so it fails with an error message: <em>“Failed to initialize detector”</em>.</p>
+</div>
+</section>
+<section id="synap-cli-ip-application">
+<span id="synap-cli-ip"></span><h2><code class="docutils literal notranslate"><span class="pre">synap_cli_ip</span></code> Application<a class="headerlink" href="#synap-cli-ip-application" title="Permalink to this headline"></a></h2>
+<p>This command line application allows to execute <em>image_processing</em> models.
+The most common case is the execution of super-resolution models that take in input a low-resolution
+image and generate in output a higher resolution image.</p>
+<p>It takes in input:</p>
+<ul class="simple">
+<li><p>the converted synap model (<em>.synap</em> extension)</p></li>
+<li><p>optionally the region of interest in the image (if supported by the model)</p></li>
+<li><p>one or more raw images with one of the following extensions:
+<em>nv12</em>, <em>nv21</em>, <em>rgb</em>, <em>bgr</em>, <em>bgra</em>, <em>gray</em>  or <em>bin</em></p></li>
+</ul>
+<p>It generates in output:</p>
+<ul class="simple">
+<li><p>a file containing the processed image in for each input file.
+The output file is called <code class="docutils literal notranslate"><span class="pre">outimage&lt;i&gt;_&lt;W&gt;x&lt;H&gt;.&lt;ext&gt;</span></code>, where &lt;i&gt; is the index of the corresponding
+input file, &lt;W&gt; and &lt;H&gt; are the dimension of the image, and &lt;ext&gt; depends on the type of the
+output image, for example <code class="docutils literal notranslate"><span class="pre">nv12</span></code> or <code class="docutils literal notranslate"><span class="pre">rgb</span></code>.
+By output files are created in the current directory, this can be changed with the <code class="docutils literal notranslate"><span class="pre">--out-dir</span></code> option.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The input image(s) are automatically resized to the size of the network input tensor.
+This is not supported for <code class="docutils literal notranslate"><span class="pre">nv12</span></code>: if the network takes in input an <code class="docutils literal notranslate"><span class="pre">nv12</span></code> image,
+the file provided in input must have the same format and the <em>WxH</em> dimensions of the image must
+correspond to the dimensions of the input tensor of the network.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Any <code class="docutils literal notranslate"><span class="pre">png</span></code> and <code class="docutils literal notranslate"><span class="pre">jpeg</span></code> image can be converted to <code class="docutils literal notranslate"><span class="pre">nv12</span></code> and rescaled to the required size
+using the <code class="docutils literal notranslate"><span class="pre">image_to_raw</span></code> command available in the <em>SyNAP</em> <code class="docutils literal notranslate"><span class="pre">toolkit</span></code>
+(for more info see <a class="reference internal" href="working_with_models.html#using-docker-label"><span class="std std-ref">Installing Docker</span></a>).
+In the same way the generated raw <code class="docutils literal notranslate"><span class="pre">nv12</span></code> or <code class="docutils literal notranslate"><span class="pre">rgb</span></code> images can be converted to <code class="docutils literal notranslate"><span class="pre">png</span></code> or <code class="docutils literal notranslate"><span class="pre">jpeg</span></code>
+format using the <code class="docutils literal notranslate"><span class="pre">image_from_raw</span></code> command.</p>
+</div>
+<p>Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cd $MODELS/image_processing/super_resolution/model/sr_qdeo_y_uv_1920x1080_3840x2160
+$ synap_cli_ip -m model.synap ../../sample/ref_1920x1080.nv12
+Input buffer: input_0 size: 1036800
+Input buffer: input_1 size: 2073600
+Output buffer: output_13 size: 4147200
+Output buffer: output_14 size: 8294400
+
+Input image: ../../sample/ref_1920x1080.nv12
+Inference time: 30.91 ms
+Writing output to file: outimage0_3840x2160.nv12
+</pre></div>
+</div>
+</section>
+<section id="synap-cli-ic2-application">
+<span id="synap-cli-ic2"></span><h2><code class="docutils literal notranslate"><span class="pre">synap_cli_ic2</span></code> Application<a class="headerlink" href="#synap-cli-ic2-application" title="Permalink to this headline"></a></h2>
+<p>This application executes two models in sequence, the input image is fed to the first model and
+its output is then fed to the second one which is used to perform classification as in <code class="docutils literal notranslate"><span class="pre">synap_cli_ic</span></code>.
+It provides an easy way to experiment with 2-stage inference, where for example the
+the first model is a <em>preprocessing</em> model for downscaling and/or format conversion
+(see <code class="xref std std-numref docutils literal notranslate"><span class="pre">conversion_models</span></code>) and the second is an <em>image_classification</em> model.</p>
+<p>It takes in input:</p>
+<ul class="simple">
+<li><p>the converted synap <em>preprocessing</em> model (<em>.synap</em> extension)</p></li>
+<li><p>the converted synap <em>classification</em> model (<em>.synap</em> extension)</p></li>
+<li><p>one or more images (<em>jpeg</em> or <em>png</em> format)</p></li>
+</ul>
+<p>It generates in output:</p>
+<ul class="simple">
+<li><p>the top5 most probable classes for each input image provided</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The shape of the output tensor of the first model must match that of the input of the second model.</p>
+</div>
+<p>As an example we can use a preprocessing model to convert and rescale a <code class="docutils literal notranslate"><span class="pre">NV12</span></code> image to <code class="docutils literal notranslate"><span class="pre">RGB</span></code>
+so that it can be processed by the standard <code class="docutils literal notranslate"><span class="pre">mobilenet_v2_1.0_224_quant</span></code> model:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ pp=$MODELS/image_processing/preprocess/model/convert_nv12@1920x1080_rgb@224x224
+$ cd $MODELS/image_classification/imagenet/model/mobilenet_v2_1.0_224_quant
+$ synap_cli_ic2 -m $pp/model.synap -m2 model.synap ../../sample/goldfish_1920x1080.nv12
+
+Inference time: 4.34 ms
+Class  Confidence  Description
+    1       19.48  goldfish, Carassius auratus
+  122       10.68  American lobster, Northern lobster, Maine lobster, Homarus americanus
+  927        9.69  trifle
+  124        9.69  crayfish, crawfish, crawdad, crawdaddy
+  314        9.10  cockroach, roach
+</pre></div>
+</div>
+<p>The classification output is very close to what we get in <code class="xref std std-numref docutils literal notranslate"><span class="pre">synap_cli_ic</span></code>, the minor difference
+is due to the difference in the image rescaled from NV12. The bigger overall inference time is
+due to the processing required to perform rescale and conversion of the input 1920x1080 image.</p>
+</section>
+<section id="synap-cli-application">
+<h2><code class="docutils literal notranslate"><span class="pre">synap_cli</span></code> Application<a class="headerlink" href="#synap-cli-application" title="Permalink to this headline"></a></h2>
+<p>This command line application can be used to run models of all categories.
+The purporse of <code class="code docutils literal notranslate"><span class="pre">synap_cli</span></code> is not to show inference results but to benchmark the network
+execution times. So it provides additional options that allow to run inference mutiple time in order
+to collect statistics.</p>
+<p>An additional feature is that <code class="code docutils literal notranslate"><span class="pre">synap_cli</span></code> can automatically generate input images with random
+content. This makes it easy to test any model even without having a suitable input file available.</p>
+<p>Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cd $MODELS/image_classification/imagenet/model/mobilenet_v2_1.0_224_quant
+$ synap_cli -m model.synap -r 50 random
+Flush/invalidate: yes
+Loop period (ms): 0
+Network inputs: 1
+Network outputs: 1
+Input buffer: input_0 size: 150528 : random
+Output buffer: output_66 size: 1001
+
+Predict #0: 2.68 ms
+Predict #1: 1.81 ms
+Predict #2: 1.79 ms
+Predict #3: 1.79 ms
+.....
+Inference timings (ms):  load: 55.91  init: 3.84  min: 1.78  median: 1.82  max: 2.68  stddev: 0.13  mean: 1.85
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Specifying a <code class="docutils literal notranslate"><span class="pre">random</span></code> input is the only way to execute models requiring secure inputs.</p>
+</div>
+</section>
+<section id="synap-init-application">
+<h2><code class="docutils literal notranslate"><span class="pre">synap_init</span></code> Application<a class="headerlink" href="#synap-init-application" title="Permalink to this headline"></a></h2>
+<p>The purpose of this application is not to execute a model but just to initialize and lock the NPU.
+It can be used to simulate a process locking the NPU for his exclusive usage.</p>
+<p>Example to lock NPU access:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ synap_init -i --lock
+</pre></div>
+</div>
+<p>The lock is released when the program exits or is terminated.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This prevents any process from accessing the NPU via both NNAPI and direct SyNAP API.
+Please refer to the next section to disable NPU access only for NNAPI.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While the NPU is locked it is still possible to create a Network from another process, but any
+attempts to do inference will fail.
+When this occours, the appropriate error message is added to the system log:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ synap_cli_ic
+Loading network: /vendor/firmware/models/image_classification/imagenet/model/mobilenet_v2_1.0_224_quant/model.synap
+Inference failed
+$ dmesg | grep NPU
+[ 1211.651] SyNAP: cannot execute model because the NPU is reserved by another user
+</pre></div>
+</div>
+</div>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"></a></h2>
+<p>SyNAP libraries and command line applications generate logging messages to help troubleshooting
+in case something goes wrong. On Android these messages appear in logcat, while on linux they are sent
+directly to the console.</p>
+<p>There are 4 logging levels:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>0: verbose</p></li>
+<li><p>1: info</p></li>
+<li><p>2: warning</p></li>
+<li><p>3: error</p></li>
+</ul>
+</div></blockquote>
+<p>The default level is 3, so that only error logs are generated.
+It is possible to select a different level by setting the SYNAP_NB_LOG_LEVEL environment variable
+before starting the application, for example to enable logs up to <code class="docutils literal notranslate"><span class="pre">info</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>export SYNAP_NB_LOG_LEVEL=1
+logcat -c; synap_cli_ic; logcat -d | grep SyNAP
+Input image: /vendor/firmware/models/image_classification/imagenet/sample/space_shuttle_224x224.jpg
+Classification time: 3.16 ms
+Class  Confidence  Description
+  812       19.48  space shuttle
+  ...
+1-08 15:10:57.185 830 830 I SyNAP : get_network_attrs():70: Parsing network metadata
+1-08 15:10:57.185 830 830 I SyNAP : load_model():252: Network inputs: 1
+1-08 15:10:57.185 830 830 I SyNAP : load_model():253: Network outputs: 1
+1-08 15:10:57.191 830 830 I SyNAP : resume_cpu_access():65: Resuming cpu access on dmabuf: 5
+1-08 15:10:57.193 830 830 I SyNAP : set_buffer():208: Buffer set for tensor: input_0
+1-08 15:10:57.193 830 830 I SyNAP : resume_cpu_access():65: Resuming cpu access on dmabuf: 6
+1-08 15:10:57.193 830 830 I SyNAP : set_buffer():208: Buffer set for tensor: output_66
+1-08 15:10:57.193 830 830 I SyNAP : do_predict():83: Start inference
+1-08 15:10:57.193 830 830 I SyNAP : suspend_cpu_access():54: Suspending cpu access on dmabuf: 5
+1-08 15:10:57.195 830 830 I SyNAP : do_predict():95: Inference time: 2.33 ms
+1-08 15:10:57.195 830 830 I SyNAP : resume_cpu_access():65: Resuming cpu access on dmabuf: 6
+1-08 15:10:57.196 830 830 I SyNAP : unregister_buffer():144: Detaching buffer from input tensor input_0
+1-08 15:10:57.196 830 830 I SyNAP : set_buffer():177: Unset buffer for: input_0
+1-08 15:10:57.196 830 830 I SyNAP : unregister_buffer():150: Detaching buffer from output tensor output_66
+1-08 15:10:57.196 830 830 I SyNAP : set_buffer():177: Unset buffer for: output_66
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nnapi.html" class="btn btn-neutral float-right" title="Using Online Inference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, 2022, 2023, 2024, Synaptics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

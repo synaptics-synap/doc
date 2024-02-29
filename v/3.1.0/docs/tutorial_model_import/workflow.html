@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Import Workflow Example &mdash; SyNAP Model Import and Quantization 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/synaptics_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/synaptics_theme.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SyNAP Model Import and Quantization
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Import Workflow Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preliminary-evaluation">Preliminary Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-an-appropriate-input-size">Use An Appropriate Input Size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quantize-model">Quantize Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remove-un-necessary-layers">Remove Un-Necessary Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#improve-quantization-dataset">Improve Quantization Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#per-channel-and-kl-divergence-quantization">Per-Channel And KL_Divergence Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bits-quantization">16-Bits Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mixed-quantization">Mixed Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remove-un-needed-outputs">Remove Un-Needed Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#perform-input-preprocessing-with-the-npu">Perform Input Preprocessing With The NPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#i-still-can-t-meet-my-requirements">I Still Can’t Meet My Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SyNAP Model Import and Quantization</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Import Workflow Example</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="import-workflow-example">
+<h1>Import Workflow Example<a class="headerlink" href="#import-workflow-example" title="Permalink to this headline"></a></h1>
+<p>In order to show how SyNAP toolkit can be used in practice, we show here the use-case of
+converting a face-detection model.
+Even if we present a specific use-case, the same techniques and ideas are valid in general.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For detailed information and description on the commands and options used in this document
+please refer to the SyNAP user manual: <em>SyNAP.pdf</em>.</p>
+</div>
+<section id="use-case">
+<h2>Use Case<a class="headerlink" href="#use-case" title="Permalink to this headline"></a></h2>
+<p>We would like to perform face-detection on images. Instead of developing our own model,
+we search a bit online and we see that the <em>YOLOv5-face</em> model seems a good fit.
+Of course we want to have a good accuracy and we want to run our model at 30 FPS on our <em>VS680 EVK</em>
+board, so overall inference time must be less than 33ms.</p>
+</section>
+<section id="preliminary-evaluation">
+<h2>Preliminary Evaluation<a class="headerlink" href="#preliminary-evaluation" title="Permalink to this headline"></a></h2>
+<p>We find a pre-trained, pre-quantized <code class="docutils literal notranslate"><span class="pre">yolov5s_face_640x640.tflite</span></code> so we want to try it to have an
+idea of the level of performance we can expect.
+We compile it using SyNAP toolkit, download it to the board and measure inference time using the
+<code class="docutils literal notranslate"><span class="pre">synap_cli</span></code> application.
+Since our <em>tflite</em> model is already prequantized, it can be converted directly without any additional
+complication.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">$ synap convert --model yolov5s_face_640x640.tflite --target VS680 --out-dir compiled</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">$ ls compiled</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">model.synap  model_info.txt</span><span class="w"></span>
+
+<span class="l l-Scalar l-Scalar-Plain">$ adb shell mkdir /data/local/tmp/test</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">$ adb push compiled/model.synap /data/local/tmp/test</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">$ adb shell &quot;cd /data/local/tmp/test &amp;&amp; synap_cli -r 5 random&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">....</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Predict</span><span class="w"> </span><span class="c1">#0: 43.58 ms</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Predict</span><span class="w"> </span><span class="c1">#1: 43.48 ms</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Predict</span><span class="w"> </span><span class="c1">#2: 44.12 ms</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Predict</span><span class="w"> </span><span class="c1">#3: 42.07 ms</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Predict</span><span class="w"> </span><span class="c1">#4: 43.24 ms</span><span class="w"></span>
+
+<span class="w">    </span><span class="nt">Inference timings (ms)</span><span class="p">:</span><span class="w">  </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="nt">145.11  init</span><span class="p">:</span><span class="w"> </span><span class="nt">28.47  min</span><span class="p">:</span><span class="w"> </span><span class="nt">42.07  median</span><span class="p">:</span><span class="w"> </span><span class="nt">43.47  max</span><span class="p">:</span><span class="w"> </span><span class="nt">44.12  stddev</span><span class="p">:</span><span class="w"> </span><span class="nt">0.68  mean</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">43.29</span><span class="w"></span>
+</pre></div>
+</div>
+<p>We notice that inference time is about <strong>43ms</strong>, above our desired target but still reasonable, so it makes
+sense to work on this to optimize things. The first thing we check is if the input size
+is correct for our application.</p>
+</section>
+<section id="use-an-appropriate-input-size">
+<h2>Use An Appropriate Input Size<a class="headerlink" href="#use-an-appropriate-input-size" title="Permalink to this headline"></a></h2>
+<p>In Neural Networks the size of the input plays often a major role in the resulting inference time,
+in particular when many convolution layers are involved, so it is always a good idea to check
+if the size and shape of the input is adequate for what we want to achieve.
+In our case the image comes from a camera with 4:3 aspect ratio. To fit it in a 640x640 network
+we have to add padding bands at the top and at the bottom. These added pixels will be fully processed
+by the network as the real pixels, but they actually contain nothing so this additional processing
+is just a waste of time. Ideally we need a network with the same aspect ratio of our input,
+that is 640x480 in our case. We might also consider a smaller input (e.g. 320x240) for some application
+but in our case we think that 640x480 is right.</p>
+<p>We clone the PINTO model zoo from <code class="docutils literal notranslate"><span class="pre">https://github.com/PINTO0309/PINTO_model_zoo</span></code> we run the script
+<code class="docutils literal notranslate"><span class="pre">130_YOLOv5_Face/download.sh</span></code> and we use the model
+<code class="docutils literal notranslate"><span class="pre">130_YOLOv5_Face/saved_model_yolov5s_face_480x640/yolov5s_face_480x640.onnx</span></code>.
+We take the sample image from the board: <code class="docutils literal notranslate"><span class="pre">adb</span> <span class="pre">pull</span> <span class="pre">$MODELS/object_detection/face/sample/face_720p.jpg</span> <span class="pre">.</span></code></p>
+<p>Before investing time and effort in compiling and optimizing a model it’s always a good idea to test
+the execution of the original model on a PC. This phase can be as simple as running the model on
+a couple of sample images and checking that the result matches our expectation, or as complex as
+putting in place a test bench to evaluate its accuray on multiple reference datasets.
+Most models that we can find open source are provided with some test code that can be used to execute
+them out of the box: this is often good enough for a preliminary assessment.</p>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="_images/result_cvdnn.jpg"><img alt="_images/result_cvdnn.jpg" src="_images/result_cvdnn.jpg" style="width: 640.0px; height: 360.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 5 </span><span class="caption-text">Detections from running the original model on a PC</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The result seems good, so we can go on, compile the model and run it on the board as before:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ synap convert --model yolov5s_face_480x640.onnx --target VS680 --out-dir compiled
+$ adb push compiled/model.synap /data/local/tmp/test
+$ adb shell <span class="s2">&quot;cd /data/local/tmp/test &amp;&amp; synap_cli -r 5 random&quot;</span>
+    ....
+    Predict <span class="c1">#0: 2240.05 ms</span>
+    Predict <span class="c1">#1: 2228.61 ms</span>
+    Predict <span class="c1">#2: 2363.15 ms</span>
+    Predict <span class="c1">#3: 2272.57 ms</span>
+    Predict <span class="c1">#4: 2241.46 ms</span>
+
+    Inference timings <span class="o">(</span>ms<span class="o">)</span>:  load: <span class="m">356</span>.74  init: <span class="m">73</span>.25  min: <span class="m">2228</span>.60  median: <span class="m">2241</span>.45  max: <span class="m">2363</span>.14  stddev: <span class="m">49</span>.20  mean: <span class="m">2269</span>.16
+</pre></div>
+</div>
+<p>Surprisingly inference time is now about 50 times slower than what we had with the previous model.
+We open the <em>onnx</em> model with Netron (<a class="reference external" href="https://github.com/lutzroeder/netron">https://github.com/lutzroeder/netron</a>) and we notice that
+this is a floating point model. So the high inference time is not surprising at all,
+in order to run it efficiently on the NPU we have to quantize it.</p>
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="_images/yolov5float.png"><img alt="_images/yolov5float.png" src="_images/yolov5float.png" style="width: 1008.0px; height: 712.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 6 </span><span class="caption-text">Floating point YOLOv5 model</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>use a model with an appropriate input tensor size and aspect ratio for the intended application</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>do an assessment of the original model on a PC before embarking in the quantization process.
+This will provide a reference against which to benchmark the quantized model</p>
+</div>
+</section>
+<section id="quantize-model">
+<h2>Quantize Model<a class="headerlink" href="#quantize-model" title="Permalink to this headline"></a></h2>
+<p>Model quantization can be done during training (Quantization-Aware Training) in frameworks
+such as Tensorflow and PyTorch. This quantization technique is the one that can in principle
+provide the best results in term of accuracy of the generated model. In alternative the same
+frameworks also allow to perform quantization <em>after</em> a model has been trained (Post Training Quantization).</p>
+<p>Quantized models can be imported directly with SyNAP.
+In our case we already have a trained floating point model in  <em>onnx</em> format, so converting it back
+to a format suitable for quantization with one of these frameworks is cumbersome.
+The simplest way is to perform quantization when the model is compiled using the SyNAP toolkit.</p>
+<p>Quantization requires running inference on a set of representative input files (quantization data set),
+so that it is possible to determine the expected data range for all the tensors in the network.
+From these data ranges the quantization parameters for each layer can be derived using suitable algorithms.</p>
+<p>The list of files in the quantization data set has to be specified when the model is converted
+using SyNAP toolkit. In order to avoid complicated command lines, the toolkit uses the approach of
+having all the conversion options, including the qauantization dataset, in a single <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file
+know as the <em>conversion metafile</em> which is specified when the model is converted:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rgb</span><span class="w"></span>
+<span class="nt">outputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yolov5 landmarks=5 anchors=[[],[],[],[4,5,8,10,13,16],[23,29,43,55,73,105],[146,217,231,300,335,433]]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asymmetric_affine</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dataset</span><span class="p">:</span><span class="w">   </span><span class="c1"># One entry for each input of the model</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qdataset/*.jpg</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The dequantize option is set to true for each output (the model we are using has 3 outputs) so that
+the conversion to floating point is done using the NPU, this is much faster that performing the conversion in SW.
+The output format specification is not required to perform the conversion,
+but it will be embedded in the generated model metadata and will be used by SyNAP postprocessing
+library to understand how to interpred the model output. This is required only for the first output.
+The anchors depend on how the model has been trained, we took them directly from yolov5-face git:
+<a class="reference external" href="https://github.com/deepcam-cn/yolov5-face/blob/master/models/yolov5s.yaml">https://github.com/deepcam-cn/yolov5-face/blob/master/models/yolov5s.yaml</a>
+The dataset specification can contain wildcard,
+here we have resized some sample image using an external tool to 640x480 and put them in the <code class="docutils literal notranslate"><span class="pre">qdataset</span></code> directory.</p>
+<p>We convert and quantize the model:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ synap convert --model yolov5s_face_480x640.onnx --meta yolo.yaml --target VS680 --out-dir compiled
+</pre></div>
+</div>
+<p>Measure inference time:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ adb shell <span class="s2">&quot;cd /data/local/tmp/test &amp;&amp; synap_cli -r 5 random&quot;</span>
+    ....
+    Predict <span class="c1">#0: 31.25 ms</span>
+    Predict <span class="c1">#1: 28.75 ms</span>
+    Predict <span class="c1">#2: 28.06 ms</span>
+    Predict <span class="c1">#3: 28.35 ms</span>
+    Predict <span class="c1">#4: 28.84 ms</span>
+
+    Inference timings <span class="o">(</span>ms<span class="o">)</span>:  load: <span class="m">135</span>.78  init: <span class="m">19</span>.65  min: <span class="m">28</span>.05  median: <span class="m">28</span>.75  max: <span class="m">31</span>.25  stddev: <span class="m">1</span>.14  mean: <span class="m">29</span>.05
+</pre></div>
+</div>
+<p>Now we run object detection using the <code class="docutils literal notranslate"><span class="pre">synap_cli_od</span></code> application:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ adb push compiled/model.synap /data/local/tmp/test
+$ adb shell <span class="s2">&quot;cd /data/local/tmp/test &amp;&amp; synap_cli_od face_720p.jpg&quot;</span>
+Loading network: model.synap
+...
+Input image: face_720p.jpg <span class="o">(</span><span class="nv">w</span> <span class="o">=</span> <span class="m">1280</span>, <span class="nv">h</span> <span class="o">=</span> <span class="m">720</span>, <span class="nv">c</span> <span class="o">=</span> <span class="m">3</span><span class="o">)</span>
+<span class="o">{</span>
+  <span class="s2">&quot;items&quot;</span>: <span class="o">[]</span>,
+  <span class="s2">&quot;success&quot;</span>: <span class="nb">true</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Median inference time is now less than <strong>29ms</strong>, an improvement of more than 30% over the previous model.
+Unfortunately the result is no detection at all. Something went wrong.
+After double checking everything we find two issues in what we did:</p>
+<ol class="arabic simple">
+<li><p>we didn’t specify preprocessing options for the input</p></li>
+<li><p>when we converted the images in the quantization dataset to 640x480 we didn’t preserve the aspect ratio,
+so images which where for example square or 16:9 got distorted when we resized them to 640x480</p></li>
+</ol>
+<p>The effect of 1 and 2 is that we didn’t use a representative quantization data set,
+so the model was not quantized correctly.</p>
+<p>We fix point 1 by specifying in the conversion metafile the same processing options used during training
+(we can normally find them in the sample inference code that comes with the model if they are not
+specified explicitly in the model documentation).
+We fix point 2 by replacing the content of our <code class="docutils literal notranslate"><span class="pre">qdataset</span></code> directory with the original images,
+SyNAP toolkit will take care of resizing them correcly by adding bands if needed to avoid distortion.
+Here our fixed metafile:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">means</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">255</span><span class="w"></span>
+<span class="nt">outputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yolov5 landmarks=5 anchors=[[],[],[],[4,5,8,10,13,16],[23,29,43,55,73,105],[146,217,231,300,335,433]]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asymmetric_affine</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dataset</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qdataset/*.jpg</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Execution now begins to provide some detections:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">$ adb shell &quot;cd /data/local/tmp/test &amp;&amp; synap_cli_od face_720p.jpg&quot;</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">Loading network</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">model.synap</span><span class="w"></span>
+<span class="nn">...</span><span class="w"></span>
+<span class="nt">Input image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">face_720p.jpg (w = 1280, h = 720, c = 3)</span><span class="w"></span>
+<span class="p p-Indicator">{</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;items&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">{</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;bounding_box&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;origin&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"></span>
+<span class="w">            </span><span class="s">&quot;x&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">507</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">            </span><span class="s">&quot;y&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">310</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">},</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;size&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="w"></span>
+<span class="w">            </span><span class="s">&quot;x&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">106</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">            </span><span class="s">&quot;y&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">135</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">}</span><span class="w"></span>
+<span class="w">        </span><span class="p p-Indicator">},</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;class_index&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;confidence&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">0.8831787705421448</span><span class="p p-Indicator">,</span><span class="w"></span>
+<span class="w">        </span><span class="nv">...</span><span class="w"></span>
+</pre></div>
+</div>
+<p>In order to see the detection boxes on the image we can redirect the output of <code class="docutils literal notranslate"><span class="pre">synap_cli_od</span></code> to
+the <code class="docutils literal notranslate"><span class="pre">image_od</span></code> tool provided in the toolkit. This will generate a new image with the bounding
+boxes and landmarks:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>adb shell <span class="s2">&quot;cd /data/local/tmp/test &amp;&amp; synap_cli_od face_720p.jpg&quot;</span>  <span class="p">|</span> synap image_od -i face_720p.jpg -o face_720p_out.jpg
+</pre></div>
+</div>
+<figure class="align-default" id="id3">
+<a class="reference internal image-reference" href="_images/result_synap_fixed_quant_n_image.jpg"><img alt="_images/result_synap_fixed_quant_n_image.jpg" src="_images/result_synap_fixed_quant_n_image.jpg" style="width: 640.0px; height: 360.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 7 </span><span class="caption-text">Detections from our quantized model (face_720p_out.jpg)</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>specify the correct preprocessing options in the conversion metafile (mean and scale)
+be sure they are the same as those used during training and inference</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>use representative undistorted images in the quantization dataset. This is important to ensure
+that the activations of all layers take the same distribution of values that will be found
+during inference</p>
+</div>
+<p>The quantized model now provides detections which are reasonable but far from good, in particular
+for the landmarks where we need a high precision in order to be useful.
+Before looking at how to improve the quantization let’s see how to optimize the model even more.</p>
+</section>
+<section id="remove-un-necessary-layers">
+<span id="prune"></span><h2>Remove Un-Necessary Layers<a class="headerlink" href="#remove-un-necessary-layers" title="Permalink to this headline"></a></h2>
+<p>If we look at the final layers in our model we can observe that the last two layers for each output
+are a <em>Reshape</em> and <em>Transpose</em>. While these layers are fully supported by the NPU, there is no
+real computation going on, the data is just being moved around in memory, and the NPU is not faster
+than the CPU in this task. Furthermore since we have to perform postprocessing anyway we can write
+our code to support the data format as it is before these layers, so no data movement is needed at all.</p>
+<p>Removing these layers from the ONNX model itself is possible but requires editing the model using the ONNX API
+which is not trivial. Things are even more complicated in the case of <code class="docutils literal notranslate"><span class="pre">tflite</span></code> or <code class="docutils literal notranslate"><span class="pre">caffe</span></code> models.</p>
+<figure class="align-default" id="id4">
+<a class="reference internal image-reference" href="_images/yolov5head.png"><img alt="_images/yolov5head.png" src="_images/yolov5head.png" style="width: 856.8px; height: 604.8px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 8 </span><span class="caption-text">Final layers of yolov5s_face_480x640.onnx</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>This is a situation that happens quite often so SyNAP toolkit provides a way to remove these layers
+from the generated model at conversion time, without modifying the original model: all we have to
+do is specify the name of the final tensor(s) in the conversion metafile, all the layers after
+these tensors will be ignored and omitted from the compiled model.
+Our model has 3 outputs, so we prune each of them after the last convolution, at tensors
+“349”, “369” and “389”.</p>
+<p>Since the layout of the data in the output tensors will now be different, we also have to inform
+the postprocessing code so that it can interpret the results correctly. This is done with the
+<code class="docutils literal notranslate"><span class="pre">transposed=1</span></code> option in the format string:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">means</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">255</span><span class="w"></span>
+<span class="nt">outputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;349&quot;</span><span class="w">  </span><span class="c1"># Name of the output tensor of the last layer we want to keep</span><span class="w"></span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yolov5 landmarks=5 transposed=1 anchors=[[],[],[],[4,5,8,10,13,16],[23,29,43,55,73,105],[146,217,231,300,335,433]]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;369&quot;</span><span class="w">  </span><span class="c1"># Name of the output tensor of the last layer we want to keep</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;389&quot;</span><span class="w">  </span><span class="c1"># Name of the output tensor of the last layer we want to keep</span><span class="w"></span>
+
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asymmetric_affine</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dataset</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qdataset/*.jpg</span><span class="w"></span>
+</pre></div>
+</div>
+<p>When we compile the model with this metafile we obtain a <em>model.synap</em> which is now a bit smaller
+and the outputs listed in the generated <em>model_info.txt</em> are actually the outputs of the last convolution layer:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ cat compiled/model_info.txt
+...
+outputs:
+  - name: attach_Conv_Conv_212/out0
+    shape: <span class="o">[</span><span class="m">1</span>, <span class="m">48</span>, <span class="m">60</span>, <span class="m">80</span><span class="o">]</span>
+    layout: nchw
+    format: yolov5 <span class="nv">landmarks</span><span class="o">=</span><span class="m">5</span> <span class="nv">transposed</span><span class="o">=</span><span class="m">1</span>
+        <span class="nv">anchors</span><span class="o">=[[]</span>,<span class="o">[]</span>,<span class="o">[]</span>,<span class="o">[</span><span class="m">4</span>,5,8,10,13,16<span class="o">]</span>,<span class="o">[</span><span class="m">23</span>,29,43,55,73,105<span class="o">]</span>,<span class="o">[</span><span class="m">146</span>,217,231,300,335,433<span class="o">]]</span>
+    type: float32
+  - name: attach_Conv_Conv_228/out0
+    shape: <span class="o">[</span><span class="m">1</span>, <span class="m">48</span>, <span class="m">30</span>, <span class="m">40</span><span class="o">]</span>
+    layout: nchw
+    format: yolov5
+    type: float32
+  - name: attach_Conv_Conv_244/out0
+    shape: <span class="o">[</span><span class="m">1</span>, <span class="m">48</span>, <span class="m">15</span>, <span class="m">20</span><span class="o">]</span>
+    layout: nchw
+    format: yolov5
+    type: float32
+...
+</pre></div>
+</div>
+<p>Running this model with <code class="docutils literal notranslate"><span class="pre">synap_cli_od</span></code> we can see that the detections are exactly the same as before
+so pruning the model didn’t introduce any regression.
+But inference time is now a bit better, we measure a median inference time of <strong>26.86ms</strong>.
+We are now ready to see how we can fix the quantization issues.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Remove layers at the end of the model which are unnecessary or can be implemented faster using the CPU</p>
+</div>
+</section>
+<section id="improve-quantization-dataset">
+<h2>Improve Quantization Dataset<a class="headerlink" href="#improve-quantization-dataset" title="Permalink to this headline"></a></h2>
+<p>One common reason for bad quantization results is that the quantization dataset is not representative
+enough, that is there are situations in real use that have never occoured during quantization,
+so the corresponding activation values in some layers cannot be represented and saturate or overflow,
+generating completely wrong results. This can be fixed by adding more or better samples to
+the quantization dataset.</p>
+<p>Another possibility is that the range required to represent the weights or the activations is too wide,
+so the values cannot be represented with enough precision with the number of bits available. This can
+be fixed by increasing the number of quantization bits or in some cases by using a smarter
+quantization algorithm.</p>
+<p>One way to check if the issue comes from the quantization dataset is to go in the opposite direction,
+that is use a quantization dataset with one single (or very few) sample, and use the same sample for
+inference.
+If even in this case the result is bad, we can be pretty sure that adding more samples will not improve
+the situation and we have to fix the quantization in some other way.</p>
+<p>We requantize our model using the same metafile as before, but this time we quantize it using
+only the image we are using for inference:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span><span class="w"></span>
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asymmetric_affine</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dataset</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qdataset/face_720p.jpg</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The result we get is in the image here below.</p>
+<figure class="align-default" id="id5">
+<a class="reference internal image-reference" href="_images/result_synap_fixed_quant_1_image.jpg"><img alt="_images/result_synap_fixed_quant_1_image.jpg" src="_images/result_synap_fixed_quant_1_image.jpg" style="width: 640.0px; height: 360.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 9 </span><span class="caption-text">Result of quantizing the model with the same image used for inference</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Even with one single image the quantized result is poor, we now know that we have no hope
+of getting good results by just adding more samples to the quantization dataset.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Check quantization limits by doing quantization and inference with the same sample data.
+In case of bad results it will not help to increase the quantization dataset. First check that
+the preprocessing information specified in the metafile are correct then
+try with a different quantization algorithm, or quantize with more bits.</p>
+</div>
+</section>
+<section id="per-channel-and-kl-divergence-quantization">
+<h2>Per-Channel And KL_Divergence Quantization<a class="headerlink" href="#per-channel-and-kl-divergence-quantization" title="Permalink to this headline"></a></h2>
+<p>SyNAP supports per-channel quantization scheme: in this case quantization will produce a specific
+quantization scale for each channel, instead of a single scale for the entire tensor as in standard
+quantization. Having a separate scale for each channel can improve the results a lot in those
+models which have large differences in weights values inside a convolution.</p>
+<p>We can try per-channel quantization by specifying it in the conversion metafile:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span><span class="w"></span>
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int8</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">perchannel_symmetric_affine</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dataset</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qdataset/*.jpg</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Another possibility is to use a more advanced quantization algorithm. SyNAP toolkit provides
+<em>kl_divergence</em> algorithm, which is slower but can provide better results in problematic cases.
+As usual this can be configured in the conversion metafile:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span><span class="w"></span>
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asymmetric_affine</span><span class="w"></span>
+<span class="w">    </span><span class="nt">algorithm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kl_divergence</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dataset</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qdataset/*.jpg</span><span class="w"></span>
+</pre></div>
+</div>
+<p>In our case neither option showed visible improvements in the landmarks position.
+The only remaining option is to increase the number of bits used to represent quantized values.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>for problematic models per-channel quantization and/or kl_divergence algorithm can often provide better quantization results</p>
+</div>
+</section>
+<section id="bits-quantization">
+<h2>16-Bits Quantization<a class="headerlink" href="#bits-quantization" title="Permalink to this headline"></a></h2>
+<p>In addition to floating point and 8-bits computation, our NPU also supports 16-bits computation.
+To take advantage of this feature, SyNAP toolkit allows to quantize a model to 16-bits.
+This is a feature currently unavailable with standard <code class="docutils literal notranslate"><span class="pre">.tflite</span></code> models quantized with Tensorflow.
+16-bits inference is slower than 8-bits by a factor of around 2 to 3. This is a lot, but still
+much faster than floating-point inference and can provide a solution when 8-bits quantization
+provides unacceptable results.</p>
+<p>Again we configure this in the <code class="docutils literal notranslate"><span class="pre">quantization</span></code> section of the conversion metafile:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">means</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">255</span><span class="w"></span>
+<span class="nt">outputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;349&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yolov5 landmarks=5 transposed=1 anchors=[[],[],[],[4,5,8,10,13,16],[23,29,43,55,73,105],[146,217,231,300,335,433]]</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;369&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;389&quot;</span><span class="w"></span>
+
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dataset</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qdataset/*.jpg</span><span class="w"></span>
+</pre></div>
+</div>
+<p>We convert our model and test it with <code class="docutils literal notranslate"><span class="pre">synap_cli_od</span></code> as before. The landmarks position finally
+looks good!</p>
+<figure class="align-default" id="id6">
+<a class="reference internal image-reference" href="_images/result_synap_quant_16bits.jpg"><img alt="_images/result_synap_quant_16bits.jpg" src="_images/result_synap_quant_16bits.jpg" style="width: 640.0px; height: 360.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 10 </span><span class="caption-text">Detections from our model quantized with 16-bits</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Unfortunately, inference time don’t look good at all:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ adb shell <span class="s2">&quot;cd /data/local/tmp/test &amp;&amp; synap_cli -r 5 random&quot;</span>
+    ....
+    Predict <span class="c1">#0: 67.51 ms</span>
+    Predict <span class="c1">#1: 64.94 ms</span>
+    Predict <span class="c1">#2: 65.24 ms</span>
+    Predict <span class="c1">#3: 65.68 ms</span>
+    Predict <span class="c1">#4: 65.59 ms</span>
+
+    Inference timings <span class="o">(</span>ms<span class="o">)</span>:  load: <span class="m">338</span>.92  init: <span class="m">51</span>.61  min: <span class="m">64</span>.93  median: <span class="m">65</span>.58  max: <span class="m">67</span>.38  stddev: <span class="m">0</span>.85  mean: <span class="m">65</span>.76
+</pre></div>
+</div>
+<p>Median inference time is now around <strong>65ms</strong>, as expected we got an increase in inference time of more than two times.
+This is not acceptable for our application, what can we do?</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>16-bits quantization can normally provide good quantization results at the price of increased inference time</p>
+</div>
+</section>
+<section id="mixed-quantization">
+<h2>Mixed Quantization<a class="headerlink" href="#mixed-quantization" title="Permalink to this headline"></a></h2>
+<p>An additional feature of our NPU is the ability to specify the data type per layer. This is called
+<em>mixed quantization</em> and allows to select for each layer the data type to be used for the computation,
+so we can execute some layers in 8 bits, others in 16 bits fixed point and others in 16 bits floating point.
+This is another feature currently unavailable with standard quantized models and in many cases allows
+to find a good tradeoff between exceution speed and accuracy.</p>
+<p>The first question is how to choose which layers to keep in 8 bits and which would benefit more from
+a 16-bit quantization. From a theoretical point of view the best candidates for 16-bits quantization
+are the layers that introduce the largest quantization error. A common measure for this is the
+Kullback-Leibler divergence between the original and quantized weights and outputs distributions.
+When the <code class="docutils literal notranslate"><span class="pre">kl_divergence</span></code> algorithm is selected, SyNAP toolkit generates a <code class="docutils literal notranslate"><span class="pre">quantization_entropy.txt</span></code>
+file with the kl-divergence value of the weights and output for each layer.
+The higher (closer to 1) the kl-divergence, the bigger the quantization error introduced by the
+corresponding layer, and so the biggest advantage in quantizing it with 16-bits.</p>
+<p>In practice the kl-divergence is not the only factor to consider when deciding which layers
+to keep in 8-bits and which to move to 16 bits:</p>
+<ol class="arabic simple">
+<li><p>each change in data-type (8bits to 16bits or 16bits to 8bits) requires a corresponding
+layer to perform the data conversion. These layers are added automatically by SyNAP toolkit
+but at runtime each conversion takes time, so the number of data changes should be minimized</p></li>
+<li><p>the errors introduced don’t have all the same importance: in the initial part of the network
+when we are working with pixels that already have some noise, some additional quantization noise
+doesn’t normally generate much harm. In the final part of the network when we are already
+computing classes or coordinate offsets the effect of quantization errors can be much more visible.</p></li>
+</ol>
+<p>In order to combine the two approaches, we first compile the model using <code class="docutils literal notranslate"><span class="pre">algorithm:</span> <span class="pre">kl_divergence</span></code>
+and then we examine the generated  <code class="docutils literal notranslate"><span class="pre">quantization_entropy.txt</span></code> file.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>@Conv_Conv_0_212_acuity_mark_perm_220:out0, 0.27883491513891734
+@Conv_Conv_11_174:out0, 0.3733763339858789
+@Conv_Conv_17_191:out0, 0.4021046389971754
+@Sigmoid_Sigmoid_15_180_Mul_Mul_16_167:out0, 0.405560572116115
+@Conv_Conv_14_179:out0, 0.40564278569588696
+...
+@Conv_Conv_205_22:out0, 0.7342595588162942
+@Concat_Concat_208_15:out0, 0.7357854636814533
+@Conv_Conv_213_4:out0, 0.7585377393897166
+@Sigmoid_Sigmoid_206_23_Mul_Mul_207_16:out0, 0.7683961679254856
+@Sigmoid_Sigmoid_210_10_Mul_Mul_211_6:out0, 0.8057662225936256
+...
+@Conv_Conv_202_30:weight, 0.5096223462373272
+@Conv_Conv_6_203:weight, 0.5118887173396539
+@Conv_Conv_162_38:weight, 0.5121908770041979
+@Conv_Conv_169_13:weight, 0.5144894053732241
+@Conv_Conv_209_9:weight, 0.5147316014944239
+@Conv_Conv_3_213:weight, 0.5169572774188768
+@Conv_Conv_11_174:weight, 0.5183437879100847
+@Conv_Conv_192_59:weight, 0.5229359023069913
+@Conv_Conv_212_5:weight, 0.6613776358217723
+@Conv_Conv_213_4:weight, 0.696057611379417
+@Conv_Conv_214_3:weight, 0.7661783138044042
+</pre></div>
+</div>
+<p>We notice that in general the final layers tend to have a higher entropy than those at the beginning
+of the network. We also observe that our biggest problems are with the coordinates of the landmarks
+which are computed in the network head. So it seems a good idea to quantize the network backbone
+in 8-bits and the head in 16-bits.</p>
+<figure class="align-default" id="id7">
+<a class="reference internal image-reference" href="_images/yolov5head16.png"><img alt="_images/yolov5head16.png" src="_images/yolov5head16.png" style="width: 616.5px; height: 786.5px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 11 </span><span class="caption-text">Head of yolov5s_face_480x640.onnx</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>From the network diagram and documentation we see that most of the head processing occurs after layer <code class="docutils literal notranslate"><span class="pre">Concat_155</span></code>
+(circled red in the picture) so as a first guess we decide to quantize in 16 bits all the layers after this point.
+Luckily we don’t have to enumerate all those layers by hand, SyNAP provides a shortcut syntax to
+express exactly this. Here the required changes in the conversion metafile:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span><span class="w"></span>
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w">              </span><span class="c1"># Default data type</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Concat_155...</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w">    </span><span class="c1"># Data type for network head</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dataset</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qdataset/*.jpg</span><span class="w"></span>
+</pre></div>
+</div>
+<p>After compiling the model as usual we test the detection again using <code class="docutils literal notranslate"><span class="pre">synap_cli_od</span></code>.</p>
+<figure class="align-default" id="id8">
+<a class="reference internal image-reference" href="_images/result_synap_quant_mixed.jpg"><img alt="_images/result_synap_quant_mixed.jpg" src="_images/result_synap_quant_mixed.jpg" style="width: 640.0px; height: 360.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 12 </span><span class="caption-text">Detections from our model with mixed quantization</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The landmarks position looks almost as good as the one we get with full 16-bits quantization.
+We measure the timing with <code class="docutils literal notranslate"><span class="pre">synap_cli</span></code> and we get a median inference time of <strong>31.61ms</strong>, just
+5ms more of what we had with full 8-bits quantization but with much better results.</p>
+<p>Of course at this point we could setup an automated script to actually measure the quality of the
+quantization (for example measure the mean squared error between the quantized landmarks position
+and the ones we get with the floating point model) and fine-tune the layer(s) where to switch to
+16-bits quantization in order to get the most suitable tradeoff between desired accuracy and inference
+time. For this preliminary study this is not needed.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>mixed quantization can often provide a good tradeoff between execution speed and accuracy</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>16-bits floating point (float16) can provide even greater accuracy than 16-bits fixed point (int16),
+but is even slower and normally not needed</p>
+</div>
+</section>
+<section id="remove-un-needed-outputs">
+<h2>Remove Un-Needed Outputs<a class="headerlink" href="#remove-un-needed-outputs" title="Permalink to this headline"></a></h2>
+<p>We are already quite satisfied with the performance of our quantized model, but we notice that in
+our application we will never have faces that are too close to the camera, and that we are not
+interested in faces that are too far away. The processing done in the model for the corresponding
+pyramid elements (outputs 0 and 2) is thus wasted. Since we don’t want to change the original model
+we can use the same technique used in <code class="xref std std-numref docutils literal notranslate"><span class="pre">prune</span></code> and prune the model at conversion time with SyNAP.
+In this case we prune away two complete branches of the network, precisely those corresponding to
+the first and third outputs. We do this by removing the corresponding output names from the conversion
+metafile, and their anchors from the format string. Here our final version.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">means</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">255</span><span class="w"></span>
+<span class="nt">outputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;369&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yolov5 landmarks=5 transposed=1 anchors=[[],[],[],[],[23,29,43,55,73,105]]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dequantize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+
+<span class="nt">quantization</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span><span class="w"></span>
+<span class="w">        </span><span class="nt">Concat_155...</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dataset</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qdataset/*.jpg</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Measuring inference time with <code class="docutils literal notranslate"><span class="pre">synap_cli</span></code> we get our final median inference time of <strong>30.25ms</strong>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>model outputs that are not needed can be pruned away</p>
+</div>
+</section>
+<section id="perform-input-preprocessing-with-the-npu">
+<h2>Perform Input Preprocessing With The NPU<a class="headerlink" href="#perform-input-preprocessing-with-the-npu" title="Permalink to this headline"></a></h2>
+<p>We now notice that our model takes in input an RGB image, but our camera actually provides images
+in YUV 1024x768. The required data preprocessing (applying mean and scale plus format and size
+conversion) can be done either in SW or using the NPU.
+In most cases the NPU can do it faster but performing the preprocessing in SW has the advantage that
+it can be parallelized with NPU inference, so the choice is application-dependent.</p>
+<p>As usual if we want to perform preprocessing with the NPU we don’t have to modify the model itsef,
+we can specify this at conversion time by adding the <code class="docutils literal notranslate"><span class="pre">preprocess</span></code> option to the input specification:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">means</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">255</span><span class="w"></span>
+<span class="w">    </span><span class="nt">preprocess</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nv12</span><span class="w"></span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1024</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">768</span><span class="p p-Indicator">]</span><span class="w"></span>
+</pre></div>
+</div>
+<p>We test the performance but we see that preprocessing increases the inference time to more than <code class="docutils literal notranslate"><span class="pre">35ms</span></code>
+so we decide that it’s better to do this with the CPU to achieve better parallelism.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>NPU is able to perform preprocessing at inference time. It’s application dependent if this
+is preferable to CPU-preprocessing or not</p>
+</div>
+</section>
+<section id="i-still-can-t-meet-my-requirements">
+<h2>I Still Can’t Meet My Requirements<a class="headerlink" href="#i-still-can-t-meet-my-requirements" title="Permalink to this headline"></a></h2>
+<p>It is possible that despite all the optimization efforts done, the final model obtained
+still doesn’t satisfy the expected target of inference speed and/or accuracy.</p>
+<p>In these cases we still have a few options:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>use a smaller model, maybe with lower accuracy</p></li>
+<li><p>use a better model: model architectures are constantly improving
+it’s possible that a newer model exists that can provide similar or better accuracy with
+a smaller size and lower computational requirements</p></li>
+<li><p>use a more fit model: some models can run more efficiently than others on our NPU
+so they can run faster even if they are more computationally expensive. The efficiency
+of a model is hard to specify exactly as it depends on many factors: for sure models
+that contain a lot of data layout reorganizations or pointwise operations (e.g. tensor add)
+or convolutions with very few channels are not able to fully take advantge of the parallel
+convolutional cores of the NPU and so are not able to take fully adavtage of the computationa
+resources available.</p></li>
+<li><p>run the model layer-by-layer: step-by-step execution allows to measure the inference timing
+of each layer and therfore to see where the bottlenecks are
+and to adapt the model accordingly or guide the selection of a more fit model</p></li>
+<li><p>relax the requirements: sometimes the requirements are not as strict as we think. For example
+there is no way we can run the face-detection model seen above at 50 FPS. But if we have a
+50 FPS video we could as well run the model every other frame and still provide the
+desired functionality</p></li>
+</ol>
+</div></blockquote>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>if the targets of speed and accuracy cannot be met, consider using a better model if possible
+or relax the requirements</p>
+</div>
+</section>
+</section>
+<section id="conclusions">
+<h1>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline"></a></h1>
+<p>We have shown with a real-life example how to use SyNAP toolkit to import, quantize and optimize
+a model. We have been able to take a model and make it run with the required speed and accuracy.
+Even if each model and application present their own specific requirements and
+challanges the steps discussed are quite common and provide a good starting point for a process
+that can be later customized and improved according to individual needs.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, 2023, Synaptics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

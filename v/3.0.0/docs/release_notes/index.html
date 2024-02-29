@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. SyNAP Release Notes &mdash; SyNAP Release Notes 3.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            SyNAP Release Notes
+          </a>
+              <div class="version">
+                3.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">1. SyNAP Release Notes</a><ul>
+<li><a class="reference internal" href="#version-3-0-0">1.1. Version 3.0.0</a><ul>
+<li><a class="reference internal" href="#runtime">1.1.1. Runtime</a></li>
+<li><a class="reference internal" href="#toolkit">1.1.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-8-1">1.2. Version 2.8.1</a><ul>
+<li><a class="reference internal" href="#id1">1.2.1. Runtime</a></li>
+<li><a class="reference internal" href="#id2">1.2.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-8-0">1.3. Version 2.8.0</a><ul>
+<li><a class="reference internal" href="#id3">1.3.1. Runtime</a></li>
+<li><a class="reference internal" href="#id4">1.3.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-7-0">1.4. Version 2.7.0</a><ul>
+<li><a class="reference internal" href="#id5">1.4.1. Runtime</a></li>
+<li><a class="reference internal" href="#id6">1.4.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-6-0">1.5. Version 2.6.0</a><ul>
+<li><a class="reference internal" href="#id7">1.5.1. Runtime</a></li>
+<li><a class="reference internal" href="#id8">1.5.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-5-0">1.6. Version 2.5.0</a><ul>
+<li><a class="reference internal" href="#id9">1.6.1. Runtime</a></li>
+<li><a class="reference internal" href="#id10">1.6.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-4-0">1.7. Version 2.4.0</a><ul>
+<li><a class="reference internal" href="#id11">1.7.1. Runtime</a></li>
+<li><a class="reference internal" href="#id12">1.7.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-3-0">1.8. Version 2.3.0</a><ul>
+<li><a class="reference internal" href="#id13">1.8.1. Runtime</a></li>
+<li><a class="reference internal" href="#id14">1.8.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-2-1">1.9. Version 2.2.1</a><ul>
+<li><a class="reference internal" href="#id15">1.9.1. Runtime</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-2-0">1.10. Version 2.2.0</a><ul>
+<li><a class="reference internal" href="#id16">1.10.1. Runtime</a></li>
+<li><a class="reference internal" href="#id17">1.10.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-1-1">1.11. Version 2.1.1</a><ul>
+<li><a class="reference internal" href="#id18">1.11.1. Runtime</a></li>
+<li><a class="reference internal" href="#id19">1.11.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-1-0">1.12. Version 2.1.0</a><ul>
+<li><a class="reference internal" href="#id20">1.12.1. Runtime</a></li>
+<li><a class="reference internal" href="#id21">1.12.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-0-1">1.13. Version 2.0.1</a><ul>
+<li><a class="reference internal" href="#id22">1.13.1. Runtime</a></li>
+<li><a class="reference internal" href="#id23">1.13.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-2-0-0">1.14. Version 2.0.0</a><ul>
+<li><a class="reference internal" href="#id24">1.14.1. Runtime</a></li>
+<li><a class="reference internal" href="#id25">1.14.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-5-0">1.15. Version 1.5.0</a><ul>
+<li><a class="reference internal" href="#id26">1.15.1. Runtime</a></li>
+<li><a class="reference internal" href="#id27">1.15.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-4-0">1.16. Version 1.4.0</a><ul>
+<li><a class="reference internal" href="#id28">1.16.1. Runtime</a></li>
+<li><a class="reference internal" href="#id29">1.16.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-3-0">1.17. Version 1.3.0</a><ul>
+<li><a class="reference internal" href="#id30">1.17.1. Runtime</a></li>
+<li><a class="reference internal" href="#id31">1.17.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-2-0">1.18. Version 1.2.0</a><ul>
+<li><a class="reference internal" href="#id32">1.18.1. Runtime</a></li>
+<li><a class="reference internal" href="#id33">1.18.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-1-0">1.19. Version 1.1.0</a><ul>
+<li><a class="reference internal" href="#id34">1.19.1. Runtime</a></li>
+<li><a class="reference internal" href="#id35">1.19.2. Toolkit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-1-0-0">1.20. Version 1.0.0</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">SyNAP Release Notes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">1. </span>SyNAP Release Notes</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="synap-release-notes">
+<h1>SyNAP Release Notes<a class="headerlink" href="#synap-release-notes" title="Permalink to this headline"></a></h1>
+<section id="version-3-0-0">
+<h2><span class="section-number">1. </span>Version 3.0.0<a class="headerlink" href="#version-3-0-0" title="Permalink to this headline"></a></h2>
+<p>Release date: 2024.03.01</p>
+<section id="runtime">
+<h3><span class="section-number">1.1. </span>Runtime<a class="headerlink" href="#runtime" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Component</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Support for models in .synap format
+C++ API fully backward compatible with SyNAP 2.x</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Support for heterogeneous model execution (NPU, CPU, GPU)</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Full support and compatibility with legacy SyNAP 2.x models
+(<em>model.nb</em> and <em>model.json</em>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Integrate Onnx runtime 1.16.3</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Integrate TFlite runtime 2.15</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>TimVx delegate for TFlite for improved online inference on NPU</p></td>
+</tr>
+<tr class="row-even"><td><p>bin</p></td>
+<td><p>Add</p></td>
+<td><p>Optimized model benchmark binary <code class="docutils literal notranslate"><span class="pre">benchmark_model</span></code> integrating
+TimVx delegate</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="toolkit">
+<h3><span class="section-number">1.2. </span>Toolkit<a class="headerlink" href="#toolkit" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Heterogeneous compilation support (NPU, CPU, GPU). The desired delegate(s)
+can be selected at model compilation time.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Generates <em>.synap</em> format by default. The <em>.synap</em> format is a bundle that
+contains both the model subgraph(s) and the companion meta-information. This
+replaces the <em>model.nb</em> and <em>model.json</em> files in SyNAP 2.x. It’s still possible to
+generate the legacy <em>model.nb</em> and <em>model.json</em> files compatible with SyNAP 2.x runtime
+by specifying the <code class="docutils literal notranslate"><span class="pre">--out-format</span> <span class="pre">nb</span></code> option when converting the model</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>New preprocessing option to accept model input in 32-bits floating point</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fix</p></td>
+<td><p>Preprocessing support for non-quantized models</p></td>
+</tr>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p>Mixed quantization for tflite models (“No layers to requantize” error)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fix</p></td>
+<td><p>Accuracy issues with some models when using mixed quantization</p></td>
+</tr>
+<tr class="row-even"><td><p>Improve</p></td>
+<td><p>Inference time for some models with mixed quantization</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-8-1">
+<h2><span class="section-number">2. </span>Version 2.8.1<a class="headerlink" href="#version-2-8-1" title="Permalink to this headline"></a></h2>
+<section id="id1">
+<h3><span class="section-number">2.1. </span>Runtime<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<p>No changes.</p>
+</section>
+<section id="id2">
+<h3><span class="section-number">2.2. </span>Toolkit<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p>Import of Tensorflow .nb models</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fix</p></td>
+<td><p>Import of ONNX models containing MaxPool layers</p></td>
+</tr>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p>Import of ONNX models containing Slice layers</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-8-0">
+<h2><span class="section-number">3. </span>Version 2.8.0<a class="headerlink" href="#version-2-8-0" title="Permalink to this headline"></a></h2>
+<section id="id3">
+<h3><span class="section-number">3.1. </span>Runtime<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Component</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Improve</p></td>
+<td><p>Image Preprocessor now adds horizontal or vertical gray bars when
+importing an image to preserve proportions. The image is always kept
+at the center.</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Detector now supports ‘yolov8’ format</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Tensor now supports assignent from float and int16 data</p></td>
+</tr>
+<tr class="row-odd"><td><p>driver</p></td>
+<td><p>Fix</p></td>
+<td><p>Layer-by-layer profiling now provides more accurate timings</p></td>
+</tr>
+<tr class="row-even"><td><p>driver</p></td>
+<td><p>Update</p></td>
+<td><p>Verisilicon software stack upgraded to Ovxlib 1.1.84</p></td>
+</tr>
+<tr class="row-odd"><td><p>doc</p></td>
+<td><p>Update</p></td>
+<td><p>Improvements and clarifications in SyNAP.pdf user manual</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id4">
+<h3><span class="section-number">3.2. </span>Toolkit<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Update</p></td>
+<td><p>Verisilicon Acuity 6.21.2</p></td>
+</tr>
+<tr class="row-odd"><td><p>Update</p></td>
+<td><p>Conversion docker updated to Tensorflow 2.13.0 and onnx==1.14.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p>Issues with mixed quantization with some models</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-7-0">
+<h2><span class="section-number">4. </span>Version 2.7.0<a class="headerlink" href="#version-2-7-0" title="Permalink to this headline"></a></h2>
+<section id="id5">
+<h3><span class="section-number">4.1. </span>Runtime<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Component</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Face recognition</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Optional OpenCV support</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Fix</p></td>
+<td><p>Bounding box scaling in postprocessing for ‘yolov5’ format</p></td>
+</tr>
+<tr class="row-odd"><td><p>driver</p></td>
+<td><p>Improve</p></td>
+<td><p>Load network directly from a user buffer (avoid data copy)</p></td>
+</tr>
+<tr class="row-even"><td><p>driver</p></td>
+<td><p>Update</p></td>
+<td><p>Verisilicon software stack upgraded to Unify driver 6.4.13 and
+ovxlib 1.1.69</p></td>
+</tr>
+<tr class="row-odd"><td><p>doc</p></td>
+<td><p>Update</p></td>
+<td><p>Improvements and clarifications in SyNAP.pdf user manual</p></td>
+</tr>
+<tr class="row-even"><td><p>doc</p></td>
+<td><p>Add</p></td>
+<td><p>Model import tutorial: SyNAP_ModelImport.prf</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id6">
+<h3><span class="section-number">4.2. </span>Toolkit<a class="headerlink" href="#id6" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Model preprocessing now supports nv12 format</p></td>
+</tr>
+<tr class="row-odd"><td><p>Update</p></td>
+<td><p>Verisilicon Acuity 6.15.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Update</p></td>
+<td><p>Conversion docker to ubuntu 22.04 and tensorflow 2.10.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fix</p></td>
+<td><p>Import of .pb models when post-processing enabled (skip reordering)</p></td>
+</tr>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p>Support relative model pathnames in model_convert.py</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-6-0">
+<h2><span class="section-number">5. </span>Version 2.6.0<a class="headerlink" href="#version-2-6-0" title="Permalink to this headline"></a></h2>
+<section id="id7">
+<h3><span class="section-number">5.1. </span>Runtime<a class="headerlink" href="#id7" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Component</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>fix</p></td>
+<td><p>Fix Tensor::set_buffer in case the same Buffer is assigned/deassigned
+multiple times.</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Tensor assign() supports data normalization</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>fix</p></td>
+<td><p>Fix model json parsing for 16-bits models</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Preprocessor supports 16-bits models</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Preprocessor supports models with preprocessing and cropping</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Preprocessor rescale now preserves the input aspect-ratio by default
+(a gray band is added on the bottom of the image if needed)</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Support for scalar tensors</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Detector supports yolov5 output format</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Buffer sharing (allows to share the tensor memory between different
+networks avoiding data copy)</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Improve</p></td>
+<td><p>Support 64bits compilation</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id8">
+<h3><span class="section-number">5.2. </span>Toolkit<a class="headerlink" href="#id8" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Support compilation of models with embedded preprocessing including: format conversion
+(eg. YUV to RGB), layout conversion (eg. NCHW to NHWC), normalization and cropping</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Support “full” model quantization mode</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Mixed quantization: the user can mix 8-bits and 16-bits quantization in the same model
+by specifying the quantization type for each layer</p></td>
+</tr>
+<tr class="row-odd"><td><p>Improve</p></td>
+<td><p>Quantization images now rescaled preserving the aspect-ratio of the content</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-5-0">
+<h2><span class="section-number">6. </span>Version 2.5.0<a class="headerlink" href="#version-2-5-0" title="Permalink to this headline"></a></h2>
+<section id="id9">
+<h3><span class="section-number">6.1. </span>Runtime<a class="headerlink" href="#id9" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Component</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NNAPI</p></td>
+<td><p>Improve</p></td>
+<td><p>Init time for online inference (release mode)</p></td>
+</tr>
+<tr class="row-odd"><td><p>NNAPI</p></td>
+<td><p>Add</p></td>
+<td><p>Support for NNAPI compilation cache</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Improve</p></td>
+<td><p>Error checking on out-of-sequence API calls</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Move support to Network objects</p></td>
+</tr>
+<tr class="row-even"><td><p>driver</p></td>
+<td><p>Fix</p></td>
+<td><p>Layer-by-layer metrics was not working on some models (inference fail)</p></td>
+</tr>
+<tr class="row-odd"><td><p>driver</p></td>
+<td><p>Improve</p></td>
+<td><p>Accuracy of layer-by-layer metrics</p></td>
+</tr>
+<tr class="row-even"><td><p>driver</p></td>
+<td><p>Improve</p></td>
+<td><p>Unify all logcat messages with “SyNAP” tag</p></td>
+</tr>
+<tr class="row-odd"><td><p>driver</p></td>
+<td><p>Improve</p></td>
+<td><p>Memory optimization: on-demand loading of compressed OpenVX kernels
+(saves more than 80MB or RAM)</p></td>
+</tr>
+<tr class="row-even"><td><p>driver</p></td>
+<td><p>Change</p></td>
+<td><p>unified libovxlib.so supporting both VS640 and VS680</p></td>
+</tr>
+<tr class="row-odd"><td><p>driver</p></td>
+<td><p>Update</p></td>
+<td><p>Verisilicon software stack upgraded to Unify driver 6.4.11 and
+ovxlib 1.1.50</p></td>
+</tr>
+<tr class="row-even"><td><p>driver</p></td>
+<td><p>Improve</p></td>
+<td><p>Overall improvements now achieve a score of 33.8 with AIBenchmark 4.0.4</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id10">
+<h3><span class="section-number">6.2. </span>Toolkit<a class="headerlink" href="#id10" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Update</p></td>
+<td><p>Verisilicon Acuity 6.9</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Support compilation of Caffe models</p></td>
+</tr>
+<tr class="row-even"><td><p>Improve</p></td>
+<td><p>Error reporting for quantization issues</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-4-0">
+<h2><span class="section-number">7. </span>Version 2.4.0<a class="headerlink" href="#version-2-4-0" title="Permalink to this headline"></a></h2>
+<section id="id11">
+<h3><span class="section-number">7.1. </span>Runtime<a class="headerlink" href="#id11" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Component</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NNAPI</p></td>
+<td><p>Fix</p></td>
+<td><p>Correctly support multiple online models at the same time.
+Compiling multiple online models in parallel could in some cases
+give issues (SyNAP HAL crash) in previous releases.</p></td>
+</tr>
+<tr class="row-odd"><td><p>NNAPI</p></td>
+<td><p>Add</p></td>
+<td><p>New internal SyNAP model compilation cache.
+This dramatically improves model initialization time during the
+first inference. Typical speedup of the first inference is by a factor
+of 3, can be a factor of 20 or more on some models.</p></td>
+</tr>
+<tr class="row-even"><td><p>NNAPI</p></td>
+<td><p>Improve</p></td>
+<td><p>Further runtime optimizations allowing VS680 to achieve a score
+of 31.5 in ai-benchmark 4.0.4. This places VS680 at the top position
+of the IOT group: <a class="reference external" href="https://ai-benchmark.com/ranking_IoT_detailed.html">https://ai-benchmark.com/ranking_IoT_detailed.html</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Change</p></td>
+<td><p>SyNAP default log level is now WARNING (instead of no logs)</p></td>
+</tr>
+<tr class="row-even"><td><p>doc</p></td>
+<td><p>Update</p></td>
+<td><p>Operator support table</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id12">
+<h3><span class="section-number">7.2. </span>Toolkit<a class="headerlink" href="#id12" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>New internal SyNAP model compilation cache allows to improve model compilation time.
+Typical speedup is by a facor of 3, can be a factor of 20 or more on some models.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fix</p></td>
+<td><p>Conversion of ONNX models when output layer name(s) specified explicitly in metafile.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-3-0">
+<h2><span class="section-number">8. </span>Version 2.3.0<a class="headerlink" href="#version-2-3-0" title="Permalink to this headline"></a></h2>
+<section id="id13">
+<h3><span class="section-number">8.1. </span>Runtime<a class="headerlink" href="#id13" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Component</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>all</p></td>
+<td><p>Add</p></td>
+<td><p>By-layer profiling support.
+Low-level driver and runtime binaries and libraries now support
+layer by layer profiling of any network.</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Allocator API in synap device and associated SE-Linux rules.
+This is the default allocator in libsynapnb and the NNAPI is already
+making use of it.
+This also enable any user application (native or not) to execute
+models without root priviledge, including the synap_cli family.</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p>Sample Java support.</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Update</p></td>
+<td><p>Reorganize libraries. We now have the following libraries:</p>
+<ul class="simple">
+<li><p>libsynapnb.so: core EBG execution library</p></li>
+<li><p>libsynap_preprocess.a: pre-processing</p></li>
+<li><p>libsynap_postprocess.a: post-processing
+(classification, detection, etc)</p></li>
+<li><p>libsynap_img.a: image processing utilities</p></li>
+<li><p>libsynap_utils.a: common utilities</p></li>
+<li><p>libsynap_app.a: application support utilities</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>bin</p></td>
+<td><p>Add</p></td>
+<td><p>Repeat mode to synap_cli</p></td>
+</tr>
+<tr class="row-odd"><td><p>bin</p></td>
+<td><p>Add</p></td>
+<td><p>EBG for profiling generation to synap_cli_nb</p></td>
+</tr>
+<tr class="row-even"><td><p>NNAPI</p></td>
+<td><p>Fix</p></td>
+<td><p>Memory leak when running models</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id14">
+<h3><span class="section-number">8.2. </span>Toolkit<a class="headerlink" href="#id14" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>by-layer profiling</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Secure Model Generation for VS640 (VS680 was already supported)
+Note: This feature requires special agreement with Synaptics in order to be
+enabled.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-2-1">
+<h2><span class="section-number">9. </span>Version 2.2.1<a class="headerlink" href="#version-2-2-1" title="Permalink to this headline"></a></h2>
+<section id="id15">
+<h3><span class="section-number">9.1. </span>Runtime<a class="headerlink" href="#id15" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Component</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Fix</p></td>
+<td><p>Memory leak when dellocating Buffers</p></td>
+</tr>
+<tr class="row-odd"><td><p>NNAPI</p></td>
+<td><p>Optimize</p></td>
+<td><p>Memory savings and simplified dependencies
+NNRT is now using libsynapnb directly to execute an EBG model;
+VIPBroker dependency was removed from OVXLIB which is now only used as
+a graph compiler.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-2-0">
+<h2><span class="section-number">10. </span>Version 2.2.0<a class="headerlink" href="#version-2-2-0" title="Permalink to this headline"></a></h2>
+<section id="id16">
+<h3><span class="section-number">10.1. </span>Runtime<a class="headerlink" href="#id16" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Component</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>all</p></td>
+<td><p>Add</p></td>
+<td><p>Linux Baseline VSSDK support</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Preprocessor</span></code> class with support for image rescaling and conversion</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Classifier</span></code> postprocessor</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p><cite>Detector`</cite> postprocessors with full support for
+<code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code> layer with external anchors</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Label_info</span></code> class</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Add</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ebg_utils</span></code>: new shared library for EBG format manipulation</p></td>
+</tr>
+<tr class="row-even"><td><p>lib</p></td>
+<td><p>Fix</p></td>
+<td><p>NPU lock functionality</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib</p></td>
+<td><p>Remove</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nnapi_lock()</span></code> API, use vendor.NNAPI_SYNAP_DISABLE property instead.
+This doesn’t require any special permission for the application.</p></td>
+</tr>
+<tr class="row-even"><td><p>bin</p></td>
+<td><p>Add</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">synap_cli_nb</span></code>: new program for NBG to EBG conversion</p></td>
+</tr>
+<tr class="row-odd"><td><p>driver</p></td>
+<td><p>Optimize</p></td>
+<td><p>Much reduced usage of contiguous memory</p></td>
+</tr>
+<tr class="row-even"><td><p>NNAPI</p></td>
+<td><p>Update</p></td>
+<td><p>VSI OVXLIB to 1.1.37</p></td>
+</tr>
+<tr class="row-odd"><td><p>NNAPI</p></td>
+<td><p>Update</p></td>
+<td><p>VSI NNRT/NHAL to 1.3.1</p></td>
+</tr>
+<tr class="row-even"><td><p>NNAPI</p></td>
+<td><p>Add</p></td>
+<td><p>More operators supported</p></td>
+</tr>
+<tr class="row-odd"><td><p>NNAPI</p></td>
+<td><p>Optimize</p></td>
+<td><p>Much higher score for some AI-benchmark models (ex: PyNET and U-Net)</p></td>
+</tr>
+<tr class="row-even"><td><p>NNAPI</p></td>
+<td><p>Add</p></td>
+<td><p>Android CTS/VTS pass for both VS680 and VS640</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id17">
+<h3><span class="section-number">10.2. </span>Toolkit<a class="headerlink" href="#id17" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p>Crash when importing one TFLite object-detection models</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Full support for TFLite_Detection_PostProcess layerb</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Support for ${ANCHOR} and ${<a class="reference external" href="FILE:name">FILE:name</a>} variables in tensor format string</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Support for ${ENV:name} variables substitution in model yaml metafile</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Support for security.yaml file</p></td>
+</tr>
+<tr class="row-odd"><td><p>Update</p></td>
+<td><p>VSI acuity toolkit to 6.3.1</p></td>
+</tr>
+<tr class="row-even"><td><p>Update</p></td>
+<td><p>Improved error checking</p></td>
+</tr>
+<tr class="row-odd"><td><p>Update</p></td>
+<td><p>Layer name and shape are now optional when doing quantization</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Support for single mean value in metafile</p></td>
+</tr>
+<tr class="row-odd"><td><p>Remove</p></td>
+<td><p>synap_profile tool</p></td>
+</tr>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p>Handling of relative paths</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-1-1">
+<h2><span class="section-number">11. </span>Version 2.1.1<a class="headerlink" href="#version-2-1-1" title="Permalink to this headline"></a></h2>
+<section id="id18">
+<h3><span class="section-number">11.1. </span>Runtime<a class="headerlink" href="#id18" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p>Timeout expiration in online model execution
+(ai-benchmark 4.0.4 now runs correctly)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fix</p></td>
+<td><p>Issues in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> diagnostic</p></td>
+</tr>
+<tr class="row-even"><td><p>Change</p></td>
+<td><p>On android <code class="docutils literal notranslate"><span class="pre">synap</span></code> logs don’t go to <code class="docutils literal notranslate"><span class="pre">stderr</span></code> anymore (just to logcat)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id19">
+<h3><span class="section-number">11.2. </span>Toolkit<a class="headerlink" href="#id19" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sysfs</span></code> section in User Manual</p></td>
+</tr>
+<tr class="row-odd"><td><p>Update</p></td>
+<td><p>Inference timings section in User Manual now includes y-uv models</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-1-0">
+<h2><span class="section-number">12. </span>Version 2.1.0<a class="headerlink" href="#version-2-1-0" title="Permalink to this headline"></a></h2>
+<section id="id20">
+<h3><span class="section-number">12.1. </span>Runtime<a class="headerlink" href="#id20" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Full support for SyKURE<sup>TM</sup>: Synaptics secure inference technology</p></td>
+</tr>
+<tr class="row-odd"><td><p>Improve</p></td>
+<td><p>Tensor Buffers for NNAPI and synapnb now allocated in non-contiguous memory
+by default</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Buildable source code for <code class="docutils literal notranslate"><span class="pre">synap_cli_ip</span></code> sample application</p></td>
+</tr>
+<tr class="row-odd"><td><p>Change</p></td>
+<td><p>Per-target organization of libraries and binaries in the install tree</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id21">
+<h3><span class="section-number">12.2. </span>Toolkit<a class="headerlink" href="#id21" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Support for NHWC tensors in rescale layer</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fix</p></td>
+<td><p>Tensor format in json file for converted models</p></td>
+</tr>
+<tr class="row-even"><td><p>Improve</p></td>
+<td><p>Reorganize sections in User Manual</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-0-1">
+<h2><span class="section-number">13. </span>Version 2.0.1<a class="headerlink" href="#version-2-0-1" title="Permalink to this headline"></a></h2>
+<section id="id22">
+<h3><span class="section-number">13.1. </span>Runtime<a class="headerlink" href="#id22" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Improve</p></td>
+<td><p>Online inference performance</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Option to show SyNAP version in synap_cli application</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Buildable source code for all SyNAP sample applications and libraries</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id23">
+<h3><span class="section-number">13.2. </span>Toolkit<a class="headerlink" href="#id23" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Update</p></td>
+<td><p>Model coversion tool (fixes offline performance drop in some cases)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-2-0-0">
+<h2><span class="section-number">14. </span>Version 2.0.0<a class="headerlink" href="#version-2-0-0" title="Permalink to this headline"></a></h2>
+<section id="id24">
+<h3><span class="section-number">14.1. </span>Runtime<a class="headerlink" href="#id24" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Improve</p></td>
+<td><p>Inference engine now supports the new EBG (Executable Binary Graph) model
+format.</p>
+<p>Compared to previous NBG format, EBG brings several impovements:</p>
+<ul class="simple">
+<li><p>Much faster loading time</p></li>
+<li><p>Better maintenance and stability (10x lighter driver source code)</p></li>
+<li><p>Pave the way to secure inference</p></li>
+</ul>
+<p>NBG models are not supported anymore.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id25">
+<h3><span class="section-number">14.2. </span>Toolkit<a class="headerlink" href="#id25" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Update</p></td>
+<td><p>Model coversion tools now support EBG generation</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-1-5-0">
+<h2><span class="section-number">15. </span>Version 1.5.0<a class="headerlink" href="#version-1-5-0" title="Permalink to this headline"></a></h2>
+<section id="id26">
+<h3><span class="section-number">15.1. </span>Runtime<a class="headerlink" href="#id26" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Synap device information and statistics in sysfs</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id27">
+<h3><span class="section-number">15.2. </span>Toolkit<a class="headerlink" href="#id27" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Update</p></td>
+<td><p>Conversion toolkit to v. 5.24.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>Improve</p></td>
+<td><p>Model quantization algorithm</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Generate network information file when model is converted</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Host tools binaries and libraries in toolkit/bin and toolkit/lib</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-1-4-0">
+<h2><span class="section-number">16. </span>Version 1.4.0<a class="headerlink" href="#version-1-4-0" title="Permalink to this headline"></a></h2>
+<section id="id28">
+<h3><span class="section-number">16.1. </span>Runtime<a class="headerlink" href="#id28" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p>CTS/VTS now run successfully with NNAPI</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id29">
+<h3><span class="section-number">16.2. </span>Toolkit<a class="headerlink" href="#id29" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Update</p></td>
+<td><p>Conversion toolkit to v. 5.24</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Model benchmark binary: /vendor/bin/android_arm_benchmark_model</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Model test script and specs</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-1-3-0">
+<h2><span class="section-number">17. </span>Version 1.3.0<a class="headerlink" href="#version-1-3-0" title="Permalink to this headline"></a></h2>
+<section id="id30">
+<h3><span class="section-number">17.1. </span>Runtime<a class="headerlink" href="#id30" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Change</p></td>
+<td><p>Update and cleanup object Detector API</p></td>
+</tr>
+<tr class="row-odd"><td><p>Change</p></td>
+<td><p>synap_cli_od allows to specify model</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>synap_cli_od source code</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Cmake standalone build for synap_cli_ic and synap_cli_od</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id31">
+<h3><span class="section-number">17.2. </span>Toolkit<a class="headerlink" href="#id31" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>Import and conversion of ONNX models</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-1-2-0">
+<h2><span class="section-number">18. </span>Version 1.2.0<a class="headerlink" href="#version-1-2-0" title="Permalink to this headline"></a></h2>
+<section id="id32">
+<h3><span class="section-number">18.1. </span>Runtime<a class="headerlink" href="#id32" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Change</p></td>
+<td><p>Remove private implementation details from Buffer.hpp</p></td>
+</tr>
+<tr class="row-odd"><td><p>Change</p></td>
+<td><p>Switch memory allocation to dmabuf</p></td>
+</tr>
+<tr class="row-even"><td><p>Fix</p></td>
+<td><p>Model pathnames and documentation for object detection</p></td>
+</tr>
+<tr class="row-odd"><td><p>Add</p></td>
+<td><p>Synap device</p></td>
+</tr>
+<tr class="row-even"><td><p>Add</p></td>
+<td><p>OpenVX headers and librairies</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id33">
+<h3><span class="section-number">18.2. </span>Toolkit<a class="headerlink" href="#id33" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>New</p></td>
+<td><p>Model quantization support</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-1-1-0">
+<h2><span class="section-number">19. </span>Version 1.1.0<a class="headerlink" href="#version-1-1-0" title="Permalink to this headline"></a></h2>
+<section id="id34">
+<h3><span class="section-number">19.1. </span>Runtime<a class="headerlink" href="#id34" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>New</p></td>
+<td><p>NNAPI lock support: <code class="code docutils literal notranslate"><span class="pre">Npu::lock_nnapi()</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id35">
+<h3><span class="section-number">19.2. </span>Toolkit<a class="headerlink" href="#id35" title="Permalink to this headline"></a></h3>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>New</p></td>
+<td><p>Model profiling tool: <code class="docutils literal notranslate"><span class="pre">synap_profile.py</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>New</p></td>
+<td><p>NNAPI benchmarking script: <code class="docutils literal notranslate"><span class="pre">synap_benchmark_nnapi.sh</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="version-1-0-0">
+<h2><span class="section-number">20. </span>Version 1.0.0<a class="headerlink" href="#version-1-0-0" title="Permalink to this headline"></a></h2>
+<p>Initial Version.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, 2022, 2023, 2024, Synaptics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

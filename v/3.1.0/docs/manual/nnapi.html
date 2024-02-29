@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Using Online Inference &mdash; SyNAP 3.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/synaptics_theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/synaptics_theme.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Reference Models" href="benchmark.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SyNAP
+          </a>
+              <div class="version">
+                3.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using Online Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#online-inference-with-nnapi">Online Inference With NNAPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#benchmarking-models-with-nnapi">Benchmarking Models With NNAPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nnapi-compilation-caching">NNAPI Compilation Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#disabling-npu-usage-from-nnapi">Disabling NPU Usage From NNAPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#online-inference-with-timvx-delegate">Online Inference With <em>TimVx</em> Delegate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#benchmarking-models-with-timvx-delegate">Benchmarking Models With <em>TimVx</em> Delegate</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">Reference Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics And Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working_with_models.html">Working With Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="framework_api.html">Framework API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="npu_operators.html">Neural Network Processing Unit Operator Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="java.html">Direct Access In Android Applications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SyNAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Using Online Inference</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="using-online-inference">
+<h1>Using Online Inference<a class="headerlink" href="#using-online-inference" title="Permalink to this headline"></a></h1>
+<section id="online-inference-with-nnapi">
+<h2>Online Inference With NNAPI<a class="headerlink" href="#online-inference-with-nnapi" title="Permalink to this headline"></a></h2>
+<p>When a model is loaded and executed via NNAPI it is automatically converted to the internal
+representation suitable for execution on the NPU. This conversion doesn’t take place when the
+model is loaded but when the first inference is executed. This is because the size of the input(s)
+is needed in order to perform the conversion and with some models this information is available only
+at inference time. If the input size is specified in the model, then the provided input(s) must match
+this size. In any case it is not possible to change the size of the input(s) after the first inference.</p>
+<p>The model compilation has been heavily optimized, but even so it can take several milliseconds up to
+a few seconds for typical models, so it is suggested to execute an inference once just after
+the model has been loaded and prepared.
+One of the techniques used to speedup model compilation is caching, that is some results
+of the computations performed to compile a model are cashed in a file so that they don’t have to be
+executed again the next time the same model is compiled.</p>
+<p>On Android the cache file is saved by default to <code class="docutils literal notranslate"><span class="pre">/data/vendor/synap/nnhal.cache</span></code> and will contain
+up to 10000 entries which corresponds to a good setting for NNAPI utilization on an average system.
+Cache path and size can be changed by setting the properties <code class="docutils literal notranslate"><span class="pre">vendor.SYNAP_CACHE_PATH</span></code> and
+<code class="docutils literal notranslate"><span class="pre">vendor.SYNAP_CACHE_CAPACITY</span></code>. Setting the capacity to 0 will disable the cache.
+An additional possibility to speedup model compilation is to use the NNAPI cache,
+see : <a class="reference internal" href="#nnapi-caching"><span class="std std-ref">NNAPI Compilation Caching</span></a>.</p>
+<p>On yocto linux there is no NNAPI cache, but we still have smaller per-process cache files named
+<code class="docutils literal notranslate"><span class="pre">synap-cache.&lt;PROGRAM-NAME&gt;</span></code> in the <code class="docutils literal notranslate"><span class="pre">/tmp/</span></code> directory.</p>
+</section>
+<section id="benchmarking-models-with-nnapi">
+<span id="online-benchmarking-nnapi"></span><h2>Benchmarking Models With NNAPI<a class="headerlink" href="#benchmarking-models-with-nnapi" title="Permalink to this headline"></a></h2>
+<p>It is possible to benchmark the execution of a model with online conversion using the standard
+Android NNAPI tool <code class="docutils literal notranslate"><span class="pre">android_arm_benchmark_model</span></code> from <a class="reference external" href="https://www.tensorflow.org/lite/performance/measurement">https://www.tensorflow.org/lite/performance/measurement</a></p>
+<p>A custom version of this tool optimized for SyNAP platforms called <code class="docutils literal notranslate"><span class="pre">benchmark_model</span></code> is already
+preinstalled on the board in <code class="docutils literal notranslate"><span class="pre">/vendor/bin</span></code>.</p>
+<p>Benchmarking a model is quite simple:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Download the tflite model to be benchmarked, for example:</p>
+<p><a class="reference external" href="https://storage.googleapis.com/download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_224_quant.tgz">https://storage.googleapis.com/download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_224_quant.tgz</a></p>
+</li>
+<li><p>Copy the model to the board, for example in the <code class="code docutils literal notranslate"><span class="pre">/data/local/tmp</span></code> directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb push mobilenet_v1_0.25_224_quant.tflite /data/local/tmp
+</pre></div>
+</div>
+</li>
+<li><p>Benchmark the model execution on the NPU with NNAPI (android only):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb shell benchmark_model --graph=/data/local/tmp/mobilenet_v1_0.25_224_quant.tflite --use_nnapi=true --nnapi_accelerator_name=synap-npu
+
+INFO: STARTING!
+INFO: Tensorflow Version : 2.15.0
+INFO: Log parameter values verbosely: [0]
+INFO: Graph: [/data/local/tmp/mobilenet_v1_0.25_224_quant.tflite]
+INFO: Use NNAPI: [1]
+INFO: NNAPI accelerator name: [synap-npu]
+INFO: NNAPI accelerators available: [synap-npu,nnapi-reference]
+INFO: Loaded model /data/local/tmp/mobilenet_v1_0.25_224_quant.tflite
+INFO: Initialized TensorFlow Lite runtime.
+INFO: Created TensorFlow Lite delegate for NNAPI.
+INFO: NNAPI delegate created.
+WARNING: NNAPI SL driver did not implement SL_ANeuralNetworksDiagnostic_registerCallbacks!
+VERBOSE: Replacing 31 out of 31 node(s) with delegate (TfLiteNnapiDelegate) node, yielding 1 partitions for the whole graph.
+INFO: Explicitly applied NNAPI delegate, and the model graph will be completely executed by the delegate.
+INFO: The input model file size (MB): 0.497264
+INFO: Initialized session in 66.002ms.
+INFO: Running benchmark for at least 1 iterations and at least 0.5 seconds but terminate if exceeding 150 seconds.
+INFO: count=1 curr=637079
+
+INFO: Running benchmark for at least 50 iterations and at least 1 seconds but terminate if exceeding 150 seconds.
+INFO: count=520 first=2531 curr=2793 min=1171 max=9925 avg=1885.74 std=870
+
+INFO: Inference timings in us: Init: 66002, First inference: 637079, Warmup (avg): 637079, Inference (avg): 1885.74
+INFO: Note: as the benchmark tool itself affects memory footprint, the following is only APPROXIMATE to the actual memory footprint of the model at runtime. Take the information at your discretion.
+INFO: Memory footprint delta from the start of the tool (MB): init=7.40234 overall=7.83203
+</pre></div>
+</div>
+</li>
+</ol>
+</div></blockquote>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>NNAPI is the standard way to perform online inference on the NPU in Android,
+but it isn’t the most efficient or the most flexible one.
+The suggested way to perform online inference on Synaptics platforms is via the <code class="docutils literal notranslate"><span class="pre">timvx</span></code> delegate.
+For more information see section <code class="xref std std-numref docutils literal notranslate"><span class="pre">online_benchmarking_timvx</span></code>.</p>
+</div>
+<p>If for any reason some of the layers in the model cannot be executed on the NPU, they will automatically
+fall back to CPU execution. This can occur for example in case of specific layer types, options or data types
+not supported by NNAPI or SyNAP. In this case the network graph will be partitioned in multiple delegate kernels
+as indicated in the output messages from <code class="docutils literal notranslate"><span class="pre">benchmark_model</span></code>, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb shell benchmark_model ...
+...
+INFO: Initialized TensorFlow Lite runtime.
+INFO: Created TensorFlow Lite delegate for NNAPI.
+Explicitly applied NNAPI delegate, and the model graph will be partially executed by the delegate w/ 2 delegate kernels.
+...
+</pre></div>
+</div>
+<p>Executing part of the network on the CPU will increase inference times, sometimes considerably.
+To better understand which are the problematic layers and where the time is spent it can be useful
+to run <code class="docutils literal notranslate"><span class="pre">benchmark_model</span></code> with the option <code class="docutils literal notranslate"><span class="pre">--enable_op_profiling=true</span></code>.
+This option generates a detailed report of the layers executed on the CPU and the time spent executing them.
+For example in the execution here below the network contains a <code class="docutils literal notranslate"><span class="pre">RESIZE_NEAREST_NEIGHBOR</span></code> layer which falls back to CPU execution:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb shell benchmark_model ... --enable_op_profiling=true
+...
+Operator-wise Profiling Info for Regular Benchmark Runs:
+============================== Run Order ==============================
+            [node type]  [first]  [avg ms]      [%]    [cdf%]  [mem KB] [times called] [Name]
+    TfLiteNnapiDelegate    3.826     4.011  62.037%   62.037%     0.000         1      []:64
+RESIZE_NEAREST_NEIGHBOR    0.052     0.058   0.899%   62.936%     0.000         1      []:38
+    TfLiteNnapiDelegate    2.244     2.396  37.064%  100.000%     0.000         1      []:65
+</pre></div>
+</div>
+<p>Execution of the model (or part of it) on the NPU can also be confirmed by looking at the SyNAP <code class="docutils literal notranslate"><span class="pre">inference_count</span></code>
+file in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> (see section <code class="xref std std-numref docutils literal notranslate"><span class="pre">sysfs-inference-counter</span></code>).</p>
+<p>For an even more in-depth analysis, it is possible to obtain detailed layer-by-layer inference timing
+by setting the profiling property before running <code class="docutils literal notranslate"><span class="pre">benchmark_model</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb shell setprop vendor.NNAPI_SYNAP_PROFILE 1
+$ adb shell benchmark_model --graph=/data/local/tmp/mobilenet_v1_0.25_224_quant.tflite --use_nnapi=true --nnapi_accelerator_name=synap-npu
+</pre></div>
+</div>
+<p>On android, the profiling information will be availabe in <code class="docutils literal notranslate"><span class="pre">/sys/class/misc/synap/device/misc/synap/statistics/network_profile</span></code>
+while <code class="docutils literal notranslate"><span class="pre">benchmark_model</span></code> is running. On yocto linux, the same information is in <code class="code docutils literal notranslate"><span class="pre">/sys/class/misc/synap/statistics/network_profile</span></code>.</p>
+<p>For more information see section <code class="xref std std-numref docutils literal notranslate"><span class="pre">sysfs-networks</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">vendor.NNAPI_SYNAP_PROFILE</span></code> is enabled, the network is executed step-by-step,
+so the overall inference time becomes meaningless and should be ignored.</p>
+</div>
+</section>
+<section id="nnapi-compilation-caching">
+<span id="nnapi-caching"></span><h2>NNAPI Compilation Caching<a class="headerlink" href="#nnapi-compilation-caching" title="Permalink to this headline"></a></h2>
+<p>NNAPI compilation caching provides even greater speedup than the default SyNAP cache by caching
+entire compiled models, but it requires some support from the application (see
+<a class="reference external" href="https://source.android.com/devices/neural-networks/compilation-caching">https://source.android.com/devices/neural-networks/compilation-caching</a>) and requires more disk space.</p>
+<p>NNAPI caching support must be enabled by setting the corresponding android property:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb shell setprop vendor.npu.cache.model 1
+</pre></div>
+</div>
+<p>As explained in the official android documentation, for NNAPI compilation cache to work the user
+has to provide a directory when to store the cached model and a unique key for each model.
+The unique key is normally determined by computing some hash on the entire model.</p>
+<p>This can be tested using <code class="docutils literal notranslate"><span class="pre">benchmark_model</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb shell benchmark_model --graph=/data/local/tmp/mobilenet_v1_0.25_224_quant.tflite --use_nnapi=true --nnapi_accelerator_name=synap-npu --delegate_serialize_dir=/data/local/tmp/nnapiacache --delegate_serialize_token=&#39;`md5sum -b /data/local/tmp/mobilenet_v1_0.25_224_quant.tflite`&#39;
+</pre></div>
+</div>
+<p>During the first execution of the above command, NNAPI will compile the model and add it to the cache:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span><span class="p">:</span> <span class="n">Initialized</span> <span class="n">TensorFlow</span> <span class="n">Lite</span> <span class="n">runtime</span><span class="o">.</span>
+<span class="n">INFO</span><span class="p">:</span> <span class="n">Created</span> <span class="n">TensorFlow</span> <span class="n">Lite</span> <span class="n">delegate</span> <span class="k">for</span> <span class="n">NNAPI</span><span class="o">.</span>
+<span class="n">NNAPI</span> <span class="n">delegate</span> <span class="n">created</span><span class="o">.</span>
+<span class="n">ERROR</span><span class="p">:</span> <span class="n">File</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">nnapiacache</span><span class="o">/</span><span class="n">a67461dd306cfd2ff0761cb21dedffe2_6183748634035649777</span><span class="o">.</span><span class="n">bin</span> <span class="n">couldn</span><span class="s1">&#39;t be opened for reading: No such file or directory</span>
+<span class="n">INFO</span><span class="p">:</span> <span class="n">Replacing</span> <span class="mi">31</span> <span class="n">node</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">with</span> <span class="n">delegate</span> <span class="p">(</span><span class="n">TfLiteNnapiDelegate</span><span class="p">)</span> <span class="n">node</span><span class="p">,</span> <span class="n">yielding</span> <span class="mi">1</span> <span class="n">partitions</span><span class="o">.</span>
+<span class="o">...</span>
+<span class="n">Inference</span> <span class="n">timings</span> <span class="ow">in</span> <span class="n">us</span><span class="p">:</span> <span class="n">Init</span><span class="p">:</span> <span class="mi">34075</span><span class="p">,</span> <span class="n">First</span> <span class="n">inference</span><span class="p">:</span> <span class="mi">1599062</span><span class="p">,</span> <span class="n">Warmup</span> <span class="p">(</span><span class="n">avg</span><span class="p">):</span> <span class="mf">1.59906e+06</span><span class="p">,</span> <span class="n">Inference</span> <span class="p">(</span><span class="n">avg</span><span class="p">):</span> <span class="mf">1380.86</span>
+</pre></div>
+</div>
+<p>In all the following executions NNAPI will load the compiled model directly from the cache, so the
+first inference will be faster:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span><span class="p">:</span> <span class="n">Initialized</span> <span class="n">TensorFlow</span> <span class="n">Lite</span> <span class="n">runtime</span><span class="o">.</span>
+<span class="n">INFO</span><span class="p">:</span> <span class="n">Created</span> <span class="n">TensorFlow</span> <span class="n">Lite</span> <span class="n">delegate</span> <span class="k">for</span> <span class="n">NNAPI</span><span class="o">.</span>
+<span class="n">NNAPI</span> <span class="n">delegate</span> <span class="n">created</span><span class="o">.</span>
+<span class="n">INFO</span><span class="p">:</span> <span class="n">Replacing</span> <span class="mi">31</span> <span class="n">node</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">with</span> <span class="n">delegate</span> <span class="p">(</span><span class="n">TfLiteNnapiDelegate</span><span class="p">)</span> <span class="n">node</span><span class="p">,</span> <span class="n">yielding</span> <span class="mi">1</span> <span class="n">partitions</span><span class="o">.</span>
+<span class="o">...</span>
+<span class="n">Inference</span> <span class="n">timings</span> <span class="ow">in</span> <span class="n">us</span><span class="p">:</span> <span class="n">Init</span><span class="p">:</span> <span class="mi">21330</span><span class="p">,</span> <span class="n">First</span> <span class="n">inference</span><span class="p">:</span> <span class="mi">90853</span><span class="p">,</span> <span class="n">Warmup</span> <span class="p">(</span><span class="n">avg</span><span class="p">):</span> <span class="mf">1734.13</span><span class="p">,</span> <span class="n">Inference</span> <span class="p">(</span><span class="n">avg</span><span class="p">):</span> <span class="mf">1374.59</span>
+</pre></div>
+</div>
+</section>
+<section id="disabling-npu-usage-from-nnapi">
+<span id="nnapi-locking"></span><h2>Disabling NPU Usage From NNAPI<a class="headerlink" href="#disabling-npu-usage-from-nnapi" title="Permalink to this headline"></a></h2>
+<p>It is possible to make the NPU inaccessible from NNAPI by setting the property <code class="docutils literal notranslate"><span class="pre">vendor.NNAPI_SYNAP_DISABLE</span></code> to 1.
+In this case any attempt to run a model via NNAPI will always fall back to CPU.</p>
+<p>NNAPI execution with NPU enabled:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb shell setprop vendor.NNAPI_SYNAP_DISABLE 0
+$ adb shell &#39;echo &gt; /sys/class/misc/synap/device/misc/synap/statistics/inference_count&#39;
+$ adb shell benchmark_model --graph=/data/local/tmp/mobilenet_v1_0.25_224_quant.tflite --use_nnapi=true --nnapi_accelerator_name=synap-npu
+Inference timings in us: Init: 24699, First inference: 1474732, Warmup (avg): 1.47473e+06, Inference (avg): 1674.03
+$ adb shell cat /sys/class/misc/synap/device/misc/synap/statistics/inference_count
+1004
+</pre></div>
+</div>
+<p>NNAPI execution with NPU disabled:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb shell setprop vendor.NNAPI_SYNAP_DISABLE 1
+$ adb shell &#39;echo &gt; /sys/class/misc/synap/device/misc/synap/statistics/inference_count&#39;
+$ adb shell benchmark_model --graph=/data/local/tmp/mobilenet_v1_0.25_224_quant.tflite --use_nnapi=true --nnapi_accelerator_name=synap-npu
+Inference timings in us: Init: 7205, First inference: 15693, Warmup (avg): 14598.5, Inference (avg): 14640.3
+$ adb shell cat /sys/class/misc/synap/device/misc/synap/statistics/inference_count
+0
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It will still be possible to perform online inference on the NPU using the <em>timvx</em> tflite delegate.</p>
+</div>
+</section>
+<section id="online-inference-with-timvx-delegate">
+<h2>Online Inference With <em>TimVx</em> Delegate<a class="headerlink" href="#online-inference-with-timvx-delegate" title="Permalink to this headline"></a></h2>
+<p>NNAPI is not the only way to perform online inference on the NPU.
+It is possible to run a model without using NNAPI, by loading it with the standard Tensorflow Lite API
+and then using the <em>timvx</em> tflite delegate. This delegate has been optimized to call directly
+the SyNAP API, so it can most often provide better performance and less limitations than the standard NNAPI.</p>
+<p>Another advantage of the <code class="docutils literal notranslate"><span class="pre">timvx</span></code> delegate is that it is also available on yocto linux
+platforms which don’t support NNAPI.
+The only limitation of this approach is that being a delegate for the standard Tensorflow runtime,
+it doesn’t support the execution of other model formats such as ONNX.</p>
+<p><em>timvx</em> tflite delegate internal workflow is similar to that of NNAPI:
+when a tflite model is loaded  it is automatically converted to the internal
+representation suitable for execution on the NPU. This conversion doesn’t take place when the
+model is loaded but when the first inference is executed.</p>
+</section>
+<section id="benchmarking-models-with-timvx-delegate">
+<span id="online-benchmarking-timvx"></span><h2>Benchmarking Models With <em>TimVx</em> Delegate<a class="headerlink" href="#benchmarking-models-with-timvx-delegate" title="Permalink to this headline"></a></h2>
+<p>Synaptics <code class="docutils literal notranslate"><span class="pre">benchmark_model</span></code> tool provide built-in support for both the standard <code class="docutils literal notranslate"><span class="pre">nnapi</span></code> delegate,
+and the optimized <code class="docutils literal notranslate"><span class="pre">timvx</span></code> delegate.</p>
+<p>Benchmarking a model with <code class="docutils literal notranslate"><span class="pre">timvx</span></code> delegate is as simple as using NNAPI:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Download the tflite model to be benchmarked, for example:</p>
+<p><a class="reference external" href="https://storage.googleapis.com/download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_224_quant.tgz">https://storage.googleapis.com/download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_224_quant.tgz</a></p>
+</li>
+<li><p>Copy the model to the board, for example in the <code class="code docutils literal notranslate"><span class="pre">/data/local/tmp</span></code> directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb push mobilenet_v1_0.25_224_quant.tflite /data/local/tmp
+</pre></div>
+</div>
+</li>
+<li><p>Benchmark the model execution on the NPU with <code class="docutils literal notranslate"><span class="pre">timvx</span></code> delegate (both android and linux):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ adb shell benchmark_model --graph=/data/local/tmp/mobilenet_v1_0.25_224_quant.tflite --external_delegate_path=libvx_delegate.so
+
+INFO: STARTING!
+INFO: Tensorflow Version : 2.15.0
+INFO: Log parameter values verbosely: [0]
+INFO: Graph: [/data/local/tmp/mobilenet_v1_0.25_224_quant.tflite]
+INFO: External delegate path: [/vendor/lib64/libvx_delegate.so]
+INFO: Loaded model /data/local/tmp/mobilenet_v1_0.25_224_quant.tflite
+INFO: Initialized TensorFlow Lite runtime.
+INFO: Vx delegate: allowed_cache_mode set to 0.
+INFO: Vx delegate: device num set to 0.
+INFO: Vx delegate: allowed_builtin_code set to 0.
+INFO: Vx delegate: error_during_init set to 0.
+INFO: Vx delegate: error_during_prepare set to 0.
+INFO: Vx delegate: error_during_invoke set to 0.
+INFO: EXTERNAL delegate created.
+VERBOSE: Replacing 31 out of 31 node(s) with delegate (Vx Delegate) node, yielding 1 partitions for the whole graph.
+INFO: Explicitly applied EXTERNAL delegate, and the model graph will be completely executed by the delegate.
+INFO: The input model file size (MB): 0.497264
+INFO: Initialized session in 25.573ms.
+INFO: Running benchmark for at least 1 iterations and at least 0.5 seconds but terminate if exceeding 150 seconds.
+type 54 str SoftmaxAxis0
+INFO: count=277 first=201009 curr=863 min=811 max=201009 avg=1760.78 std=11997
+
+INFO: Running benchmark for at least 50 iterations and at least 1 seconds but terminate if exceeding 150 seconds.
+INFO: count=876 first=1272 curr=1730 min=810 max=6334 avg=1096.48 std=476
+
+INFO: Inference timings in us: Init: 25573, First inference: 201009, Warmup (avg): 1760.78, Inference (avg): 1096.48
+INFO: Note: as the benchmark tool itself affects memory footprint, the following is only APPROXIMATE to the actual memory footprint of the model at runtime. Take the information at your discretion.
+INFO: Memory footprint delta from the start of the tool (MB): init=15.4688 overall=43.2852
+</pre></div>
+</div>
+</li>
+</ol>
+</div></blockquote>
+<p>Comparing the timings with those in section <code class="xref std std-numref docutils literal notranslate"><span class="pre">online_benchmarking_nnapi</span></code>  we can notice that
+even for this simple model, <code class="docutils literal notranslate"><span class="pre">timvx</span></code> delegate provides better performances than NNAPI
+(average inference time 1096 us vs 1885).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="benchmark.html" class="btn btn-neutral float-right" title="Reference Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, 2022, 2023, 2024, Synaptics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reference Models &mdash; SyNAP 3.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Statistics And Usage" href="statistics.html" />
+    <link rel="prev" title="Using Online Inference" href="nnapi.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SyNAP
+          </a>
+              <div class="version">
+                3.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nnapi.html">Using Online Inference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reference Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#timings">Timings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#super-resolution">Super Resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#format-conversion">Format Conversion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics And Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working_with_models.html">Working With Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="framework_api.html">Framework API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="npu_operators.html">Neural Network Processing Unit Operator Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="java.html">Direct Access In Android Applications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SyNAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Reference Models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="reference-models">
+<h1>Reference Models<a class="headerlink" href="#reference-models" title="Permalink to this headline"></a></h1>
+<section id="timings">
+<h2>Timings<a class="headerlink" href="#timings" title="Permalink to this headline"></a></h2>
+<p>The tables in this section contain inference timings for a set of representative models.
+The quantized models have been imported and compiled offline using SyNAP toolkit.
+The floating point models are benchmarked for comparison purpose with the corresponding
+quantized models.</p>
+<p>The <em>mobilenet_v1</em>, <em>mobilenet_v2</em>, <em>posenet</em> and <em>inception</em> models are open-source models
+available in <cite>tflite</cite> format from <em>TensorFlow Hosted Models</em> page:
+<code class="docutils literal notranslate"><span class="pre">https://www.tensorflow.org/lite/guide/hosted_models</span></code></p>
+<p><em>yolov5</em> models are available from  <code class="docutils literal notranslate"><span class="pre">https://github.com/ultralytics/yolov5</span></code>,
+while <em>yolov5_face</em> comes from <code class="docutils literal notranslate"><span class="pre">https://github.com/deepcam-cn/yolov5-face</span></code>.</p>
+<p>Other models come from AI-Benchmark APK: <code class="docutils literal notranslate"><span class="pre">https://ai-benchmark.com/ranking_IoT.html</span></code>.</p>
+<p>Some of the models are Synaptics proprietary, including test models, object detection
+(<em>mobilenet224</em>), super-resolution and format conversion models.</p>
+<p>The model <em>test_64_128x128_5_132_132</em> has been designed to take maximum advantage of the computational capabilities of the NPU.
+It has 64 5x5 convolutions with a [1, 128, 128, 132] input and output.
+Its execution requires 913’519’411’200 operations (0.913 TOPs). Inference time shows that
+in the right conditions VS640 and SL1640 achieve above 1.6 TOP/s while VS680 and SL1680 able to achieve above 7.9 TOP/s.
+For 16-bits inference the maximum TOP/s can be achieved with <em>test_64_64x64_5_132_132</em>. With this model
+we achieve 0.45 TOP/s on VS640/SL1640 and above 1.7 TOP/s on VS680/SL1680.
+For actual models used in practice it’s very difficut to get close to this level of performance and it’s
+hard to predict the inference time of a model from the number of operation it contains. The only reliable
+way is to execute the model on the platform and measure.</p>
+<p>Remarks:</p>
+<ul class="simple">
+<li><p>In the following tables all timing values are expressed in milliseconds</p></li>
+<li><p>The columns <em>Online CPU</em> and <em>Online NPU</em> represent the inference time obtained by running
+the original <cite>tflite</cite> model directly on the board (<em>online</em> conversion)</p></li>
+<li><p>Online CPU tests have been done with 4 threads (<code class="docutils literal notranslate"><span class="pre">--num_threads=4</span></code>) on both <em>vs680</em> and <em>vs640</em></p></li>
+<li><p>Online CPU tests of <em>floating point models</em> on <em>vs640</em> have been done in <em>fp16</em> mode (<code class="docutils literal notranslate"><span class="pre">--allow_fp16=true</span></code>)</p></li>
+<li><p>Online NPU tests on have been done with the <em>timvx</em> delegate (<code class="docutils literal notranslate"><span class="pre">--external_delegate_path=libvx_delegate.so</span></code>).</p></li>
+<li><p>The <em>Offline Infer</em> column represents the inference time obtained by using a model converted offline
+using SyNAP toolkit (median time over 10 consecutive inferences)</p></li>
+<li><p>The <em>Online</em> timings represent the minimum time measured (for both init and inference).
+We took minimim instead of average because this is measure less sensitive to outliers due to the
+test process being temporarily suspended by the CPU scheduler</p></li>
+<li><p>Online timings, in particular for init and CPU inference, can be influenced by other processes
+running on the board and the total amount of free memory available. We ran all tests on Android
+AOSP/64bits with 4GB of memory on VS680 and 2GB on VS640. Running on Android GMS or 32-bits OS or
+with less memory can result in longer init and inference times</p></li>
+<li><p>Timings for SL1640 and SL1680 corresponds to those of VS640 and VS680, respectively</p></li>
+<li><p>Offline tests have been done with non-contiguous memory allocation and no cache flush</p></li>
+<li><p>Models marked with <cite>*</cite> come precompiled and preinstalled on the platform</p></li>
+</ul>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">Inference timings on VS680, 64-bits OS, 4GB memory</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Model</p></th>
+<th class="head"><p>Online
+CPU
+Infer</p></th>
+<th class="head"><p>Online
+GPU
+Infer</p></th>
+<th class="head"><p>Online
+NPU
+Init</p></th>
+<th class="head"><p>Online
+NPU
+Infer</p></th>
+<th class="head"><p>Offline
+NPU
+Init</p></th>
+<th class="head"><p>Offline
+NPU
+Infer</p></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>inception_v4_299_quant</p></td>
+<td><p>610.15</p></td>
+<td></td>
+<td><p>24486</p></td>
+<td><p>18.93</p></td>
+<td><p>100.79</p></td>
+<td><p>19.59</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>mobilenet_v1_0.25_224_quant</p></td>
+<td><p>2.68</p></td>
+<td></td>
+<td><p>250</p></td>
+<td><p>1.30</p></td>
+<td><p>3.70</p></td>
+<td><p>0.77</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>mobilenet_v2_1.0_224_quant</p></td>
+<td><p>16.62</p></td>
+<td></td>
+<td><p>1353</p></td>
+<td><p>2.46</p></td>
+<td><p>10.98</p></td>
+<td><p>1.79</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;1920x1080_rgb&#64;1920x1080</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>17.52</p></td>
+<td><p>32.30</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;1920x1080_rgb&#64;224x224</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>14.25</p></td>
+<td><p>1.49</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;1920x1080_rgb&#64;640x360</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>13.55</p></td>
+<td><p>5.14</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>sr_fast_y_uv_1280x720_3840x2160</p></td>
+<td></td>
+<td></td>
+<td><p>299</p></td>
+<td><p>36.26</p></td>
+<td><p>18.09</p></td>
+<td><p>12.04</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>sr_fast_y_uv_1920x1080_3840x2160</p></td>
+<td></td>
+<td></td>
+<td><p>776</p></td>
+<td><p>56.49</p></td>
+<td><p>20.40</p></td>
+<td><p>17.50</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>sr_qdeo_y_uv_1280x720_3840x2160</p></td>
+<td></td>
+<td></td>
+<td><p>153</p></td>
+<td><p>36.34</p></td>
+<td><p>21.84</p></td>
+<td><p>21.50</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>sr_qdeo_y_uv_1920x1080_3840x2160</p></td>
+<td></td>
+<td></td>
+<td><p>246</p></td>
+<td><p>41.96</p></td>
+<td><p>24.11</p></td>
+<td><p>26.97</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>posenet_mobilenet_075_float</p></td>
+<td><p>43.03</p></td>
+<td><p>53.71</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>posenet_mobilenet_075_quant</p></td>
+<td><p>39.01</p></td>
+<td></td>
+<td><p>564</p></td>
+<td><p>6.89</p></td>
+<td><p>1.84</p></td>
+<td><p>2.32</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>mobilenet224_full80</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>755.52</p></td>
+<td><p>26.14</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>yolov5m-640x480</p></td>
+<td></td>
+<td></td>
+<td><p>11464</p></td>
+<td><p>167.74</p></td>
+<td><p>54.11</p></td>
+<td><p>118.82</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>yolov5s-640x480</p></td>
+<td></td>
+<td></td>
+<td><p>4506</p></td>
+<td><p>111.81</p></td>
+<td><p>22.17</p></td>
+<td><p>75.83</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>yolov5s_face_640x480_onnx_mq</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>21.98</p></td>
+<td><p>35.31</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>mobilenet224_full1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>615.31</p></td>
+<td><p>16.02</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>deeplab_v3_plus_quant</p></td>
+<td><p>297.82</p></td>
+<td></td>
+<td><p>4693</p></td>
+<td><p>62.48</p></td>
+<td><p>7.68</p></td>
+<td><p>59.81</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>dped_quant</p></td>
+<td><p>335.63</p></td>
+<td></td>
+<td><p>1191</p></td>
+<td><p>9.58</p></td>
+<td><p>4.74</p></td>
+<td><p>8.82</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>inception_v3_float</p></td>
+<td><p>432.57</p></td>
+<td><p>415.76</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>inception_v3_quant</p></td>
+<td><p>328.16</p></td>
+<td></td>
+<td><p>13504</p></td>
+<td><p>10.62</p></td>
+<td><p>59.55</p></td>
+<td><p>10.22</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>mobilenet_v2_b4_quant</p></td>
+<td><p>67.14</p></td>
+<td></td>
+<td><p>1445</p></td>
+<td><p>14.08</p></td>
+<td><p>11.53</p></td>
+<td><p>13.63</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>mobilenet_v2_float</p></td>
+<td><p>28.16</p></td>
+<td><p>29.84</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>mobilenet_v2_quant</p></td>
+<td><p>16.57</p></td>
+<td></td>
+<td><p>1431</p></td>
+<td><p>2.65</p></td>
+<td><p>9.27</p></td>
+<td><p>1.98</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>mobilenet_v3_quant</p></td>
+<td><p>59.63</p></td>
+<td></td>
+<td><p>1760</p></td>
+<td><p>10.62</p></td>
+<td><p>13.15</p></td>
+<td><p>10.15</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>pynet_quant</p></td>
+<td><p>1067.53</p></td>
+<td></td>
+<td><p>6389</p></td>
+<td><p>19.76</p></td>
+<td><p>24.45</p></td>
+<td><p>19.30</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>srgan_quant</p></td>
+<td><p>1816.22</p></td>
+<td></td>
+<td><p>4680</p></td>
+<td><p>56.43</p></td>
+<td><p>14.72</p></td>
+<td><p>56.95</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>unet_quant</p></td>
+<td><p>288.01</p></td>
+<td></td>
+<td><p>906</p></td>
+<td><p>10.38</p></td>
+<td><p>7.73</p></td>
+<td><p>14.80</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>vgg_quant</p></td>
+<td><p>1641.18</p></td>
+<td></td>
+<td><p>1987</p></td>
+<td><p>30.50</p></td>
+<td><p>10.74</p></td>
+<td><p>30.07</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>test_64_128x128_5_132_132</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>50.07</p></td>
+<td><p>119.34</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sublima_cnn_model_relu_400_pruned_mq</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1.49</p></td>
+<td><p>45.69</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>sublima_cnn_model_relu_400_pruned_uint8</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1.49</p></td>
+<td><p>27.12</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sublima_cnn_model_relu_400_pruned_uint8full</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1.49</p></td>
+<td><p>26.25</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default" id="id2">
+<caption><span class="caption-number">Table 3 </span><span class="caption-text">Inference timings on VS640, 64-bits OS, 2GB memory</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Model</p></th>
+<th class="head"><p>Online
+CPU
+Infer</p></th>
+<th class="head"><p>Online
+GPU
+Infer</p></th>
+<th class="head"><p>Online
+NPU
+Init</p></th>
+<th class="head"><p>Online
+NPU
+Infer</p></th>
+<th class="head"><p>Offline
+NPU
+Init</p></th>
+<th class="head"><p>Offline
+NPU
+Infer</p></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>inception_v4_299_quant</p></td>
+<td><p>1006.29</p></td>
+<td></td>
+<td><p>38736</p></td>
+<td><p>54.07</p></td>
+<td><p>127.13</p></td>
+<td><p>53.82</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>mobilenet_v1_0.25_224_quant</p></td>
+<td><p>5.12</p></td>
+<td></td>
+<td><p>381</p></td>
+<td><p>1.82</p></td>
+<td><p>4.99</p></td>
+<td><p>0.93</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>mobilenet_v2_1.0_224_quant</p></td>
+<td><p>29.30</p></td>
+<td></td>
+<td><p>1947</p></td>
+<td><p>3.20</p></td>
+<td><p>14.21</p></td>
+<td><p>2.31</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;1920x1080_rgb&#64;1920x1080</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>17.48</p></td>
+<td><p>34.49</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;1920x1080_rgb&#64;224x224</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>15.14</p></td>
+<td><p>1.25</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;1920x1080_rgb&#64;640x360</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>14.70</p></td>
+<td><p>5.29</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>sr_fast_y_uv_1280x720_3840x2160</p></td>
+<td></td>
+<td></td>
+<td><p>309</p></td>
+<td><p>54.75</p></td>
+<td><p>17.87</p></td>
+<td><p>17.01</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>sr_fast_y_uv_1920x1080_3840x2160</p></td>
+<td></td>
+<td></td>
+<td><p>618</p></td>
+<td><p>88.67</p></td>
+<td><p>20.35</p></td>
+<td><p>25.90</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>sr_qdeo_y_uv_1280x720_3840x2160</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>20.33</p></td>
+<td><p>26.16</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>sr_qdeo_y_uv_1920x1080_3840x2160</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>22.03</p></td>
+<td><p>33.56</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>posenet_mobilenet_075_float</p></td>
+<td><p>125.53</p></td>
+<td><p>90.06</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>posenet_mobilenet_075_quant</p></td>
+<td><p>49.06</p></td>
+<td></td>
+<td><p>827</p></td>
+<td><p>10.80</p></td>
+<td><p>2.48</p></td>
+<td><p>4.13</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>mobilenet224_full80</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>718.96</p></td>
+<td><p>52.98</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>yolov5m-640x480</p></td>
+<td></td>
+<td></td>
+<td><p>17885</p></td>
+<td><p>234.41</p></td>
+<td><p>60.64</p></td>
+<td><p>178.00</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>yolov5s-640x480</p></td>
+<td></td>
+<td></td>
+<td><p>7132</p></td>
+<td><p>145.38</p></td>
+<td><p>24.90</p></td>
+<td><p>103.36</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>yolov5s_face_640x480_onnx_mq</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>27.31</p></td>
+<td><p>63.06</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-even"><td><p>mobilenet224_full1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>595.52</p></td>
+<td><p>36.53</p></td>
+<td><p>*</p></td>
+</tr>
+<tr class="row-odd"><td><p>deeplab_v3_plus_quant</p></td>
+<td><p>442.51</p></td>
+<td></td>
+<td><p>4877</p></td>
+<td><p>84.37</p></td>
+<td><p>8.31</p></td>
+<td><p>70.85</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>dped_quant</p></td>
+<td><p>630.28</p></td>
+<td></td>
+<td><p>1287</p></td>
+<td><p>26.65</p></td>
+<td><p>6.71</p></td>
+<td><p>25.72</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>inception_v3_float</p></td>
+<td><p>991.44</p></td>
+<td><p>706.98</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>inception_v3_quant</p></td>
+<td><p>536.96</p></td>
+<td></td>
+<td><p>21292</p></td>
+<td><p>31.00</p></td>
+<td><p>80.70</p></td>
+<td><p>29.82</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>mobilenet_v2_b4_quant</p></td>
+<td><p>120.55</p></td>
+<td></td>
+<td><p>2144</p></td>
+<td><p>19.72</p></td>
+<td><p>13.60</p></td>
+<td><p>18.39</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>mobilenet_v2_float</p></td>
+<td><p>70.24</p></td>
+<td><p>49.92</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>mobilenet_v2_quant</p></td>
+<td><p>29.37</p></td>
+<td></td>
+<td><p>2097</p></td>
+<td><p>3.33</p></td>
+<td><p>13.81</p></td>
+<td><p>2.44</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>mobilenet_v3_quant</p></td>
+<td><p>107.90</p></td>
+<td></td>
+<td><p>2770</p></td>
+<td><p>13.62</p></td>
+<td><p>16.38</p></td>
+<td><p>11.91</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>pynet_quant</p></td>
+<td><p>1932.73</p></td>
+<td></td>
+<td><p>10494</p></td>
+<td><p>59.03</p></td>
+<td><p>31.04</p></td>
+<td><p>56.30</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>srgan_quant</p></td>
+<td><p>2766.75</p></td>
+<td></td>
+<td><p>5232</p></td>
+<td><p>121.92</p></td>
+<td><p>15.97</p></td>
+<td><p>121.75</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>unet_quant</p></td>
+<td><p>543.22</p></td>
+<td></td>
+<td><p>1474</p></td>
+<td><p>19.93</p></td>
+<td><p>9.93</p></td>
+<td><p>24.20</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>vgg_quant</p></td>
+<td><p>2969.34</p></td>
+<td></td>
+<td><p>2871</p></td>
+<td><p>103.66</p></td>
+<td><p>10.65</p></td>
+<td><p>102.65</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>test_64_128x128_5_132_132</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>63.95</p></td>
+<td><p>563.81</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="super-resolution">
+<h2>Super Resolution<a class="headerlink" href="#super-resolution" title="Permalink to this headline"></a></h2>
+<p>Synaptics provides two proprietary families of super resolution models: <em>fast</em> and <em>qdeo</em>, the former
+provides better inference time, the latter better upscaling quality.
+They can be tested using <code class="docutils literal notranslate"><span class="pre">synap_cli_ip</span></code> application, see <a class="reference internal" href="getting_started.html#synap-cli-ip"><span class="std std-ref">synap_cli_ip Application</span></a>.</p>
+<p>These models are preinstalled in <code class="docutils literal notranslate"><span class="pre">$MODELS/image_processing/super_resolution</span></code> .</p>
+<table class="colwidths-given docutils align-right" id="id3">
+<caption><span class="caption-number">Table 4 </span><span class="caption-text">Synaptics SuperResolution Models on Y+UV Channels</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p><strong>Input Image</strong></p></th>
+<th class="head"><p><strong>Ouput Image</strong></p></th>
+<th class="head"><p><strong>Factor</strong></p></th>
+<th class="head"><p><strong>Notes</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sr_fast_y_uv_960x540_3840x2160</p></td>
+<td><p>960x540</p></td>
+<td><p>3840x2160</p></td>
+<td><p>4</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>sr_fast_y_uv_1280x720_3840x2160</p></td>
+<td><p>1280x720</p></td>
+<td><p>3840x2160</p></td>
+<td><p>3</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sr_fast_y_uv_1920x1080_3840x2160</p></td>
+<td><p>1920x1080</p></td>
+<td><p>3840x2160</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>sr_qdeo_y_uv_960x540_3840x2160</p></td>
+<td><p>960x540</p></td>
+<td><p>3840x2160</p></td>
+<td><p>4</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sr_qdeo_y_uv_1280x720_3840x2160</p></td>
+<td><p>1280x720</p></td>
+<td><p>3840x2160</p></td>
+<td><p>3</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>sr_qdeo_y_uv_1920x1080_3840x2160</p></td>
+<td><p>1920x1080</p></td>
+<td><p>3840x2160</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sr_qdeo_y_uv_640x360_1920x1080</p></td>
+<td><p>640x360</p></td>
+<td><p>1920x1080</p></td>
+<td><p>3</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="format-conversion">
+<span id="conversion-models"></span><h2>Format Conversion<a class="headerlink" href="#format-conversion" title="Permalink to this headline"></a></h2>
+<p>Conversion models can be used to convert an image from <code class="docutils literal notranslate"><span class="pre">NV12</span></code> format to <code class="docutils literal notranslate"><span class="pre">RGB</span></code>.
+A set of models is provided for the most commonly used resolutions.
+These models have been generated by taking advantage of the
+preprocessing feature of the <code class="docutils literal notranslate"><span class="pre">SyNAP</span></code> toolkit (see <a class="reference internal" href="working_with_models.html#preprocessing"><span class="std std-ref">Preprocessing</span></a>) and can be used to convert
+an image so that is can be fed to a processing model with <code class="docutils literal notranslate"><span class="pre">RGB</span></code> input.</p>
+<p>These models are preinstalled in <code class="docutils literal notranslate"><span class="pre">$MODELS/image_processing/preprocess</span></code> and can be
+tested using <code class="docutils literal notranslate"><span class="pre">synap_cli_ic2</span></code> application, see <a class="reference internal" href="getting_started.html#synap-cli-ic2"><span class="std std-ref">synap_cli_ic2 Application</span></a>.</p>
+<table class="colwidths-given docutils align-right" id="id4">
+<caption><span class="caption-number">Table 5 </span><span class="caption-text">Synaptics Conversion Models NV12 to RGB 224x224</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p><strong>Input Image (NV12)</strong></p></th>
+<th class="head"><p><strong>Ouput Image (RGB)</strong></p></th>
+<th class="head"><p><strong>Notes</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>convert_nv12&#64;426x240_rgb&#64;224x224</p></td>
+<td><p>426x240</p></td>
+<td><p>224x224</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;640x360_rgb&#64;224x224</p></td>
+<td><p>640x360</p></td>
+<td><p>224x224</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;854x480_rgb&#64;224x224</p></td>
+<td><p>854x480</p></td>
+<td><p>224x224</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;1280x720_rgb&#64;224x224</p></td>
+<td><p>1280x720</p></td>
+<td><p>224x224</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;1920x1080_rgb&#64;224x224</p></td>
+<td><p>1920x1080</p></td>
+<td><p>224x224</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;2560x1440_rgb&#64;224x224</p></td>
+<td><p>2560x1440</p></td>
+<td><p>224x224</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;3840x2160_rgb&#64;224x224</p></td>
+<td><p>3840x2160</p></td>
+<td><p>224x224</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;7680x4320_rgb&#64;224x224</p></td>
+<td><p>7680x4320</p></td>
+<td><p>224x224</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-right" id="id5">
+<caption><span class="caption-number">Table 6 </span><span class="caption-text">Synaptics Conversion Models NV12 to RGB 640x360</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p><strong>Input Image (NV12)</strong></p></th>
+<th class="head"><p><strong>Ouput Image (RGB)</strong></p></th>
+<th class="head"><p><strong>Notes</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>convert_nv12&#64;426x240_rgb&#64;640x360</p></td>
+<td><p>426x240</p></td>
+<td><p>640x360</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;640x360_rgb&#64;640x360</p></td>
+<td><p>640x360</p></td>
+<td><p>640x360</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;854x480_rgb&#64;640x360</p></td>
+<td><p>854x480</p></td>
+<td><p>640x360</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;1280x720_rgb&#64;640x360</p></td>
+<td><p>1280x720</p></td>
+<td><p>640x360</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;1920x1080_rgb&#64;640x360</p></td>
+<td><p>1920x1080</p></td>
+<td><p>640x360</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;2560x1440_rgb&#64;640x360</p></td>
+<td><p>2560x1440</p></td>
+<td><p>640x360</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;3840x2160_rgb&#64;640x360</p></td>
+<td><p>3840x2160</p></td>
+<td><p>640x360</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;7680x4320_rgb&#64;640x360</p></td>
+<td><p>7680x4320</p></td>
+<td><p>640x360</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-right" id="id6">
+<caption><span class="caption-number">Table 7 </span><span class="caption-text">Synaptics Conversion Models NV12 to RGB 1920x1080</span><a class="headerlink" href="#id6" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p><strong>Input Image (NV12)</strong></p></th>
+<th class="head"><p><strong>Ouput Image (RGB)</strong></p></th>
+<th class="head"><p><strong>Notes</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>convert_nv12&#64;426x240_rgb&#64;1920x1080</p></td>
+<td><p>426x240</p></td>
+<td><p>1920x1080</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;640x360_rgb&#64;1920x1080</p></td>
+<td><p>640x360</p></td>
+<td><p>1920x1080</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;854x480_rgb&#64;1920x1080</p></td>
+<td><p>854x480</p></td>
+<td><p>1920x1080</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;1280x720_rgb&#64;1920x1080</p></td>
+<td><p>1280x720</p></td>
+<td><p>1920x1080</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;1920x1080_rgb&#64;1920x1080</p></td>
+<td><p>1920x1080</p></td>
+<td><p>1920x1080</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;2560x1440_rgb&#64;1920x1080</p></td>
+<td><p>2560x1440</p></td>
+<td><p>1920x1080</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>convert_nv12&#64;3840x2160_rgb&#64;1920x1080</p></td>
+<td><p>3840x2160</p></td>
+<td><p>1920x1080</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>convert_nv12&#64;7680x4320_rgb&#64;1920x1080</p></td>
+<td><p>7680x4320</p></td>
+<td><p>1920x1080</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nnapi.html" class="btn btn-neutral float-left" title="Using Online Inference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="statistics.html" class="btn btn-neutral float-right" title="Statistics And Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, 2022, 2023, 2024, Synaptics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

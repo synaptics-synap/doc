@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statistics And Usage &mdash; SyNAP 3.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Working With Models" href="working_with_models.html" />
+    <link rel="prev" title="Reference Models" href="benchmark.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SyNAP
+          </a>
+              <div class="version">
+                3.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nnapi.html">Using Online Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">Reference Models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Statistics And Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#inference-count"><code class="docutils literal notranslate"><span class="pre">inference_count</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inference-time"><code class="docutils literal notranslate"><span class="pre">inference_time</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#networks"><code class="docutils literal notranslate"><span class="pre">networks</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#network-profile"><code class="docutils literal notranslate"><span class="pre">network_profile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clearing-statistics">Clearing Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-sysfs-information">Using <code class="docutils literal notranslate"><span class="pre">/sysfs</span></code> Information</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="working_with_models.html">Working With Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="framework_api.html">Framework API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="npu_operators.html">Neural Network Processing Unit Operator Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="java.html">Direct Access In Android Applications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SyNAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Statistics And Usage</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="statistics-and-usage">
+<h1>Statistics And Usage<a class="headerlink" href="#statistics-and-usage" title="Permalink to this headline"></a></h1>
+<p>SyNAP provides usage information and statistics.
+This is done via the standard linux <code class="code docutils literal notranslate"><span class="pre">/sysfs</span></code> interface.
+Basically  <code class="code docutils literal notranslate"><span class="pre">/sysfs</span></code> allows to provide information about system devices
+and resources using a <em>pseudo file-system</em> where each piece of information is seen
+as a file that can be read/written by the user using standard tools.</p>
+<p>On Android statistics are available in  <code class="code docutils literal notranslate"><span class="pre">/sys/class/misc/synap/device/misc/synap/statistics/</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ SYNAP_STAT_DIR=/sys/class/misc/synap/device/misc/synap/statistics
+</pre></div>
+</div>
+<p>On Yocto Linux they are in <code class="code docutils literal notranslate"><span class="pre">/sys/class/misc/synap/statistics/</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ SYNAP_STAT_DIR=/sys/class/misc/synap/statistics
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ls $SYNAP_STAT_DIR
+inference_count  inference_time  network_profile networks
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The content of the statistics files is only available from <strong>root</strong> user.</p>
+</div>
+<section id="inference-count">
+<span id="sysfs-inference-counter"></span><h2><code class="docutils literal notranslate"><span class="pre">inference_count</span></code><a class="headerlink" href="#inference-count" title="Permalink to this headline"></a></h2>
+<p>This file contains the total number of inferences performed since system startup.
+Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat $SYNAP_STAT_DIR/inference_count
+1538
+</pre></div>
+</div>
+</section>
+<section id="inference-time">
+<h2><code class="docutils literal notranslate"><span class="pre">inference_time</span></code><a class="headerlink" href="#inference-time" title="Permalink to this headline"></a></h2>
+<p>This file contains the total time spent doing inferences since system startup.
+It is a 64-bits integer expressed in microseconds.
+Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat $SYNAP_STAT_DIR/inference_time
+32233264
+</pre></div>
+</div>
+</section>
+<section id="networks">
+<h2><code class="docutils literal notranslate"><span class="pre">networks</span></code><a class="headerlink" href="#networks" title="Permalink to this headline"></a></h2>
+<p>This file contains detailed information for each network currently loaded, with a line per network.
+Each line contains the following information:</p>
+<ul class="simple">
+<li><p><strong>pid</strong>: process that created the network</p></li>
+<li><p><strong>nid</strong>: unique network id</p></li>
+<li><p><strong>inference_count</strong>: number of inferences for this network</p></li>
+<li><p><strong>inference_time</strong>: total inference time for this network in us</p></li>
+<li><p><strong>inference_last</strong>: last inference time for this network in us</p></li>
+<li><p><strong>iobuf_count</strong>: number of I/O buffers currently registered to the network</p></li>
+<li><p><strong>iobuf_size</strong>: total size of I/O buffers currently registered to the network</p></li>
+<li><p><strong>layers</strong>: number of layers in the network</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat $SYNAP_STAT_DIR/networks
+pid: 3628, nid: 38, inference_count: 22, inference_time: 40048, inference_last: 1843, iobuf_count: 2, iobuf_size: 151529, layers: 34
+pid: 3155, nid: 4, inference_count: 3, inference_time: 5922, inference_last: 1843, iobuf_count: 2, iobuf_size: 451630, layers: 12
+</pre></div>
+</div>
+</section>
+<section id="network-profile">
+<span id="sysfs-networks"></span><h2><code class="docutils literal notranslate"><span class="pre">network_profile</span></code><a class="headerlink" href="#network-profile" title="Permalink to this headline"></a></h2>
+<p>This file contains detailed information for each network currently loaded, with a line per network.
+The information in each line is the same as in the <code class="docutils literal notranslate"><span class="pre">networks</span></code> file.
+In addition if a model has been compiled offline with profiling enabled (see section <a class="reference internal" href="working_with_models.html#model-profiling-label"><span class="std std-ref">Model Profiling</span></a>)
+or executed online with profiling enabled (see section <a class="reference internal" href="nnapi.html#online-benchmarking-nnapi"><span class="std std-ref">Benchmarking Models With NNAPI</span></a>)
+the corresponding line will be followed by detailed layer-by-layer information:</p>
+<ul class="simple">
+<li><p><strong>lyr</strong>: index of the layer (or group of layers)</p></li>
+<li><p><strong>cycle</strong>: number of execution cycles</p></li>
+<li><p><strong>time_us</strong>: execution time in us</p></li>
+<li><p><strong>byte_rd</strong>: number of bytes read</p></li>
+<li><p><strong>byte_wr</strong>: number of bytes written</p></li>
+<li><p><strong>ot</strong>: operation type (NN: Neural Network core, SH: Shader, TP: TensorProcessor)</p></li>
+<li><p><strong>name</strong>: operation name</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat $SYNAP_STAT_DIR/network_profile
+pid: 21756, nid: 1, inference_count: 78, inference_time: 272430, inference_last: 3108, iobuf_count: 2, iobuf_size: 151529, layers: 34
+| lyr |    cycle | time_us | byte_rd | byte_wr | ot | name
+|   0 |   153811 |     202 |  151344 |       0 | TP | TensorTranspose
+|   1 |   181903 |     461 |    6912 |       0 | NN | ConvolutionReluPoolingLayer2
+|   2 |     9321 |      52 |    1392 |       0 | NN | ConvolutionReluPoolingLayer2
+|   3 |    17430 |      51 |    1904 |       0 | NN | ConvolutionReluPoolingLayer2
+|   4 |    19878 |      51 |    1904 |       0 | NN | ConvolutionReluPoolingLayer2
+...
+|  28 |    16248 |      51 |    7472 |       0 | NN | ConvolutionReluPoolingLayer2
+|  29 |   125706 |     408 |  120720 |       0 | TP | FullyConnectedReluLayer
+|  30 |   137129 |     196 |    2848 |    1024 | SH | Softmax2Layer
+|  31 |        0 |       0 |       0 |       0 | -- | ConvolutionReluPoolingLayer2
+|  32 |        0 |       0 |       0 |       0 | -- | ConvolutionReluPoolingLayer2
+|  33 |      671 |      51 |    1008 |       0 | NN | ConvolutionReluPoolingLayer2
+</pre></div>
+</div>
+</section>
+<section id="clearing-statistics">
+<h2>Clearing Statistics<a class="headerlink" href="#clearing-statistics" title="Permalink to this headline"></a></h2>
+<p>Statistics can be cleared by writing to either the <code class="docutils literal notranslate"><span class="pre">inference_count</span></code> or <code class="docutils literal notranslate"><span class="pre">inference_time</span></code> file.</p>
+<p>Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat $SYNAP_STAT_DIR/inference_time
+32233264
+# echo &gt; $SYNAP_STAT_DIR/inference_time
+# cat $SYNAP_STAT_DIR/inference_time
+0
+# cat $SYNAP_STAT_DIR/inference_count
+0
+</pre></div>
+</div>
+</section>
+<section id="using-sysfs-information">
+<h2>Using <code class="docutils literal notranslate"><span class="pre">/sysfs</span></code> Information<a class="headerlink" href="#using-sysfs-information" title="Permalink to this headline"></a></h2>
+<p>The information available from <code class="code docutils literal notranslate"><span class="pre">/sysfs</span></code> can be easily used from scripts or tools.
+For example in order to get the average NPU utilization in a 5 seconds period:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>us=5000000;
+echo &gt; $SYNAP_STAT_DIR/inference_time;
+usleep $us;
+npu_usage=$((`cat $SYNAP_STAT_DIR/inference_time`*100/us));
+echo &quot;Average NPU usage: $npu_usage%&quot;
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="benchmark.html" class="btn btn-neutral float-left" title="Reference Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="working_with_models.html" class="btn btn-neutral float-right" title="Working With Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, 2022, 2023, 2024, Synaptics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

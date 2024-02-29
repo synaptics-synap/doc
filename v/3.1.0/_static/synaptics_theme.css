@@ -1,0 +1,25 @@
+.synaptics-table-hidden {
+    display: none;
+}
+
+.synaptics-table-inner-wrapper {
+    display: inline-block;
+}
+
+.synaptics-close-link {
+    float: right;
+}
+
+.synaptics-table-wrapper {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    position: fixed;
+    top:0;
+    left: 0;
+    z-index: 400;
+    overflow: auto;
+    padding: 40px;
+    border: 1px solid #ddd;
+    text-align: center;
+}

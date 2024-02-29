@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; SyNAP Heterogeneous Inference 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="SyNAP Heterogeneous Inference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SyNAP Heterogeneous Inference
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#use-case">Use Case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#analysis">Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#model-cutting">Model Cutting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#heterogeneous-inference">Heterogeneous Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#automatic-heterogeneous-inference">Automatic Heterogeneous Inference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SyNAP Heterogeneous Inference</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h1>
+<p>Starting from version 3.0 SyNAP toolkit and runtime provide extensive support for heterogeneous
+inference. This means that:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a model can be compiled to take advantage of all the computational resources available
+on the destination hardware (NPU, CPU, GPU)</p></li>
+<li><p>different parts of the model can be executed on different hardware units, also in parallel
+whenever possible</p></li>
+<li><p>the same workflow can be used to compile a model for different hardware targets</p></li>
+<li><p>the same API is available at runtime to run the model independently of the hardware unit(s)
+that will actually execute it</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="use-case">
+<h1>Use Case<a class="headerlink" href="#use-case" title="Permalink to this headline"></a></h1>
+<p>In order to show how SyNAP heterogeneous inference can be useful in practice, we show here the use-case of
+converting a standard object-detection model.
+Even if we present a specific use-case, the same techniques and ideas are valid in general.</p>
+<p>We would like to perform object-detection on images on a VS680. Instead of developing our own model,
+we decide to use a standard model from Google model zoo.
+In particular, we choose the <em>ssd_mobilenet_v1_coco</em> model, which is a Single Shot MultiBox Detector (SSD).</p>
+<p>A pretrained, quantized tflite version of this model is available at the following link:</p>
+<p><a class="reference external" href="https://www.kaggle.com/models/tensorflow/ssd-mobilenet-v1/frameworks/tfLite/variations/default/versions/1">https://www.kaggle.com/models/tensorflow/ssd-mobilenet-v1/frameworks/tfLite/variations/default/versions/1</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For detailed information and description on the commands and options used in this document
+please refer to the SyNAP user manual: <em>SyNAP.pdf</em>.</p>
+</div>
+</section>
+<section id="analysis">
+<h1>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline"></a></h1>
+<p>This model contains a MobileNetV1 backbone and a SSD head. The backbone is a convolutional neural network
+which performs feature extraction on the input image. The SSD head takes the features extracted by the backbone
+and performs the actual object detection. The detected boxes and the corresponding per-class scores are
+sent to a post-processing stage which performs non-maximum suppression (NMS) and returns the final detections
+(<code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code> layer).</p>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="_images/mobilenet_ssd.png"><img alt="_images/mobilenet_ssd.png" src="_images/mobilenet_ssd.png" style="width: 712.0px; height: 890.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 1 </span><span class="caption-text">MobileNet SSD architecture</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Since most of the model is composed by convolutional layers, the ideal hardware unit to execute it
+is the NPU. However, the TFLite_Detection_PostProcess layer is mostly sequential and it is not
+supported by the NPU, so compiling the entire model for execution on the NPU is not possible.</p>
+<p>If we try to compile the entire model for execution on the NPU, the toolkit will detect this and
+generate a warning message:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ synap convert --model ssd_mobilenet_v1_1_default_1.tflite --target VS680 --out-dir compiled
+Warning: skipping unimplemented custom layer: TFLite_Detection_PostProcess
+</pre></div>
+</div>
+<p>The toolkit has converted the model anyway without including the final unsupported layer in the
+compiled model. This allows us to experiment with the execution of the partial model.
+If the unsupported layer were in the middle of the network instead of being at the end,
+the conversion would have failed.</p>
+<p>In any case in order to be able to completely execute this model, we have to split it in two parts,
+and execute each of them on a different hardware unit:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the backbone and SSD head can be executed on the NPU</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code> layer will have to be executed on the CPU</p></li>
+</ul>
+</div></blockquote>
+<p>SyNAP provides two ways to achieve this:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>convert only the backbone and SSD head of the model for execution on the NPU by <em>cutting away</em>
+the <code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code> layer, and then implement the postprocessing in software</p></li>
+<li><p>convert the entire model to an heterogeneous network, where the backbone and SSD head are executed
+on the NPU and the <code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code> layer is executed on the CPU</p></li>
+</ol>
+</div></blockquote>
+<p>The first method has the advantage that the postprocessing part can be implemented in any way we want,
+so we can experiment with different algorithms and optimizations. However, it requires to write some code
+for which it is necessary to understand in detail how the postprocessing layer works. SyNAP runtime library
+already provides support for the most common postprocessing layers, including <code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code>.</p>
+<p>The second method is easier to use (no extra code to be written), and is actually the only
+possibility in cases where the unsupported layers are not at the end but in the middle of the network.</p>
+<p>Let’s see how to use both methods.</p>
+</section>
+<section id="model-cutting">
+<h1>Model Cutting<a class="headerlink" href="#model-cutting" title="Permalink to this headline"></a></h1>
+<p>In order to perform the postprocessing explicity in SW, we need to cut away the <code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code>
+layer. This doesn’t require any modification to the <em>tflite</em> model itself, the layer can be removed
+easily when the model is converted, by providing a conversion metafile that specifies where to cut the model,
+that is which tensors should be the actual outputs of the converted model.</p>
+<p>Let’s see in detail the final part of the model.</p>
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="_images/mobilenet_ssd_pp.png"><img alt="_images/mobilenet_ssd_pp.png" src="_images/mobilenet_ssd_pp.png" style="width: 1930.0px; height: 930.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2 </span><span class="caption-text">MobileNet SSD final part</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>We want the outputs of the converted model to be the input tensors of the <code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code> layer.
+We can see that these are the tensors named <code class="docutils literal notranslate"><span class="pre">Squeeze</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_scores</span></code>.
+There is a third input tensor named <code class="docutils literal notranslate"><span class="pre">anchors</span></code> but it is a constant tensor so we don’t have to specify it
+as a model output.</p>
+<p>To do this we create a conversion metafile <code class="docutils literal notranslate"><span class="pre">meta_cut.yaml</span></code> that specifies these tensors as the actual
+outputs of the converted model.
+Their content will then be fed at runtime to the SyNAP library to perform the postprocessing.
+Since there are several possible postprocessing algorithms, the metafile must also specify the format
+and attributes of these tensors so the SyNAP library can apply the right processing to them.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">outputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Squeeze</span><span class="w"></span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tflite_detection_boxes anchors=${ANCHORS}</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">convert_scores</span><span class="w"></span>
+</pre></div>
+</div>
+<p>A few notes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tflite_detection_boxes</span></code> indicate the format of the corresponding tensor</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">${ANCHORS}</span></code> variable is replaced by the anchors extracted from the corresponding tensor
+in the tflite model at conversion time. This information is needed by the runtime library
+to convert the network output to the coordinates of the bounding boxes</p></li>
+<li><p>we don’t explicitly specify any delegate, so the model will be compiled for the default
+delegate; on VS680 this is the NPU.</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>For detailed information on the syntax and options of this metafile, please refer to the
+<cite>Conversion Metafile</cite> section in the <code class="docutils literal notranslate"><span class="pre">SyNAP.pdf</span></code> user manual.</p>
+</div>
+<p>Model conversion is performed as before, but with an additional argument to specify the
+conversion metafile. The warning message is now gone, since the unsupported layer has been excluded
+explicitly:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ synap convert --model ssd_mobilenet_v1_1_default_1.tflite --meta meta_cut.yaml --target VS680 --out-dir compiled
+</pre></div>
+</div>
+<p>We can now push the compiled model to the target and run it with the <code class="docutils literal notranslate"><span class="pre">synap_cli_od</span></code> application:</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>On Android the sample models can be found in <code class="code docutils literal notranslate"><span class="pre">/vendor/firmware/models/</span></code> while
+on Yocto Linux they are in <code class="code docutils literal notranslate"><span class="pre">/usr/share/synap/models/</span></code>.
+In this document we will refer to this directory as <code class="code docutils literal notranslate"><span class="pre">$MODELS</span></code>.</p>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ adb shell mkdir /data/local/tmp/test
+$ adb shell cp <span class="nv">$MODELS</span>/object_detection/coco/info.json /data/local/tmp/test
+$ adb push compiled/model.synap /data/local/tmp/test
+$ adb shell
+dolphin:/ $ <span class="nv">TEST_IMG</span><span class="o">=</span><span class="nv">$MODELS</span>/object_detection/coco/sample/sample001_640x480.jpg
+dolphin:/ $ <span class="nb">cd</span> /data/local/tmp/test
+dolphin:/data/local/tmp/test $ synap_cli_od <span class="nv">$TEST_IMG</span>
+
+Loading network: model.synap
+
+Input image: /vendor/firmware/models/object_detection/coco/sample/sample001_640x480.jpg <span class="o">(</span><span class="nv">w</span> <span class="o">=</span> <span class="m">640</span>, <span class="nv">h</span> <span class="o">=</span> <span class="m">480</span>, <span class="nv">c</span> <span class="o">=</span> <span class="m">3</span><span class="o">)</span>
+Detection time: <span class="m">24</span>.03 ms <span class="o">(</span>pre:17802, inf:5846, post:374<span class="o">)</span>
+<span class="c1">#   Score  Class   Position        Size  Description     Landmarks</span>
+<span class="m">0</span>    <span class="m">0</span>.76      <span class="m">1</span>   <span class="m">184</span>,  <span class="m">38</span>    <span class="m">307</span>, <span class="m">433</span>  bicycle
+<span class="m">1</span>    <span class="m">0</span>.71      <span class="m">2</span>   <span class="m">157</span>,  <span class="m">94</span>     <span class="m">72</span>,  <span class="m">44</span>  car
+<span class="m">2</span>    <span class="m">0</span>.60      <span class="m">2</span>   <span class="m">479</span>,  <span class="m">41</span>    <span class="m">160</span>, <span class="m">133</span>  car
+<span class="m">3</span>    <span class="m">0</span>.57      <span class="m">2</span>   <span class="m">388</span>, <span class="m">107</span>     <span class="m">72</span>,  <span class="m">36</span>  car
+<span class="m">4</span>    <span class="m">0</span>.57      <span class="m">2</span>    <span class="m">97</span>, <span class="m">101</span>     <span class="m">18</span>,  <span class="m">18</span>  car
+<span class="m">5</span>    <span class="m">0</span>.55     <span class="m">27</span>   <span class="m">308</span>,  <span class="m">51</span>    <span class="m">102</span>,  <span class="m">61</span>  tie
+<span class="m">6</span>    <span class="m">0</span>.51      <span class="m">2</span>   <span class="m">421</span>,  <span class="m">97</span>     <span class="m">52</span>,  <span class="m">42</span>  car
+</pre></div>
+</div>
+<figure class="align-default" id="id3">
+<a class="reference internal image-reference" href="_images/od_result.jpg"><img alt="_images/od_result.jpg" src="_images/od_result.jpg" style="width: 320.0px; height: 240.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 3 </span><span class="caption-text">Object detection result</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="heterogeneous-inference">
+<h1>Heterogeneous Inference<a class="headerlink" href="#heterogeneous-inference" title="Permalink to this headline"></a></h1>
+<p>Heterogeneous inference allows to execute different parts of the model on different hardware units.
+In this case we want to execute the entire model on the NPU, except the <code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code>
+layer which we want to execute on the CPU.</p>
+<p>As before we do this with a conversion metafile <code class="docutils literal notranslate"><span class="pre">meta_hi.yaml</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">delegate</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npu</span><span class="w"></span>
+<span class="w">    </span><span class="s">&#39;63&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu</span><span class="w"></span>
+
+<span class="nt">outputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tflite_detection w_scale=640 h_scale=480</span><span class="w"></span>
+</pre></div>
+</div>
+<p>A few notes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>we specify the <code class="docutils literal notranslate"><span class="pre">npu</span></code> delegate for all layers except layer 63 (<code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code>)
+for which we specify the <code class="docutils literal notranslate"><span class="pre">cpu</span></code> delegate</p></li>
+<li><p>we want to convert the entire model so no need to indicate the output tensor names</p></li>
+<li><p>the format of the output tensor is not the same as before, since this is now the
+output of the TFLite_Detection_PostProcess layer: <code class="docutils literal notranslate"><span class="pre">tflite_detection</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">w_scale</span></code> and <code class="docutils literal notranslate"><span class="pre">h_scale</span></code> indicate the width and height of the network input.
+This is needed by the runtime library to rescale the coordinates of the generated bounding boxes
+to the actual size of the input image</p></li>
+</ul>
+</div></blockquote>
+<p>Let’s recompile the model with the new metafile:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ synap convert --model ssd_mobilenet_v1_1_default_1.tflite --meta meta_hi.yaml --target VS680 --out-dir compiled
+</pre></div>
+</div>
+<p>We can now push the compiled model to the target and execute it as before:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>dolphin:/data/local/tmp/test $ synap_cli_od <span class="nv">$TEST_IMG</span>
+Loading network: model.synap
+INFO: Initialized TensorFlow Lite runtime.
+INFO: Created TensorFlow Lite XNNPACK delegate <span class="k">for</span> CPU.
+
+Input image: /vendor/firmware/models/object_detection/coco/sample/sample001_640x480.jpg <span class="o">(</span><span class="nv">w</span> <span class="o">=</span> <span class="m">640</span>, <span class="nv">h</span> <span class="o">=</span> <span class="m">480</span>, <span class="nv">c</span> <span class="o">=</span> <span class="m">3</span><span class="o">)</span>
+Detection time: <span class="m">26</span>.52 ms <span class="o">(</span>pre:17484, inf:8963, post:66<span class="o">)</span>
+<span class="c1">#   Score  Class   Position        Size  Description     Landmarks</span>
+<span class="m">0</span>    <span class="m">0</span>.76      <span class="m">1</span>   <span class="m">184</span>,  <span class="m">38</span>    <span class="m">307</span>, <span class="m">433</span>  bicycle
+<span class="m">1</span>    <span class="m">0</span>.71      <span class="m">2</span>   <span class="m">157</span>,  <span class="m">94</span>     <span class="m">72</span>,  <span class="m">44</span>  car
+<span class="m">2</span>    <span class="m">0</span>.60      <span class="m">2</span>   <span class="m">479</span>,  <span class="m">41</span>    <span class="m">160</span>, <span class="m">133</span>  car
+<span class="m">3</span>    <span class="m">0</span>.57      <span class="m">2</span>    <span class="m">97</span>, <span class="m">101</span>     <span class="m">18</span>,  <span class="m">18</span>  car
+<span class="m">4</span>    <span class="m">0</span>.57      <span class="m">2</span>   <span class="m">400</span>,  <span class="m">99</span>     <span class="m">65</span>,  <span class="m">38</span>  car
+<span class="m">5</span>    <span class="m">0</span>.55     <span class="m">27</span>   <span class="m">308</span>,  <span class="m">51</span>    <span class="m">102</span>,  <span class="m">61</span>  tie
+</pre></div>
+</div>
+<p>As we can see the results are almost exactly the same as before.
+Some minor differences are possible due to the fact that the postprocessing code is not identical.
+Regarding the execution time, even if one single inference is not enough to get accurate measurements,
+we can observe that the preprocessing time hasn’t changed,
+the inference time is slightly higher, and external postprocessing time is reduced.
+This is what we expected since now most of the postprocessing is done during model inference.</p>
+<p>In this case since CPU execution can only start after the NPU has generated its results,
+SyNAP runtime has no choice but to serialize the execution. However in case of more complex models
+with multiple heterogeneous parts, the runtime will try to execute them in parallel whenever possible,
+thus taking advantage as much as possible of the available hardware resources.</p>
+</section>
+<section id="automatic-heterogeneous-inference">
+<h1>Automatic Heterogeneous Inference<a class="headerlink" href="#automatic-heterogeneous-inference" title="Permalink to this headline"></a></h1>
+<p>Starting from SyNAP 3.1 heterogeneous inference will be the default, with automatic selection of the
+most suited hardware unit for each layer.</p>
+<p>In this specific case the conversion toolkit will detect that the <code class="docutils literal notranslate"><span class="pre">TFLite_Detection_PostProcess</span></code>
+node is not available on the NPU and automatically select the CPU delegate for it.</p>
+<p>This means that the conversion metafile is no longer needed,
+except if the user wants to override the default behavior or specify some additional attributes.
+For example if we know that the model has been trained with <em>RGB</em> images, we can
+specify this information explicitely in the metafile as an attribute of the input tensor.
+This information will be used at runtime by SyNAP preprocessing library to perform any necessary
+image format conversion.</p>
+<p>Here below the corresponding meta file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">delegate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span><span class="w"></span>
+
+<span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rgb</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="SyNAP Heterogeneous Inference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, 2023, 2024, Synaptics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
