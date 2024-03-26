@@ -1,1 +1,1 @@
-The documentation is available at https://syna-synap.github.io/doc/
+The documentation is available at https://synaptics-synap.github.io/doc/
