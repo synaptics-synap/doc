@@ -1,0 +1,29 @@
+Operator	Input	Kernel	Output	NN	TP	PPU
+LSTMUNIT_OVXLIB 	asym-u8 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	pc-sym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	|check| 	|check| 
+CONV2D_LSTM 	asym-u8 	asym-u8 	asym-u8 	|check| 	 	 
+	asym-i8 	pc-sym-i8 	asym-i8 	|check| 	 	 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	 	|check| 
+CONV2D_LSTM_CELL 	asym-u8 	asym-u8 	asym-u8 	|check| 	 	 
+	asym-i8 	pc-sym-i8 	asym-i8 	|check| 	 	 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16	fp16 	fp16 	 	 	|check| 
+LSTM_OVXLIB 	asym-u8 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	pc-sym-i8	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	|check| 	|check| 
+GRUCELL_OVXLIB 	asym-u8 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	pc-sym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	|check| 	|check| 
+GRU_OVXLIB 	asym-u8 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	pc-sym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	|check| 	|check| 
+SVDF 	asym-u8 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	pc-sym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	|check| 	|check| 

@@ -1,0 +1,47 @@
+a {
+    color: #007dc3
+}
+
+.synaptics-table-hidden {
+    display: none;
+}
+
+.synaptics-table-inner-wrapper {
+    display: inline-block;
+}
+
+.synaptics-close-link {
+    float: right;
+}
+
+.synaptics-table-wrapper {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    position: fixed;
+    top:0;
+    left: 0;
+    z-index: 400;
+    overflow: auto;
+    padding: 40px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.synaptics-table-placeholder {
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 1.5em;
+}
+
+.synaptics-table-icon {
+    margin-top: -5pt;
+    font-size: 40pt;
+}
+
+
+.synaptics-table-caption {
+  color: #000;
+  font: italic 85%/1 arial,sans-serif;
+  text-align: center;
+}

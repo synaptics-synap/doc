@@ -1,0 +1,86 @@
+Operator	Input	Output	NN	TP	PPU
+EXPAND_BROADCAST 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+SLICE 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+SPLIT 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+CONCAT 	asym-u8	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32  	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+STACK 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+UNSTACK 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+RESHAPE 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+SQUEEZE 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+PERMUTE 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+REORG 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+SPACE2DEPTH 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+DEPTH2SPACE 	asym-u8 	asym-u8		 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+	bool8	bool8 	 	 	 
+BATCH2SPACE 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+SPACE2BATCH 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+PAD 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+REVERSE 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+STRIDED_SLICE 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+REDUCE 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+ARGMAX 	asym-u8 	asym-u8 / int16 / int32 	 	 	|check| 
+	asym-i8 	asym-u8 / int16 / int32 	 	 	|check| 
+	fp32 	int32 	 	 	|check| 
+	fp16 	asym-u8 / int16 / int32 	 	 	|check| 
+ARGMIN 	asym-u8 	asym-u8 / int16 / int32 	 	 	|check| 
+	asym-i8 	asym-u8 / int16 / int32 	 	 	|check| 
+	fp32 	int32 	 	 	|check| 
+	fp16 	asym-u8 / int16 / int32 	 	 	|check| 
+SHUFFLECHANNEL 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 

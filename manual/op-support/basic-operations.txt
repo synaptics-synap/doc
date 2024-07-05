@@ -1,0 +1,29 @@
+Operator	Input	Kernel	Output	NN	TP	PPU
+CONV2D 	asym-u8 	asym-u8 	asym-u8 	|check| 	 	 
+	asym-i8 	pc-sym-i8 	asym-i8 	|check| 	 	|check| 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	 	|check| 
+CONV1D 	asym-u8 	asym-u8 	asym-u8 	|check| 	 	 
+	asym-i8 	pc-sym-i8 	asym-i8 	|check| 	 	|check| 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	 	|check| 
+DECONVOLUTION 	asym-u8 	asym-u8 	asym-u8 	|check| 	 	 
+	asym-i8 	pc-sym-i8 	asym-i8 	|check| 	 	|check| 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	 	|check| 
+DECONVOLUTION1D  	asym-u8  	asym-u8 	asym-u8 	|check| 	 	 
+	asym-i8  	pc-sym-i8	asym-i8 	|check| 	 	|check| 
+	fp32  	fp32 	fp32 	 	 	|check| 
+	fp16  	fp16 	fp16 	 	 	|check| 
+FCL2 	asym-u8 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8	pc-sym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	|check| 	 
+GROUPED_CONV1D 	asym-u8 	asym-u8 	asym-u8 	|check| 	 	 
+	asym-i8 	pc-sym-i8 	asym-i8 	|check| 	 	|check| 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	 	|check|
+GROUPED_CONV2D 	asym-u8 	asym-u8 	asym-u8 	|check| 	 	 
+	asym-i8 	pc-sym-i8 	asym-i8 	|check| 	 	|check| 
+	fp32 	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	fp16 	 	 	|check| 

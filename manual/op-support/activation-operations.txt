@@ -1,0 +1,101 @@
+Operator	Input	Output	NN	TP	PPU
+ELU 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	 	|check| 	|check| 
+	fp16 	fp16 	 	|check| 	|check| 
+HARD_SIGMOID 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	 	|check| 	|check| 
+	fp16 	fp16 	 	|check| 	|check| 
+SWISH 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16  	fp16 	 	|check| 	 
+LEAKY_RELU 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8  	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+PRELU 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8  	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+RELU 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+RELUN 	asym-u8 	asym-u8			|check| 	 
+	asym-i8  	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+RSQRT 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+SIGMOID 	asym-u8 	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+SOFTRELU 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+SQRT 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32  	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+TANH 	asym-u8 	asym-u8  	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+ABS 	asym-u8  	asym-u8 	 	|check| 	 
+	asym-i8 	asym-i8 	 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+CLIP 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	 	  	|check| 
+	fp16 	fp16 	 	|check| 	|check| 
+EXP 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+LOG 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	|check| 
+NEG 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	|check| 
+MISH 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	|check| 
+SOFTMAX 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32  	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+LOG_SOFTMAX 	asym-u8 	asym-u8  	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+SQUARE 	asym-u8  	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+SIN 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+LINEAR 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+ERF 	asym-u8  	asym-u8 	 	|check| 	|check| 
+	asym-i8  	asym-i8 	 	|check| 	|check| 
+	fp32  	fp32 	 	 	|check| 
+	fp16  	fp16 	 	|check| 	|check| 
+GELU 	asym-u8  	asym-u8 	 	|check| 	|check| 
+	asym-i8  	asym-i8 	 	|check| 	|check| 
+	fp32  	fp32 	 	 	|check| 
+	fp16  	fp16 	 	|check| 	|check| 

@@ -1,0 +1,17 @@
+Operator	Input	Output	NN	TP	PPU
+POOL 	asym-u8 	asym-u8 	|check| 	|check| 	 
+	asym-i8 	asym-i8 	|check| 	|check| 	 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	 
+ROI_POOL 	asym-u8 	asym-u8 	 	|check| 	|check| 
+	asym-i8 	asym-i8 	 	|check| 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	|check| 	|check| 
+POOLWITHARGMAX 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
+UPSAMPLE 	asym-u8 	asym-u8 	 	 	|check| 
+	asym-i8 	asym-i8 	 	 	|check| 
+	fp32 	fp32 	 	 	|check| 
+	fp16 	fp16 	 	 	|check| 
