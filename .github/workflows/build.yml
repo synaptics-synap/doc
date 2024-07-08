@@ -35,7 +35,7 @@ jobs:
 
   publish:
     name: Publish doc to GitHub Pages
-    if: ${{ github.ref_name == 'wip/adddoc' }}
+    if: ${{ github.ref_name == 'main' }}
     permissions:
       contents: read
       pages: write
