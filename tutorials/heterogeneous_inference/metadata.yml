@@ -1,0 +1,23 @@
+# document name
+project: 'SyNAP Heterogeneous Inference'
+
+# author
+author: 'Synaptics'
+
+# document version
+version: '1.0.0'
+
+# document release
+release: '1.0.0'
+
+# part number
+part_number: '511-000xxx-01'
+
+# document revision
+revision: '1.0.0'
+
+# copyright years
+years: [2022,2023,2024]
+
+# one of internal, limited, nda
+document_type: public

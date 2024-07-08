@@ -1,0 +1,3 @@
+extensions = [
+    'synaptics_theme'
+]
