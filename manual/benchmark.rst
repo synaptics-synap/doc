@@ -75,13 +75,13 @@ All tests have been done on 64-bits OS with 4GB of memory.
    :widths: 45,11,11,11,11,11,11,4
    :class: widetable
 
-   .. include:: ../../models/test_report_vs680_synaptics.rst
+   .. include:: benchmark/test_report_vs680_synaptics.rst
 
 .. table:: Open models
    :widths: 45,11,11,11,11,11,11,4
    :class: widetable
 
-   .. include:: ../../models/test_report_vs680_open.rst
+   .. include:: benchmark/test_report_vs680_open.rst
 
 
 .. raw:: latex
@@ -92,13 +92,13 @@ All tests have been done on 64-bits OS with 4GB of memory.
    :widths: 45,11,11,11,11,11,11,4
    :class: widetable
 
-   .. include:: ../../models/test_report_vs680_aibench4.rst
+   .. include:: benchmark/test_report_vs680_aibench4.rst
 
 .. table:: AiBenchmark 5 models
    :widths: 45,11,11,11,11,11,11,4
    :class: widetable
 
-   .. include:: ../../models/test_report_vs680_aibench5.rst
+   .. include:: benchmark/test_report_vs680_aibench5.rst
 
 
 .. raw:: latex
@@ -116,13 +116,13 @@ All tests have been done on 64-bits OS with *2GB* of memory.
    :widths: 45,11,11,11,11,11,11,4
    :class: widetable
 
-   .. include:: ../../models/test_report_vs640_synaptics.rst
+   .. include:: benchmark/test_report_vs640_synaptics.rst
 
 .. table:: Open models
    :widths: 45,11,11,11,11,11,11,4
    :class: widetable
 
-   .. include:: ../../models/test_report_vs640_open.rst
+   .. include:: benchmark/test_report_vs640_open.rst
 
 
 .. raw:: latex
@@ -133,14 +133,14 @@ All tests have been done on 64-bits OS with *2GB* of memory.
    :widths: 45,11,11,11,11,11,11,4
    :class: widetable
 
-   .. include:: ../../models/test_report_vs640_aibench4.rst
+   .. include:: benchmark/test_report_vs640_aibench4.rst
 
 
 .. table:: AiBenchmark 5 models
    :widths: 45,11,11,11,11,11,11,4
    :class: widetable
 
-   .. include:: ../../models/test_report_vs640_aibench5.rst
+   .. include:: benchmark/test_report_vs640_aibench5.rst
 
 
 .. raw:: latex
