@@ -1,43 +1,28 @@
 Introduction
 ============
 
-The purpose of SyNAP is to support the execution of neural networks by taking advantage of the
-available hardware accelerators.
-The execution of a *Neural Network*, commonly called an *inference* or a *prediction*,  consists of
-taking one or more inputs and applying a neural network to them to generate one or more outputs.
-Each input and output is represented with an n-dimensional array of data, called a *Tensor*.
-Execution takes place inside the Network Processing Unit (*NPU*) accelerator or in the *GPU* or directly
-in the *CPU*.
-In order to do this, the network has to be converted from its original representation (e.g.
-Tensorflow Lite) to the internal SyNAP representation, optimized for the target hardware.
+The purpose of SyNAP is to optimize the execution of neural networks by taking best advantage of the
+available hardware - *NPU*, *GPU*, *CPU* or even :ref:`heterogeneous_inference`.
 
-This conversion can occur at two different moments:
+In order to do this, SyNAP converts neural network models from their original representation (e.g.
+Tensorflow Lite or ONNX) and optimizes and compiles them for the target hardware.
 
-    - at runtime, when the network is going to be executed, by using a just-in-time compiler
-      and optimizer. We call this *Online Model Conversion*.
+This model optimization can occur at one of two stages:
+
+    - *Pre-optimized* - a binary specific to the target hardware is compiled ahead of time.
+
+    - *Just-in-time* (JIT) - at runtime, compiled at the moment the network is going to be executed.
+
+
+.. note::
+
+    For embedded applications with a single hardware target, *pre-optimization* is resource optimial.
+
+    For quick prototyping or portability across hardware targets, *JIT-optimization* offers flexibility.
+
     
-    - ahead of time, by applying offline conversion and optimization tools which generate a
-      precompiled representation of the network specific for the target hardware.
-      We call this *Offline Model Conversion*. 
 
-
-Online Model Conversion
------------------------
-
-Online model conversion allows to execute a model directly without any
-intermediate steps. This is the most flexible method as all the required conversions and
-optimizations are done on the fly at runtime, just before the model is executed. The price to be paid
-for this is that model compilation takes some time (typically a few seconds) when the model
-is first executed.
-Another important limitation is that online execution is not available in a secure media path, that is
-to process data in secure streams.
-
-.. figure:: images/online_conversion.png
-
-   Online model conversion and execution
-
-
-Offline Model Conversion
+Pre-optimizing Models
 ------------------------
 
 In this mode the network has to be converted from its original representation (e.g.
@@ -56,7 +41,26 @@ secure inference technology.
 
 .. figure:: images/offline_conversion.png
 
-    Offline model conversion and execution
+    Pre-optimization and execution
+
+
+JIT Optimization
+-----------------------
+
+JIT Optimization allows the execution of a model directly without any
+intermediate steps. This is the most flexible method as all the required conversions and
+optimizations are done on the fly at runtime, just before the model is executed. The price to be paid
+for this is that model compilation takes some time (typically a few seconds) when the model
+is first executed.
+Another important limitation is that online execution is not available in a secure media path, that is
+to process data in secure streams.
+
+.. figure:: images/online_conversion.png
+
+   JIT Optimization and execution
+
+
+
 
 
 .. raw:: latex
