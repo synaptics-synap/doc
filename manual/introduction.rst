@@ -25,6 +25,10 @@ This model optimization can occur at one of two stages:
 Pre-optimizing Models
 ------------------------
 
+.. figure:: images/preoptimized.svg
+
+    Pre-optimization and execution
+
 In this mode the network has to be converted from its original representation (e.g.
 Tensorflow Lite) to the internal SyNAP representation, optimized for the target hardware.
 Doing the optimization offline allows to perform the highest level of optimizations possible
@@ -38,11 +42,6 @@ secure inference technology.
 .. note::
 
     a compiled model is target-specific and will fail to execute on a different hardware
-
-.. figure:: images/offline_conversion.png
-
-    Pre-optimization and execution
-
 
 JIT Optimization
 -----------------------
