@@ -1,8 +1,13 @@
+import os
+
+# setup documentation metadata
+
 project = 'SyNAP'
 copyright = '2024, Synaptics'
 author = 'Synaptics'
 release = '3.1.0'
 
+# setup html theme
 
 html_static_path = ['_static']
 
@@ -16,12 +21,31 @@ extensions = [
 
 html_theme = "sphinx_rtd_theme"
 
+templates_path = [ '_templates' ]
+
 html_context = {
     'display_github': True,
     'github_repo': 'synaptics-synap/doc',
     'github_version': 'main',
-    'conf_py_path': '/'
+    'conf_py_path': '/',
+    'version': release,
 }
+
+# create the version selection menu if we are building the lastes version of the doc
+if os.environ["GITHUB_REF"] == os.environ.get("LATEST_BRANCH", "refs/heads/main"):
+  html_context['current_version'] = 'latest'
+  html_context['version'] = 'latest'
+
+  if not os.path.isdir("v"):
+     raise Exception("Missing versions directory")
+
+  html_context['versions'] = [(v, f"v/{v}/index.html" ) for v in os.listdir('v')] + [('latest', 'index.html')]
+
+  html_theme_options = {
+      'display_version': True,
+  }
+
+# setup inclusion of doxygen documentation extracted from sources
 
 breathe_projects = {
     'runtime': '_build/doxygen/xml'

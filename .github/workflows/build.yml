@@ -3,6 +3,12 @@ name: Build and publish documentation
 on:
   push:
 
+env:
+  # branch that contains the lastest version of the documentation
+  # when building this branch we create the version list and switcher
+  # so that they can be published on the website
+  LATEST_BRANCH: refs/heads/main
+
 jobs:
 
   build:
