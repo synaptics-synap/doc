@@ -32,7 +32,7 @@ html_context = {
 }
 
 # create the version selection menu if we are building the lastes version of the doc
-if os.environ["GITHUB_REF"] == os.environ.get("LATEST_BRANCH", "refs/heads/main"):
+if os.environ.get("GITHUB_REF") == os.environ.get("LATEST_BRANCH", "refs/heads/main"):
   html_context['current_version'] = 'latest'
   html_context['version'] = 'latest'
 
