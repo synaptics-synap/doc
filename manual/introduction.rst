@@ -1,58 +1,36 @@
 Introduction
 ============
 
-The purpose of SyNAP is to optimize the execution of neural networks by taking best advantage of the
-available hardware - *NPU*, *GPU*, *CPU* or even :ref:`heterogeneous_inference`.
+The purpose of SyNAP is to optimize the execution of neural network models by taking best advantage of *NPU* or *GPU* hardware accelerators on-board `Synaptics Astra Processors <https://www.synaptics.com/products/embedded-processors>`_. 
 
-In order to do this, SyNAP converts neural network models from their original representation (e.g.
-Tensorflow Lite or ONNX) and optimizes and compiles them for the target hardware.
-
-This model optimization can occur at one of two stages:
-
-    - *Pre-optimized* - a binary specific to the target hardware is compiled ahead of time.
-
-    - *Just-in-time* (JIT) - at runtime, compiled at the moment the network is going to be executed.
+In order to do this, SyNAP converts the models from their original representation (e.g. Tensorflow Lite, PyTorch or ONNX) and compiles them into the `.synap` binary format specific to the target hardware. 
 
 
-.. note::
+Optimizing models
+-----------------------
 
-    For embedded applications with a single hardware target, *pre-optimization* is resource optimial.
+For embedded software with a single hardware target, an *ahead of time compilation* approach is resource optimial - and in most cases can be done with a :ref:`single command in SyNAP <working_with_models>`. 
 
-    For quick prototyping or portability across hardware targets, *JIT-optimization* offers flexibility.
+You can also pass advanced optimization options (e.g. :ref:`mixed quantization <../tutorials/model_import>`, :ref:`heterogeneous inference <heterogeneous_inference>`) using a :ref:`YAML metafile <working_with_models.html#conversion-metafile>`. The model can also be signed and encrypted to support Synaptics SyKURE\ :sup:`TM`
+secure inference technology.
 
-    
-
-Pre-optimizing Models
-------------------------
 
 .. figure:: images/preoptimized.svg
 
-    Pre-optimization and execution
-
-In this mode the network has to be converted from its original representation (e.g.
-Tensorflow Lite) to the internal SyNAP representation, optimized for the target hardware.
-Doing the optimization offline allows to perform the highest level of optimizations possible
-without the tradeoffs of the just-in-time compiler.
-
-In most cases the model conversion can be done with a one-line command using SyNAP toolkit.
-SyNAP toolkit also supports more advanced operations, such as network quantization and preprocessing.
-Optionally an offline model can also be signed and encrypted to support Synaptics SyKURE\ :sup:`TM`
-secure inference technology.
 
 .. note::
 
-    a compiled model is target-specific and will fail to execute on a different hardware
+    While optimal for the target hardware, a pre-optimized model is target specific and will fail to execute on different hardware
 
-JIT Optimization
+JIT Compilation
 -----------------------
 
-JIT Optimization allows the execution of a model directly without any
-intermediate steps. This is the most flexible method as all the required conversions and
-optimizations are done on the fly at runtime, just before the model is executed. The price to be paid
-for this is that model compilation takes some time (typically a few seconds) when the model
-is first executed.
-Another important limitation is that online execution is not available in a secure media path, that is
-to process data in secure streams.
+Just-in-time compilation enables the execution of TensorFlow Lite models directly. For applications that require portability (e.g. must be able to run on an Astra embedded board or an Android phone), the JIT compilation approach offers flexibilty at the cost of performance. 
+
+.. note::
+
+    JIT compilation is flexible, but initialization time can take a few seconds, and additional optimization and secure media paths are not available.
+
 
 .. figure:: images/online_conversion.png
 
