@@ -1,4 +1,6 @@
-Neural Network Processing Unit Operator Support
+.. _npu_operators:
+
+NPU Operators
 ===============================================
 
 This section summarizes neural network operators supported by the SyNAP VS6x0/SL16x0 class of NPUs

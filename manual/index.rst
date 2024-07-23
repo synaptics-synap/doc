@@ -1,6 +1,6 @@
 SyNAP Manual
 ************
-
+ 
 .. toctree::
 
      introduction.rst
