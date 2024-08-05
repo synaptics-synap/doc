@@ -1,8 +1,8 @@
-Running Inference
-=================
+Inference
+=========
 
-Methods
--------
+Introduction
+------------
 1) The easiest way to get started is using the CLI commands. 
 
 2) For application development, a C++ library API etc

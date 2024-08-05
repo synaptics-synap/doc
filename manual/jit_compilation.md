@@ -1,4 +1,4 @@
-JIT Optimiztion
+JIT Compilation
 ===============
 
 Introduction

@@ -1,8 +1,5 @@
-Compiling Models
-================
-
-
-.. highlight:: none
+Optimizing Models
+=================
 
 
 Model Conversion
