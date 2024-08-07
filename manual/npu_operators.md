@@ -59,7 +59,7 @@ This section summarizes neural network operators supported by the SyNAP VS6x0/SL
 
 
 > **Note:** 
-> Convolutions are executed in the NN engine only if they satisfy the following conditions: **stride == 1**, **kernel_size <= 15x15**, **dilation size + kernel size <= 15x15**. If any of these conditions are not satisfied, the convolution will require support of the TP core and will run considerably slower.
+> Convolutions are executed in the NN engine only if they satisfy the following conditions: `**stride == 1**, **kernel_size <= 15x15**, **dilation size + kernel size <= 15x15**`. If any of these conditions are not satisfied, the convolution will require support of the TP core and will run considerably slower.
 
 ## Activation Operations
 

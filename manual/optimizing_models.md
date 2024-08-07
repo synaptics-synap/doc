@@ -204,10 +204,10 @@ field. Most of the fields are optional, mandatory fields are explicitly marked.
     - ``file``
         Path to the security file. This is a ``yaml`` file with the following fields::
 
-            encryption_key: <path-to-encryption-key-file>
-            signature_key: <path-to-signature-key-file>
-            model_certificate: <path-to-model-certificate-file>
-            vendor_certificate: <path-to-vendor-certificate-file>
+            encryption_key: `<path-to-encryption-key-file>`
+            signature_key: `<path-to-signature-key-file>`
+            model_certificate: `<path-to-model-certificate-file>`
+            vendor_certificate: `<path-to-vendor-certificate-file>`
         
         Both relative and absolute paths can be used.
         Relative paths are considered relative to the location of the security file itself.

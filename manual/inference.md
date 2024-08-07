@@ -89,7 +89,8 @@ It takes in input:
 
 It generates in output:
 - a file containing the processed image in for each input file.
-  The output file is called `outimage<i>_<W>x<H>.<ext>`, where <i> is the index of the corresponding input file, <W> and <H> are the dimension of the image, and <ext> depends on the type of the output image, for example `nv12` or `rgb`. By output files are created in the current directory, this can be changed with the `--out-dir` option.
+
+  The output file is called `outimage<i>_<W>x<H>.<ext>`, where `<i>` is the index of the corresponding input file, `<W>` and `<H>` are the dimensions of the image, and `<ext>` depends on the type of the output image, for example `nv12` or `rgb`. The output files are created in the current directory, and this can be changed with the `--out-dir` option.
 
 > **Note**: The input image(s) are automatically resized to the size of the network input tensor. This is not supported for `nv12`: if the network takes in input an `nv12` image, the file provided in input must have the same format and the *WxH* dimensions of the image must correspond to the dimensions of the input tensor of the network.
 
