@@ -303,6 +303,63 @@ in input to the converter tool as well. Example::
     \clearpage
 
 
+Installing pip
+--------------
+
+This ``SyNAP`` python package allows you to convert models, providing functionality similar to the Docker-based setup. The SyNAP package is distributed as a binary wheel. To install it, simply download the appropriate wheel file based on your Python version.
+
+
+You can find the latest version of the ``pip`` package on ``https://github.com/synaptics-synap/toolkit/releases``
+
+download and installation steps:
+
+.. code-block:: shell
+
+  $ wget https://github.com/synaptics-synap/toolkit/releases/download/#SyNAP_Version#/#SyNAP_Wheel_Name#.whl
+  $ pip install #SyNAP_Wheel_Name#.whl --extra-index-url https://download.pytorch.org/whl/cpu
+
+To verify that SyNAP has been installed successfully, run:
+
+.. code-block:: shell
+
+  $ pip show synap
+
+.. important::
+
+    The binary distribution wheel currently only supports *Ubuntu 22.04*. The quickest way to get started is by using the Google Colab environment to avoid any platform dependency. Remember to prefix the commands with ``!`` when executing them in Google Colab, as this is required to run shell commands in that environment.
+
+Running pip Console Scripts
+---------------------------
+
+After installing pip package, you can use the SyNAP Tools through console commands.
+
+To see available commands for SyNAP tools, use
+
+.. code-block:: shell
+
+  $ synap help
+
+  SyNAP Toolkit
+
+  Usage:
+    COMMAND ARGS
+    Run 'COMMAND --help' for more information on a command.
+
+  Commands:
+    synap_convert        - Convert and compile model
+    synap_image_from_raw - Convert image file to raw format
+    synap_image_to_raw   - Generate image file from raw format
+    synap_image_od       - Superimpose object-detection boxes to an image
+
+Example:
+
+.. code-block:: shell
+
+  $ synap_convert --model mobilenet_v1_0.25_224_quant.tflite --target VS680 --out-dir mnv1
+  $ ls mnv1
+  model_info.txt  model.synap  cache
+
+
 .. _conversion-metafile:
 
 Conversion Metafile
