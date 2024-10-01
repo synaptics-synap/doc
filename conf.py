@@ -17,6 +17,7 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinxcontrib.plantuml',
     'breathe',
+    'myst_parser'
 ]
 
 html_theme = "sphinx_rtd_theme"

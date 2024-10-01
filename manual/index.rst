@@ -12,3 +12,4 @@ SyNAP Manual
      framework_api.rst
      npu_operators.rst
      java.rst
+     test.md
