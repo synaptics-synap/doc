@@ -8,7 +8,9 @@ RUN pip install sphinxcontrib-plantuml==0.30
 
 RUN pip install breathe==4.35.0
 
-COPY download_releases.py /usr/local/bin
 COPY build.sh /usr/local/bin/build.sh
+
+COPY create-site.py /tools/
+COPY snippets/ /tools/snippets
 
 ENTRYPOINT [ "/usr/local/bin/build.sh" ]

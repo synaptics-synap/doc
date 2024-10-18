@@ -5,7 +5,7 @@ import os
 project = 'SyNAP'
 copyright = '2024, Synaptics'
 author = 'Synaptics'
-release = '3.1.0'
+release = os.environ.get('RELEASE_VER', 'git-main')
 
 # setup html theme
 
@@ -30,20 +30,6 @@ html_context = {
     'conf_py_path': '/',
     'version': release,
 }
-
-# create the version selection menu if we are building the lastes version of the doc
-if os.environ.get("GITHUB_REF") == os.environ.get("LATEST_BRANCH", "refs/heads/main"):
-  html_context['current_version'] = 'latest'
-  html_context['version'] = 'latest'
-
-  if not os.path.isdir("v"):
-     raise Exception("Missing versions directory")
-
-  html_context['versions'] = [(v, f"v/{v}/index.html" ) for v in os.listdir('v')] + [('latest', 'index.html')]
-
-  html_theme_options = {
-      'display_version': True,
-  }
 
 # setup inclusion of doxygen documentation extracted from sources
 
