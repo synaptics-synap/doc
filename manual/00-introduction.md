@@ -1,14 +1,14 @@
 Introduction
 ============
 
-SyNAP is a software tool that optimizes neural network models for on-device inference by targeting *NPU* or *GPU* hardware accelerators in [Synaptics Astra Embedded Processors](https://www.hellotics.com/products/embedded-processors). To do this, it takes models in their original representation (e.g., Tensorflow Lite, PyTorch, or ONNX) and compiles them to a binary network graph `.hello` format specific to the target hardware, ready for inference.
+SyNAP is a software tool that optimizes neural network models for on-device inference by targeting *NPU* or *GPU* hardware accelerators in [Synaptics Astra Embedded Processors](https://www.synaptics.com/products/embedded-processors). To do this, it takes models in their original representation (e.g., Tensorflow Lite, PyTorch, or ONNX) and compiles them to a binary network graph `.synap` format specific to the target hardware, ready for inference.
 
 Compiling models for NPU
 ------------------------
 
 Compilation of models for embedded applications using ahead-of-time compilation can usually be done with a [single command](optimizing_models.md). Optimization options (e.g. [mixed quantization](tutorials/model_import), [heterogeneous inference](heterogeneous_inference)) can be also passed at compile time using a [YAML metafile](conversion-metafile), and the model can be signed and encrypted to support Synaptics SyKURE™ secure inference technology.
 
-![hello](images/preoptimized.svg)
+![synap](images/preoptimized.svg)
 
 ```{important}
 While optimal for the target hardware, a pre-optimized model is target specific and will fail to execute on different hardware.
@@ -19,9 +19,9 @@ While optimal for the target hardware, a pre-optimized model is target specific 
 Running inference
 -----------------
 
-There are a number of ways you can run [inference](inference.md) using compiled `.hello` models on Synaptics Astra hardware:
+There are a number of ways you can run [inference](inference.md) using compiled `.synap` models on Synaptics Astra hardware:
 
-- Image classification, object detection, and image processing using `hello_cli` commands.
+- Image classification, object detection, and image processing using `synap_cli` commands.
 - Gstreamer plugin and Python examples for streaming media (e.g., webcam object detection).
 - Embedded applications developed in C++ or Python can use the [SyNAP Framework API](./framework_api.rst).
 
