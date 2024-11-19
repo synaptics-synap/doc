@@ -17,6 +17,11 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinxcontrib.plantuml',
     'breathe',
+    'myst_parser',
+]
+
+myst_enable_extensions = [
+    "html_admonition",
 ]
 
 html_theme = "sphinx_rtd_theme"
