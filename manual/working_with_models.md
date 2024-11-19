@@ -1,8 +1,5 @@
-Working with Models
-===================
-
-
-.. highlight:: none
+Optimizing Models
+=================
 
 
 Model Conversion
@@ -13,242 +10,24 @@ an internal representation optimized for the target hardware.
 The conversion tool and utilities can run on Linux, MacOS or Windows hosts inside a *Docker* container.
 Only `Docker` and the ``toolkit`` image are required, no additional dependencies have to be installed.
 
-The following network model formats are supported:
+## Supported formats
 
-    - Tensorflow Lite (``.tflite`` extension)
-    - ONNX (``.onnx`` extension)
-    - TorchScript (``.torchscript``, ``.pt``, ``.pth`` extensions)
-    - Tensorflow (``.pb`` extension)
-    - Caffe (``.prototxt`` extension)
-
-
-.. note::
-
-    PyTorch models can be saved in different formats, only `TorchScript` format is supported.
-    see :ref:`working-with-pytorch-models-label` for more information.
+* Tensorflow Lite (``.tflite`` extension)
+* ONNX (``.onnx`` extension)
+* TorchScript (``.torchscript``, ``.pt``, ``.pth`` extensions)
+  - TorchScript format only. See :ref:`working-with-pytorch-models-label` for more information.
+* Tensorflow (``.pb`` extension)
+* Caffe (``.prototxt`` extension)
+  - Caffe 1.x only.  Caffe2, Caffe-SSD and Caffe-LSTM not supported
 
 
-.. note::
+NOTE - Support for ``.pb`` and ``.prototxt`` formats is deprecated.
 
-    Only standard Caffe 1.0 models are supported.
-    Custom variants such as *Caffe-SSD* or *Caffe-LSTM* models or legacy (pre-1.0) models require
-    specific parsers which are currently not available in SyNAP toolkit.
-    *Caffe2* models are not supported as well.
-
-.. warning::
-
-    The support for ``.pb`` and ``.prototxt`` formats will be removed in the future.
-
-.. _using-docker-label:
-
-Installing Docker
------------------
-
-A few installation hints here below, please note that these are not a replacement for the official
-`Docker` documentation, for more details please refer to ``https://docs.docker.com/get-docker/`` .
-
-.. _using-docker-ubuntu-label:
-
-Linux/Ubuntu
-~~~~~~~~~~~~
-
-.. code-block:: shell
-
-    apt-get install docker.io
-
-To be able to run docker without super user also run the two commands here below once after
-docker installation (for more info refer to https://docs.docker.com/engine/install/linux-postinstall/)
-
-.. code-block:: shell
-
-    # Create the docker group if it doesn't already exist
-    sudo groupadd docker
-    # Add the current user "$USER" to the docker group
-    sudo usermod -aG docker $USER
-
-macOS - Docker
-~~~~~~~~~~~~~~
-
-The easiest way to install Docker on MacOS is via the ``brew`` package manager.
-If you don't have it installed yet please follow the official `brew` website: https://brew.sh/
-After brew is installed you can install Docker.
-
-.. important::
-
-    On macOS the Docker GUI is not free for use for commercial application, a valid alternative is `Colima`.
-
-
-.. code-block:: shell
-
-    brew install docker
-
-See the note in the linux installation above to run docker without super user.
-
-
-macOS - Colima
-~~~~~~~~~~~~~~
-
-`Colima` is a free container runtimes on macOS that can be used a replacement for Docker.
-(https://github.com/abiosoft/colima).
-It doesn't have a GUI but nevertheless is easy to install and configure.
-
-.. code-block:: shell
-
-    brew install colima
-    mkdir -p ~/.docker/cli-plugins
-    brew install docker-Buildx
-    ln -sfn $(brew --prefix)/opt/docker-buildx/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
-    colima start --vm-type vz --mount-type virtiofs --cpu 4 --memory 8 --disk 80
-
-After the above commands, you can use `Colima` to work with Docker containers, the settings are
-stored in a config file ``~/.colima/default/colima.yaml`` and can be modified by editing the file
-if needed.
-Colima has to be started after each restart of the Mac:
-
-.. code-block:: shell
-
-    colima start
-
-..
-    Installation description from:
-    https://smallsharpsoftwaretools.com/tutorials/use-colima-to-run-docker-containers-on-macos/ 
-
-
-Windows
-~~~~~~~
-
-The suggested way to run Docker on Windows is to install it inside a Linux Virtual Machine
-using *WSL2* available from Windows 10.
-
-.. important::
-
-    Running Docker directly in Windows is incompatible with the presence of a VM.
-    For this reason using a Linux VM in WSL2 is usually the best option.
-
-*WSL2* installation steps:
-
-    1. Run *Windows PowerShell* App as Administrator and execute the following command
-       to install WSL2:
-
-       ``> wsl --install``
-        
-       When completed restart the computer.
-
-    2. Run *Windows PowerShell* App as before and install *Ubuntu-22.04*:
-    
-       ``> wsl --install -d Ubuntu-22.04``
-
-    3. Run *Windows Terminal* App and select the *Ubuntu-22.04* distribution.
-       From there install Docker and the *SyNAP* toolkit following the instructions
-       in :ref:`using-docker-ubuntu-label` above
-
-For more information on WSL2 installation and setup please refer to the official Microsoft documentation:
-https://learn.microsoft.com/en-us/windows/wsl/install and https://learn.microsoft.com/en-us/windows/wsl/setup/environment
-
-.. raw:: latex
-
-    \clearpage
-
-
-Installing SyNAP Tools
-----------------------
-
-Before installing the SyNAP toolkit, please be sure that you have a working Docker installation.
-The simplest way to do this is to run the ``hello-world`` image:
-
-.. code-block:: shell
-
-    $ docker run hello-world
-    
-    Unable to find image 'hello-world:latest' locally
-    latest: Pulling from library/hello-world
-    ...
-    ...
-    ...
-    Hello from Docker!
-    This message shows that your installation appears to be working correctly.
-    ...
-    ...
-
-If the above command doesn't produce the expected output please check the instructions
-in the previous section or refer to the official Docker documentation for your platform.
-If all is well you can proceed with the installation of the toolkit.
-
-The SyNAP toolkit is distributed as a Docker image, to install it just download the image from the
-SyNAP github repository:
-
-.. code-block:: shell
-
-    docker pull ghcr.io/synaptics-synap/toolkit:#SyNAP_Version#
-
-This image contains not only the conversion tool itself but also all the required dependencies and
-additional support utilities.
-
-You can find the latest version of the toolkit in: https://github.com/synaptics-synap/toolkit/pkgs/container/toolkit
-
-
-.. _running-toolkit-label:
 
 Running SyNAP Tools
 -------------------
 
-Once Docker and the *SyNAP toolkit* image are installed, the model conversion tool can be executed
-directly inside a docker container.
-The source and converted models can be accessed on the host filesystem by mounting the
-corresponding directories when running the container. For this reason it is important to run the
-container using the same user/group that owns the files to be converted. To avoid manually specifying
-these options at each execution it's suggested to create a simple alias and add it to the user's
-startup file (e.g. ``.bashrc`` or ``.zshrc``):
-
-    - ``alias synap=``\'``docker run -i --rm -u $(id -u):$(id -g) -v $HOME:$HOME -w $(pwd) ghcr.io/synaptics-synap/toolkit:#SyNAP_Version#``\'
-
-The options have the following meaning:
-
-    - ``-i``:
-        run the container interactively (required for commands that read data from *stdin*, such as ``image_od``)
-    - ``--rm``:
-        remove the container when it exits (stopped containers are not needed anymore)
-    - ``-u $(id -u):$(id -g)``:
-        run the container as the current user (so files will have the correct access rights)
-    - ``-v $HOME:$HOME``:
-        mount the user's home directory so that its entire content is visible inside the container.
-        If some models or data are located outside the home directory, additional directories can be mounted
-        by repeating the ``-v`` option, for example add: ``-v /mnt/data:/mnt/data``.
-        It's important to specify the same path outside and inside the container so absolute paths
-        work as expected.
-    - ``-w $(pwd)``:
-        set the working directory of container to the current directory, so that relative paths
-        specified in the command line are resolved correctly
-
-With the above alias, the desired *SyNAP* tool command line is just passed as a parameter, for example:
-
-.. code-block::
-
-    $ synap help
-
-    SyNAP Toolkit
-
-    Docker alias:
-        alias synap='docker run -i --rm -u $(id -u):$(id -g) -v $HOME:$HOME -w $(pwd) \
-                     ghcr.io/synaptics-synap/toolkit:#SyNAP_Version#'
-        Use multiple -v options if needed to mount additional directories eg: -v /mnt/dat:/mnt/dat
-
-    Usage:
-        synap COMMAND ARGS
-        Run 'synap COMMAND --help' for more information on a command.
-
-    Commands:
-        convert           Convert and compile model
-        help              Show help
-        image_from_raw    Convert image file to raw format
-        image_to_raw      Generate image file from raw format
-        image_od          Superimpose object-detection boxes to an image
-        version           Show version
-
-
-.. important:: as already noted there is no need to be ``root`` to run docker. In case you get a
-    *Permission Denied* error when executing the above command, please refer to :ref:`using-docker-ubuntu-label`
-
+First you must [install the SyNAP tools](synap_installation.md) via Docker container or pip package.
 
 The toolkit provides a number of tools to convert and manipulate models and images.
 
@@ -301,63 +80,6 @@ in input to the converter tool as well. Example::
 .. raw:: latex
 
     \clearpage
-
-
-Installing pip
---------------
-
-This ``SyNAP`` python package allows you to convert models, providing functionality similar to the Docker-based setup. The SyNAP package is distributed as a binary wheel. To install it, simply download the appropriate wheel file based on your Python version.
-
-
-You can find the latest version of the ``pip`` package on ``https://github.com/synaptics-synap/toolkit/releases``
-
-download and installation steps:
-
-.. code-block:: shell
-
-  $ wget https://github.com/synaptics-synap/toolkit/releases/download/#SyNAP_Version#/#SyNAP_Wheel_Name#.whl
-  $ pip install #SyNAP_Wheel_Name#.whl --extra-index-url https://download.pytorch.org/whl/cpu
-
-To verify that SyNAP has been installed successfully, run:
-
-.. code-block:: shell
-
-  $ pip show synap
-
-.. important::
-
-    The binary distribution wheel currently only supports *Ubuntu 22.04*. The quickest way to get started is by using the Google Colab environment to avoid any platform dependency. Remember to prefix the commands with ``!`` when executing them in Google Colab, as this is required to run shell commands in that environment.
-
-Running pip Console Scripts
----------------------------
-
-After installing pip package, you can use the SyNAP Tools through console commands.
-
-To see available commands for SyNAP tools, use
-
-.. code-block:: shell
-
-  $ synap help
-
-  SyNAP Toolkit
-
-  Usage:
-    COMMAND ARGS
-    Run 'COMMAND --help' for more information on a command.
-
-  Commands:
-    synap_convert        - Convert and compile model
-    synap_image_from_raw - Convert image file to raw format
-    synap_image_to_raw   - Generate image file from raw format
-    synap_image_od       - Superimpose object-detection boxes to an image
-
-Example:
-
-.. code-block:: shell
-
-  $ synap_convert --model mobilenet_v1_0.25_224_quant.tflite --target VS680 --out-dir mnv1
-  $ ls mnv1
-  model_info.txt  model.synap  cache
 
 
 .. _conversion-metafile:
@@ -482,10 +204,10 @@ field. Most of the fields are optional, mandatory fields are explicitly marked.
     - ``file``
         Path to the security file. This is a ``yaml`` file with the following fields::
 
-            encryption_key: <path-to-encryption-key-file>
-            signature_key: <path-to-signature-key-file>
-            model_certificate: <path-to-model-certificate-file>
-            vendor_certificate: <path-to-vendor-certificate-file>
+            encryption_key: `<path-to-encryption-key-file>`
+            signature_key: `<path-to-signature-key-file>`
+            model_certificate: `<path-to-model-certificate-file>`
+            vendor_certificate: `<path-to-vendor-certificate-file>`
         
         Both relative and absolute paths can be used.
         Relative paths are considered relative to the location of the security file itself.
