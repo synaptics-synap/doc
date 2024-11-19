@@ -6,7 +6,7 @@ SyNAP is a software tool that optimizes neural network models for on-device infe
 Compiling models for NPU
 ------------------------
 
-Compilation of models for embedded applications using ahead-of-time compilation can usually be done with a [single command](optimizing_models.md). Optimization options (e.g. [mixed quantization](tutorials/model_import), [heterogeneous inference](heterogeneous_inference)) can be also passed at compile time using a [YAML metafile](conversion-metafile), and the model can be signed and encrypted to support Synaptics SyKURE™ secure inference technology.
+Compilation of models for embedded applications using ahead-of-time compilation can usually be done with a [single command](optimizing_models). Optimization options (e.g. [mixed quantization](tutorials/model_import), [heterogeneous inference](heterogeneous_inference)) can be also passed at compile time using a [YAML metafile](conversion-metafile), and the model can be signed and encrypted to support Synaptics SyKURE™ secure inference technology.
 
 ![synap](images/preoptimized.svg)
 

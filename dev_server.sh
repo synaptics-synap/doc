@@ -16,7 +16,7 @@ docker run --rm -e GITHUB_REF -v /:/host/ -w /host/${ROOT_DIR}/.. ${IMAGE_ID}
 
 # Function to rebuild documentation
 rebuild_docs() {
-    #  rm -fr _build/
+    rm -fr _build/
     echo "Changes detected. Rebuilding documentation..."
     docker run --rm -e GITHUB_REF -v /:/host/ -w /host/${ROOT_DIR}/.. ${IMAGE_ID}
 }

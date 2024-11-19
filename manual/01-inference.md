@@ -1,4 +1,4 @@
-# Getting Started
+# Inference
 
 The simplest way to start experimenting with *Synp* is to use the sample precompiled models and applications that come preinstalled on the board.
 

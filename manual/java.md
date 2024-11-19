@@ -1,4 +1,4 @@
-# Direct Access in Android Applications
+# Android Applications
 
 In Android, in addition to NN API, SyNAP can be directly accessed by applications. Direct access to SyNAP main benefits are zero-copy input/output and execution of optimized models compiled ahead of time with the SyNAP toolkit.
 
