@@ -10,7 +10,7 @@ Compilation of models for embedded applications using ahead-of-time compilation 
 
 ![hello](images/preoptimized.svg)
 
-```{note}
+```{important}
 While optimal for the target hardware, a pre-optimized model is target specific and will fail to execute on different hardware.
 ```
 
@@ -25,8 +25,9 @@ There are a number of ways you can run [inference](inference.md) using compiled 
 - Gstreamer plugin and Python examples for streaming media (e.g., webcam object detection).
 - Embedded applications developed in C++ or Python can use the [SyNAP Framework API](./framework_api.rst).
 
-> [!IMPORTANT] 
-> The simplest way to start experimenting with *SyNAP* is to use the sample precompiled models and applications that come preinstalled on the Synaptics Astra board.
+```{tip}
+The simplest way to start experimenting with *SyNAP* is to use the sample precompiled models and applications that come preinstalled on the Synaptics Astra board.
+```
 
 JIT compilation
 ---------------
