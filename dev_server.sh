@@ -24,7 +24,7 @@ rebuild_docs() {
 # Start Python web server to serve the _build/html directory
 if [[ -d "${ROOT_DIR}/_build/html" ]]; then
     echo "Starting Python web server to serve _build/html..."
-    (cd "${ROOT_DIR}/_build/html" && python3 -m http.server 8000) &
+    (cd "${ROOT_DIR}/_build/html" && python3 -m http.server 8002) &
 else
     echo "ERROR: Directory _build/html not found!"
     exit 1

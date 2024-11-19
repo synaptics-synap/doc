@@ -3,8 +3,8 @@ SyNAP Manual
 
 .. toctree::
 
-     introduction.rst
-     getting_started.rst
+     introduction.md
+     getting_started.md
      nnapi.rst
      benchmark.rst
      statistics.rst
