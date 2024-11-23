@@ -58,7 +58,7 @@ Different approaches are possible:
 
 To see how this is done let's consider the very simple model in the following diagram:
 
-![network4](images/network5.png)
+![network4](images/network4.png)
 
 Figure 4 Sample Model
  
