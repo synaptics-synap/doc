@@ -98,6 +98,6 @@ public class InferenceEngine {
 }
 ```
 
-```{note}
+:::note
 To simplify application development by default, VSSDK allows untrusted applications (such as applications sideloaded or downloaded from the Google Play store) to use the SyNAP API. Since the API uses limited hardware resources, this can lead to situations in which a 3rd party application interferes with platform processes. To restrict access to SyNAP only to platform applications, remove the file `vendor/vsi/sepolicy/synap_device/untrusted_app.te`.
-```
+:::

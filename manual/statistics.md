@@ -73,7 +73,7 @@ It's easy to show in real-time the information for all the networks currently lo
 
 ## `network_profile`
 
-This file contains detailed information for each network *currently* loaded in the NPU driver, with a line per network. The information in each line is the same as in the `networks` file. Additionally, if a model has been compiled offline with profiling enabled or executed online with profiling enabled, the corresponding line will be followed by detailed layer-by-layer information:
+This file contains detailed information for each network currently loaded in the NPU driver, with a line per network. The information in each line is the same as in the `networks` file. In addition if a model has been compiled offline with profiling enabled (see section [Model Profiling](/docs/synap/model_compilation#model-profiling)) or executed online with profiling enabled (see section [Benchmarking Models With NNAPI](/docs/synap/nnapi#benchmarking-models-with-nnapi)) the corresponding line will be followed by detailed layer-by-layer information:
 
 - **lyr**: index of the layer (or group of layers)
 - **cycle**: number of execution cycles

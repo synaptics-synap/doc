@@ -2,7 +2,6 @@
 
 This section summarizes neural network operators supported by the SyNAP VS6x0/SL16x0 class of NPUs and accompanying software stack. For each operator type, the supported tensor types and execution engines are also documented. Designing networks that maximize the use of operators executed in the NN core will provide the best performance.
 
-## 
 
 ### Execution Engines
 
@@ -25,8 +24,9 @@ This section summarizes neural network operators supported by the SyNAP VS6x0/SL
 | int16   | int16                            |
 | int32   | int32                            |
 
-> **Note:** 
-> int16 dynamic fixed point convolution is supported by the NN Engine in their multiplication. Other layers follow the tables; if asym-u8 is not available in the NN column, int16 is also not available.
+:::note
+int16 dynamic fixed point convolution is supported by the NN Engine in their multiplication. Other layers follow the tables; if asym-u8 is not available in the NN column, int16 is also not available.
+:::
 
 ## Basic Operations
 
@@ -58,8 +58,9 @@ This section summarizes neural network operators supported by the SyNAP VS6x0/SL
 |                     | fp32        | fp32        | fp32      |             |             | ✔           |
 
 
-> **Note:** 
-> Convolutions are executed in the NN engine only if they satisfy the following conditions: `**stride == 1**, **kernel_size <= 15x15**, **dilation size + kernel size <= 15x15**`. If any of these conditions are not satisfied, the convolution will require support of the TP core and will run considerably slower.
+:::note
+Convolutions are executed in the NN engine only if they satisfy the following conditions: `**stride == 1**, **kernel_size <= 15x15**, **dilation size + kernel size <= 15x15**`. If any of these conditions are not satisfied, the convolution will require support of the TP core and will run considerably slower.
+:::
 
 ## Activation Operations
 

@@ -11,19 +11,195 @@ The `SyNAP` toolkit allows you to compile a model from its original format to an
 * Tensorflow Lite (`.tflite` extension)
 * ONNX (`.onnx` extension)
 * TorchScript (`.torchscript`, `.pt`, `.pth` extensions)
-  - TorchScript format only. See [Working with PyTorch Models](#working-with-pytorch-models) for more information.
 * Tensorflow (`.pb` extension)
 * Caffe (`.prototxt` extension)
-  - Caffe 1.x only. Caffe2, Caffe-SSD, and Caffe-LSTM are not supported
 
-```{note}
+:::note
+
+PyTorch models can be saved in different formats, only TorchScript format is supported. See [Working with PyTorch Models](/docs/synap/model_compilation#working-with-pytorch-models) for more information.
+
+::: 
+
+:::note
+
+Only standard Caffe 1.0 models are supported. Custom variants such as *Caffe-SSD* or *Caffe-LSTM* models or legacy (pre-1.0) models require specific parsers which are currently not available in SyNAP toolkit. *Caffe2* models are not supported as well.
+
+:::
+
+:::warning
+
 Support for `.pb` and `.prototxt` formats is deprecated.
+
+:::
+
+## Installing Docker
+
+A few installation hints are provided below. Please note that these are not a replacement for the official [Docker] documentation. For more details, please refer to [Docker website](https://docs.docker.com/get-docker).
+
+### Linux (Ubuntu)
+
+```bash
+apt-get install docker.io
 ```
+
+To be able to run Docker without superuser privileges, also run the two commands below once after Docker installation (for more info, refer to [linux postinstall](https://docs.docker.com/engine/install/linux-postinstall):
+
+```bash
+# Create the docker group if it doesn't already exist
+sudo groupadd docker
+# Add the current user "$USER" to the docker group
+sudo usermod -aG docker $USER
+```
+
+### macOS - Docker
+
+The easiest way to install Docker on macOS is via the `brew` package manager. If you don’t have it installed yet, please follow the official [brew](https://brew.sh) website. After brew is installed, you can install Docker:
+
+:::important
+
+On macOS, the Docker GUI is not free for use in commercial applications. A valid alternative is [Colima](https://github.com/abiosoft/colima).
+
+:::
+
+```bash
+brew install docker
+```
+
+See the note in the Linux installation above to run Docker without superuser privileges.
+
+### macOS - Colima
+
+[Colima](https://github.com/abiosoft/colima) is a free container runtime on macOS that can be used as a replacement for Docker. It doesn’t have a GUI but is easy to install and configure:
+
+```bash
+brew install colima
+mkdir -p ~/.docker/cli-plugins
+brew install docker-buildx
+ln -sfn $(brew --prefix)/opt/docker-buildx/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
+colima start --vm-type vz --mount-type virtiofs --cpu 4 --memory 8 --disk 80
+```
+
+After the above commands, you can use [Colima] to work with Docker containers. The settings are stored in a config file `~/.colima/default/colima.yaml` and can be modified by editing the file if needed. Colima has to be started after each restart of the Mac:
+
+```bash
+colima start
+```
+
+### Windows
+
+The suggested way to run Docker on Windows is to install it inside a Linux Virtual Machine using *WSL2*, available from Windows 10.
+
+**Important:**
+
+Running Docker directly in Windows is incompatible with the presence of a VM. For this reason, using a Linux VM in WSL2 is usually the best option.
+
+#### *WSL2* Installation Steps
+
+1. Run *Windows PowerShell* App as Administrator and execute the following command to install WSL2:
+
+   ```bash
+   wsl --install
+   ```
+
+   When completed, restart the computer.
+
+2. Run *Windows PowerShell* App as before and install *Ubuntu-22.04*:
+
+   ```bash
+   wsl --install -d Ubuntu-22.04
+   ```
+
+3. Run *Windows Terminal* App and select the *Ubuntu-22.04* distribution. From there, install Docker and the *SyNAP* toolkit following the instructions in `using-docker-ubuntu-label` above.
+
+For more information on WSL2 installation and setup, please refer to the official Microsoft documentation:
+[WSL Install](https://learn.microsoft.com/en-us/windows/wsl/install) and [WSL Environment](https://learn.microsoft.com/en-us/windows/wsl/setup/environment).
+
+
+Installing SyNAP Tools
+----------------------
+
+Before installing the SyNAP toolkit, please be sure that you have a working Docker installation The simplest way to do this is to run the
+`hello-world` image:
+
+``` 
+$ docker run hello-world
+
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from libraryhello-world
+...
+...
+Hello from Docker!
+This message shows that your installation appears to be working correctly
+```
+
+If the above command doesn't produce the expected output please check the instructions in the previous section or refer to the official Docker
+documentation for your platform If all is well you can proceed with the installation of the toolkit
+
+The SyNAP toolkit is distributed as a Docker image, to install it just download the image from the SyNAP github repository:
+
+``` 
+docker pull ghcriosynaptics-synaptoolkit:#SyNAP_Version#
+```
+
+This image contains not only the conversion tool itself but also all the required dependencies and additional support utilities
+
+You can find the latest version of the toolkit [here](https://github.com/synaptics-synap/toolkit/pkgs/container/toolkit).
+
 
 Running SyNAP Tools
 -------------------
 
-First, you must [install the SyNAP tools](synap_installation.md) via Docker container or pip package.
+Once Docker and the **SyNAP toolkit** image are installed, the model conversion tool can be executed directly inside a Docker container. The source and converted models can be accessed on the host filesystem by mounting the corresponding directories when running the container. For this reason, it is important to run the container using the same user/group that owns the files to be converted. To avoid manually specifying these options at each execution, it’s suggested to create a simple alias and add it to the user’s startup file (e.g., `.bashrc` or `.zshrc`):
+
+```bash
+alias synap='docker run -i --rm -u $(id -u):$(id -g) -v $HOME:$HOME -w $(pwd) ghcr.io/synaptics-synap/toolkit:3.1.0'
+```
+
+The options have the following meaning:
+
+
+- **`-i`**:  
+  Run the container interactively (required for commands that read data from `stdin`, such as `image_od`).
+
+- **`--rm`**:  
+  Remove the container when it exits (stopped containers are not needed anymore).
+
+- **`-u $(id -u):$(id -g)`**:  
+  Run the container as the current user (so files will have the correct access rights).
+
+- **`-v $HOME:$HOME`**:  
+  Mmount the user’s home directory so that its entire content is visible inside the container. If some models or data are located outside the home directory, additional directories can be mounted by repeating the `-v` option, for example add: `-v /mnt/data:/mnt/data`. It’s important to specify the same path outside and inside the container so absolute paths work as expected.
+
+- **`-w $(pwd)`**:  
+  Set the working directory of the container to the current directory, so that relative paths specified in the command line are resolved correctly.
+
+With the above alias, the desired *SyNAP* tool command line is just passed as a parameter, for example:
+
+```shell
+$ synap help
+
+SyNAP Toolkit
+
+Docker alias:
+    alias synap='docker run -i --rm -u $(id -u):$(id -g) -v $HOME:$HOME -w $(pwd) \
+                 ghcr.io/synaptics-synap/toolkit:3.1.0'
+    Use multiple -v options if needed to mount additional directories eg: -v /mnt/dat:/mnt/dat
+
+Usage:
+    synap COMMAND ARGS
+    Run 'synap COMMAND --help' for more information on a command.
+
+Commands:
+    convert           Convert and compile model
+    help              Show help
+    image_from_raw    Convert image file to raw format
+    image_to_raw      Generate image file from raw format
+    image_od          Superimpose object-detection boxes to an image
+    version           Show version
+```
+
+As already noted there is no need to be `root` to run docker. In case you get a Permission Denied error when executing the above command, please refer to [Linux (Ubuntu)](/docs/synap/model_compilation#linux-ubuntu).
+
 
 The toolkit provides several tools to convert and manipulate models and images.
 
@@ -61,7 +237,11 @@ In the case of `Caffe` models, the weights are not in the `.prototxt` file but s
 $ synap convert --model mnist.prototxt --weights mnist.caffemodel --target VS680 --out-dir out
 ```
 
-> **Important:** The model file and the output directory specified must be inside or below a directory mounted inside the Docker container (see `-v` option in the `synap` alias above).
+:::important
+
+The model file and the output directory specified must be inside or below a directory mounted inside the Docker container (see `-v` option in the `synap` alias above).
+
+:::
 
 Preprocessing
 -------------
@@ -72,7 +252,7 @@ Unfortunately, in real-world usage, the image to be processed is rarely availabl
 
 Another option is to retrain the network to accept the same data format that will be available at runtime. This option, while sometimes a good idea, also presents its own problems. For example, it might not always be possible or practical to retrain a network, especially if the task has to be repeated for several input sizes and formats.
 
-To simplify and speed up this task, the SyNAP Toolkit allows you to automatically insert input preprocessing code when a model is converted. This code is executed directly in the NPU and in some cases can be an order of magnitude faster than the equivalent operation in the CPU. An alternative to adding the preprocessing to the original model is to create a separate "preprocessing model" whose only purpose is to convert the input image to the desired format and size, and then execute the two models in sequence without any additional data copy. This can be convenient if the original model is large and the input can come in a variety of possible formats. Preprocessing models for the most common cases already come preinstalled.
+To simplify and speed up this task, the SyNAP Toolkit allows you to automatically insert input preprocessing code when a model is converted. This code is executed directly in the NPU and in some cases can be an order of magnitude faster than the equivalent operation in the CPU. An alternative to adding the preprocessing to the original model is to create a separate "preprocessing model" whose only purpose is to convert the input image to the desired format and size, and then execute the two models in sequence without any additional data copy, see [Buffer Sharing](/docs/synap/framework_api#buffer-sharing). This can be convenient if the original model is large and the input can come in a variety of possible formats. Preprocessing models for the most common cases already come preinstalled.
 
 The available preprocessing options are designed for images and support five kinds of transformations:
 
@@ -117,9 +297,11 @@ The `float32` type is a bit special in the sense that in this case the input is 
 |                    | 2      | NHW1        | b8     | Blue component              |
 | float32            | 0      | any         |        | Floating point data         |
 
-```{note}
+:::note
+
 Specifying a *dummy* preprocessing (for example from `rgb` input to `rgb` tensor) can be a way to implement normalization and data-type conversion using the NPU hardware instead of doing the same operations in software.
-```
+
+:::
 
 ### `size`
 
@@ -142,7 +324,9 @@ Heterogeneous Inference
 
 In some cases, it can be useful to execute different parts of a network on different hardware. For example, consider an object detection network where the initial part contains a bunch of convolutions and the final part some postprocessing layer such as `TFLite_Detection_PostProcess`. The NPU is heavily optimized for executing convolutions but doesn't support the postprocessing layer, so the best approach would be to execute the initial part of the network on the NPU and the postprocessing on the CPU.
 
-This can be achieved by specifying the delegate to be used on a per-layer basis, using the same syntax as for mixed quantization. For example, considering the model in the quantization sample, we can specify that all layers should be executed on the NPU, except `conv5` and the layers that follow it, which we want to execute on the GPU:
+This can be achieved by specifying the delegate to be used on a per-layer basis, using the same syntax as we’ve seen for mixed quantization in section [Mixed quantization](/docs/synap/model_quantization#mixed-quantization). For example, considering again the Model in [Figure 4](/docs/synap/model_quantization#mixed-quantization), we can specify that all layers should be executed on the NPU, except `conv5` and the layers that follows it which we want to execute on the GPU:
+
+
 
 ```yaml
 # Execute the entire model on the NPU, except conv5 and conv6
@@ -152,13 +336,15 @@ delegate:
   conv5...: gpu
 ```
 
-Another advantage of distributing processing to different hardware delegates is that when the model is organized in multiple independent branches (so that a branch can be executed without having to wait for the result of another branch), and each is executed on a different HW unit, then the branches can be executed in parallel.
+Another advantage of distributing processing to different hardware delegates is that when the model is organized in multiple independent branches (so that a branch can be executed without having to wait for the result of another branch), and each is executed on a different HW unit then the branches can be executed in parallel.
 
 In this way, the overall inference time can be reduced to the time it takes to execute the slowest branch. Branch parallelization is always done automatically whenever possible.
 
-```{note}
+:::note
+
 Branch parallelization should not be confused with in-layer parallelization, which is also always active when possible. In the example above, the two branches `(conv3, conv4)` and `(conv5, conv6)` are executed in parallel, the former on the NPU and the latter on the GPU. In addition, each convolution layer is parallelized internally by taking advantage of the parallelism available in the NPU and GPU hardware.
-```
+
+:::
 
 Model Conversion Tutorial
 -------------------------
@@ -238,13 +424,16 @@ To obtain this information, the network has to be executed step by step so that 
 $ synap convert --model mobilenet_v2_1.0_224_quant.tflite --target VS680 --profiling --out-dir mobilenet_profiling
 ```
 
-```{note}
+:::note
+
 Even if the execution time of each layer doesn't change between *normal* and *profiling* mode, the overall execution time of a network compiled with profiling enabled will be noticeably higher than that of the same network compiled without profiling, due to the fact that NPU execution has to be started and suspended several times to collect the profiling data. For this reason, profiling should normally be disabled and enabled only when needed for debugging purposes.
-```
+
+:::
 
 When a model is converted using the SyNAP toolkit, layers can be fused, replaced with equivalent operations, and/or optimized away. Hence, it is generally not possible to find a one-to-one correspondence between the items in the profiling information and the nodes in the original network. For example, adjacent convolution, ReLU, and Pooling layers are fused together in a single *ConvolutionReluPoolingLayer* layer whenever possible. Despite these optimizations, the correspondence is normally not too difficult to find. The layers shown in the profiling correspond to those listed in the `model_info.txt` file generated when the model is converted.
 
-After each execution of a model compiled in profiling mode, the profiling information will be available in `sysfs`. Since this information is not persistent but goes away when the network is destroyed, the easiest way to collect it is by using the `synap_cli` program. The `--profiling <filename>` option allows saving a copy of the `sysfs` `network_profile` file to a specified file before the network is destroyed:
+After each execution of a model compiled in profiling mode, the profiling information will be available in `sysfs`, see [Statistics and Usage
+](/docs/synap/statistics). Since this information is not persistent but goes away when the network is destroyed, the easiest way to collect it is by using the `synap_cli` program. The `--profiling [filename](filename)` option allows saving a copy of the `sysfs` `network_profile` file to a specified file before the network is destroyed:
 
 ```shell
 $ adb push mobilenet_profiling $MODELS/image_classification/imagenet/model/
@@ -284,15 +473,14 @@ SyNAP 3.x is fully backward compatible with SyNAP 2.x.
 - The SyNAP 3.x API is an extension of the SyNAP 2.x API, so all existing applications can be used without any modification.
 
 
-# Working with PyTorch Models
+## Working with PyTorch Models
 
-PyTorch framework supports very flexible models where the architecture and behavior of the network are defined using Python classes instead of fixed graph layers (e.g., as in `TFLite`). When saving a model, normally only the `state_dict`, which includes the learnable parameters, is saved, and not the model structure itself. ([Reference: Saving and Loading Models in PyTorch](https://pytorch.org/tutorials/beginner/saving_loading_models.html#saving-loading-model-for-inference)). 
+PyTorch framework supports very flexible models where the architecture and behavior of the network are defined using Python classes instead of fixed graph layers (e.g., as in `TFLite`). When saving a model, normally only the `state_dict`, which includes the learnable parameters, is saved, and not the model structure itself. ([Saving and Loading Models in PyTorch](https://pytorch.org/tutorials/beginner/saving_loading_models.html#saving-loading-model-for-inference)). 
 
 The original Python code used to define the model is needed to reload and execute it. Therefore, it is not possible to directly import a PyTorch model from a `.pt` file containing only the learnable parameters.
 
-## Saving PyTorch Models
 
-### Including Model Structure
+### Saving PyTorch Models including Model Structure
 When saving a PyTorch model in a `.pt` file, it is possible to include references to the Python classes defining the model. However, recreating the model still requires access to the exact Python source code used to generate it.
 
 ### Saving in TorchScript Format
@@ -329,38 +517,42 @@ mobilenet_traced.save("mobilenet_traced.torchscript")
 ```
 
 
-```{important}
+:::important
+
 Even if there exists multiple possible ways to save a PyTorch model to a file, there is no
 agreed convention for the extension used in the different cases, and `.pt` or `.pth` extension is commonly used
 no matter the format of the file. Only `TorchScript` models can be imported with the SyNAP toolkit,
 if the model is in a different format the import will fail with an error message.
-```
 
-```{note}
+:::
+
+:::note
+
 Working with `TorchScript` models is not very convenient when performing mixed quantization or
 heterogeneous inference, as the model layers sometimes don't have names or the name is modified during the
 import process and/or there is not a one-to-one correspondence between the layers in the original
 model and the layers in the imported one. The suggestion in this case is to compile the model
 with the ``--preserve`` option and then look at the intermediate ``build/model.onnx`` file
 inside the output directory.
-```
+
+:::
 
 
 An even more portable alternative to exporting a model to TorchScript is to export it to ONNX format.
 The required code is very similar to the one used to trace the model:
 
 ```python
-    import torch
-    import torchvision
+import torch
+import torchvision
     
-    # An instance of your model
-    model = torchvision.models.mobilenet_v2(pretrained=True)
+# An instance of your model
+model = torchvision.models.mobilenet_v2(pretrained=True)
     
-    # Switch the model to eval model
-    model.eval()
+# Switch the model to eval model
+model.eval()
     
-    # Export the model in ONNX format
-    torch.onnx.export(model, torch.rand(1, 3, 224, 224), "mobilenet.onnx")
+# Export the model in ONNX format
+torch.onnx.export(model, torch.rand(1, 3, 224, 224), "mobilenet.onnx")
 ```
 
 
@@ -372,17 +564,18 @@ All these models are not in `TorchScript` format and so can't be imported direct
 nevertheless it's very easy to export them to `ONNX` or `TorchScript` so that they can be imported:
 
 ```python
-    from ultralytics import YOLO
+from ultralytics import YOLO
 
-    # Load an official YOLO model
-    model = YOLO("yolov8s.pt")
+# Load an official YOLO model
+model = YOLO("yolov8s.pt")
 
-    # Export the model in TorchScript format
-    model.export(format="torchscript", imgsz=(480, 640))
+# Export the model in TorchScript format
+model.export(format="torchscript", imgsz=(480, 640))
 
-    # Export the model in ONNX format
-    model.export(format="onnx", imgsz=(480, 640))
+# Export the model in ONNX format
+model.export(format="onnx", imgsz=(480, 640))
 ```
 
-More information on exporting YOLO models to ONNX in https://docs.ultralytics.com/modes/export/
-Most public-domain machine learning packages provide similar export functions for their PyTorch models.
+More information on exporting YOLO models to ONNX in https://docs.ultralytics.com/modes/export/ 
+
+Most public domain machine learning packages provide similar export functions for their PyTorch models.

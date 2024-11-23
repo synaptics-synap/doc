@@ -58,30 +58,10 @@ Different approaches are possible:
 
 To see how this is done let's consider the very simple model in the following diagram:
 
-```uml
-:scale: 50%
-:caption: Sample Model
+![network4](images/network4.png)
 
-skinparam monochrome true
-skinparam handwritten false
-hide members
-hide methods
-hide fields
-interface input1
-class conv1
-class conv2
-class conv3
-class conv4
-class conv5
-class conv6
-
-input1  --> conv1
-conv1  --> conv2
-conv2  --> conv3
-conv3  --> conv4
-conv2  --> conv5
-conv5  --> conv6
-```
+Figure 4 Sample Model
+ 
 
 This model has one input and six convolutions. We've already seen how to compile it with uniform quantization, for example using 16 bits integers:
 
@@ -127,9 +107,11 @@ Real models can often have well above one hundred layers, so writing an exhausti
 
 The type specifications are applied in the order they are declared (except for `'*'`) so it is possible to further override the type of layers already specified.
 
-```{note}
-: During the compilation of a model several optimizations are applied and some layers in the original network may be fused together or optimized away completely. For optimized away layers it is of course not possible to specify the data type. For fused layers, the issue is that they will not have the same name as the original layers. In this case, it is possible to identify them by *layerId*: a *layerId* is a unique identifier assigned to each compiled layer. This is also a convenient way to identify layers in case the original model has layers with ambiguous or empty names. It is possible to see the list of all layerIDs for a compiled model in the generated `quantization_info.yaml` or `quantization_entropy.txt` file.
-```
+:::note
+
+During the compilation of a model several optimizations are applied and some layers in the original network may be fused together or optimized away completely. For optimized away layers it is of course not possible to specify the data type. For fused layers, the issue is that they will not have the same name as the original layers. In this case, it is possible to identify them by *layerId*: a *layerId* is a unique identifier assigned to each compiled layer. This is also a convenient way to identify layers in case the original model has layers with ambiguous or empty names. It is possible to see the list of all layerIDs for a compiled model in the generated `quantization_info.yaml` or `quantization_entropy.txt` file.
+
+:::
 
 Let's see a few examples applied to our sample network.
 

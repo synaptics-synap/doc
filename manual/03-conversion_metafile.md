@@ -91,10 +91,10 @@ This section contains security configuration for the model. If this section is n
 - `file`: Path to the security file. This is a `yaml` file with the following fields:
 
 ```yaml
-encryption_key: `<path-to-encryption-key-file>`
-signature_key: `<path-to-signature-key-file>`
-model_certificate: `<path-to-model-certificate-file>`
-vendor_certificate: `<path-to-vendor-certificate-file>`
+encryption_key: `[path-to-encryption-key-file](path-to-encryption-key-file)`
+signature_key: `[path-to-signature-key-file](path-to-signature-key-file)`
+model_certificate: `[path-to-model-certificate-file](path-to-model-certificate-file)`
+vendor_certificate: `[path-to-vendor-certificate-file](path-to-vendor-certificate-file)`
 ```
 
 Both relative and absolute paths can be used. Relative paths are considered relative to the location of the security file itself. The same fields can also be specified directly in the model metafile in place of the 'file' field. For detailed information on the security policies and how to generate and authenticate a secure model, please refer to SyNAP_SyKURE.pdf.
@@ -107,7 +107,7 @@ Must contain one entry for each input of the network. Each entry has the followi
 - `shape` (pb): Shape of the input tensor. This is a list of dimensions; the order is given by the layout of the input tensor in the model (even if a different layout is selected for the compiled model). The first dimension must represent by convention the number of samples *N* (also known as "batch size") and is ignored in the generated model, which always works with a batch-size of 1. When this field is specified, the `name` field is mandatory.
 - `means`: Used to normalize the range of input values. A list of mean values, one for each channel in the corresponding input. If a single value is specified instead of a list, it will be used for all the channels. If not specified, a mean of `0` is assumed. The *i-th* channel of each input is normalized as: `norm = (in - means[i]) / scale`.
 - `scale`: Used to normalize the range of input values. The scale is a single value for all the channels in the corresponding input. If not specified, a scale of `1` is assumed.
-- `format`: Information about the type and organization of the data in the tensor. The content and meaning of this string are custom-defined. However, SyNAP Toolkit and SyNAP `Preprocessor` recognize by convention an initial format type optionally followed by one or more named attributes: `<format-type> [<key>=value]...`. Recognized types are `rgb` (default): 8-bits RGB or RGBA or grayscale image, `bgr`: 8-bits BGR image or BGRA or grayscale image. Recognized attributes are `keep_proportions=1` (default): preserve aspect-ratio when resizing an image using `Preprocessor` or during quantization, `keep_proportions=0`: don't preserve aspect-ratio when resizing an image using `Preprocessor` or during quantization. Any additional attribute if present is ignored by SyNAP.
+- `format`: Information about the type and organization of the data in the tensor. The content and meaning of this string are custom-defined. However, SyNAP Toolkit and SyNAP `Preprocessor` recognize by convention an initial format type optionally followed by one or more named attributes: `[format-type](format-type) [[key](key)=value]...`. Recognized types are `rgb` (default): 8-bits RGB or RGBA or grayscale image, `bgr`: 8-bits BGR image or BGRA or grayscale image. Recognized attributes are `keep_proportions=1` (default): preserve aspect-ratio when resizing an image using `Preprocessor` or during quantization, `keep_proportions=0`: don't preserve aspect-ratio when resizing an image using `Preprocessor` or during quantization. Any additional attribute if present is ignored by SyNAP.
 - `preprocess`: Input preprocessing options for this input tensor. It can contain the following fields:
   - `type`: format of the input data (e.g. `rgb`, `nv12`)
   - `size`: size of the input image as a list [H, W]
@@ -123,7 +123,7 @@ Must contain one entry for each input of the network. Each entry has the followi
 
 - `name` (pb): Name of the output in the network graph. For `tflite` and `onnx` models, this field is not required but can still be used to specify a different output layer than the default output of the network. This feature allows converting just a subset of a network without having to manually edit the source model. For `.pb` and `.onnx` models or when `name` is not specified, the outputs must be in the same order as they appear in the model.
 - `dequantize`: The output of the network is internally dequantized and converted to `float`. This is more efficient than performing the conversion in software.
-- `format`: Information about the type and organization of the data in the tensor. The content and meaning of this string are custom-defined. However, SyNAP `Classifier` and `Detector` postprocessors recognize by convention an initial format type optionally followed by one or more named attributes: `<format-type> [<key>=value]...`. All fields are separated by one or more spaces. No spaces are allowed between the key and the value. Example: `confidence_array class_index_base=0`. See the `Classifier` and `Detector` classes for a description of the specific attributes supported.
+- `format`: Information about the type and organization of the data in the tensor. The content and meaning of this string are custom-defined. However, SyNAP `Classifier` and `Detector` postprocessors recognize by convention an initial format type optionally followed by one or more named attributes: `[format-type](format-type) [[key](key)=value]...`. All fields are separated by one or more spaces. No spaces are allowed between the key and the value. Example: `confidence_array class_index_base=0`. See the `Classifier` and `Detector` classes for a description of the specific attributes supported.
 - `security`: Security policy for this output tensor. This field is only considered for secure models and can have the following values:
   - `secure-if-input-secure` (default): the output buffer must be in secure memory if at least one input is in secure memory
   - `any`: the output can be either in secure or non-secure memory
