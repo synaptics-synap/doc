@@ -1,11 +1,13 @@
 # Inference
 
-The simplest way to start experimenting with *Synp* is to use the sample precompiled models and applications that come preinstalled on the board.
+The simplest way to start experimenting with *SyNAP* is to use the sample precompiled models and applications that come preinstalled on the board.
 
-```{important}
+:::important
+
 On Android the sample models can be found in `/vendor/firmware/models/` while on Yocto Linux they are in `/usr/share/synap/models/`.
 In this document we will refer to this directory as `$MODELS`.
-```
+
+:::
 
 The models are organized in broad categories according to the type of data they take in input and the information they generate in output. Inside each category, models are organized per topic (for example "imagenet") and for each topic a set of models and sample input data is provided.
 
@@ -34,9 +36,11 @@ It generates in output:
 
 * the top5 most probable classes for each input image provided
 
-```{note}
+:::note
+
 The jpeg/png input image(s) are resized in SW to the size of the network input tensor. This is not included in the classification time displayed.
-```
+
+:::
 
 Example:
 
@@ -72,9 +76,11 @@ It generates in output:
     * class index
     * confidence
 
-```{note}
+:::note
+
 The jpeg/png input image(s) are resized in SW to the size of the network input tensor.
-```
+
+:::
 
 Example:
 
@@ -87,9 +93,11 @@ Detection time: 26.94 ms
 0   0.95       0   94,193    62,143  person
 ```
 
-```{important}
-The output of object detection models is not standardized, many different formats exist. The output format used has to be specified when the model is converted, see [model_conversion_tutorial](#model_conversion_tutorial). If this information is missing or the format is unknown `synap_cli_od` doesn’t know how to interpret the result and so it fails with an error message: *"Failed to initialize detector"*.
-```
+:::important
+
+The output of object detection models is not standardized, many different formats exist. The output format used has to be specified when the model is converted, see [model_conversion_tutorial](/docs/synap/model_compilation#model-conversion-tutorial. If this information is missing or the format is unknown `synap_cli_od` doesn’t know how to interpret the result and so it fails with an error message: *"Failed to initialize detector"*.
+
+:::
 
 ## `synap_cli_ip` application
 
@@ -103,15 +111,19 @@ It takes in input:
 
 It generates in output:
 
-* a file containing the processed image for each input file. The output file is called `outimage<i>_<W>x<H>.<ext>`, where `<i>` is the index of the corresponding input file, `<W>` and `<H>` are the dimensions of the image, and `<ext>` depends on the type of the output image, for example `nv12` or `rgb`. By default, output files are created in the current directory, this can be changed with the `--out-dir` option.
+* a file containing the processed image for each input file. The output file is called `outimage[i](i)_[W](W)x[H](H).[ext](ext)`, where `[i](i)` is the index of the corresponding input file, `[W](W)` and `[H](H)` are the dimensions of the image, and `[ext](ext)` depends on the type of the output image, for example `nv12` or `rgb`. By default, output files are created in the current directory, this can be changed with the `--out-dir` option.
 
-```{note}
+:::note
+
 The input image(s) are automatically resized to the size of the network input tensor. This is not supported for `nv12`: if the network takes in input an nv12 image, the file provided in input must have the same format and the *WxH* dimensions of the image must correspond to the dimensions of the input tensor of the network.
-```
 
-```{note}
-Any `png` and `jpeg` image can be converted to `nv12` and rescaled to the required size using the `image_to_raw` command available in the *SyNAP* toolkit (for more info see [using-docker-label](#using-docker-label)). In the same way, the generated raw `nv12` or `rgb` images can be converted to `png` or `jpeg` format using the `image_from_raw` command.
-```
+:::
+
+:::note
+
+Any `png` and `jpeg` image can be converted to `nv12` and rescaled to the required size using the `image_to_raw` command available in the *SyNAP* toolkit (for more info see [Installing Docker](/docs/synap/model_compilation#installing-docker)). In the same way, the generated raw `nv12` or `rgb` images can be converted to `png` or `jpeg` format using the `image_from_raw` command.
+
+:::
 
 Example:
 
@@ -130,7 +142,7 @@ Writing output to file: outimage0_3840x2160.nv12
 
 ## `synap_cli_ic2` application
 
-This application executes two models in sequence, the input image is fed to the first model and its output is then fed to the second one which is used to perform classification as in `synap_cli_ic`. It provides an easy way to experiment with 2-stage inference, where for example the first model is a *preprocessing* model for downscaling and/or format conversion (see [conversion_models](#conversion_models)) and the second is an *image_classification* model.
+This application executes two models in sequence, the input image is fed to the first model and its output is then fed to the second one which is used to perform classification as in `synap_cli_ic`. It provides an easy way to experiment with 2-stage inference, where for example the first model is a *preprocessing* model for downscaling and/or format conversion (see [Model Conversion](/docs/synap/model_compilation#model-conversion)) and the second is an *image_classification* model.
 
 It takes in input:
 
@@ -142,9 +154,11 @@ It generates in output:
 
 * the top 5 most probable classes for each input image provided
 
-```{note}
+:::note
+
 The shape of the output tensor of the first model must match that of the input of the second model.
-```
+
+:::
 
 As an example, we can use a preprocessing model to convert and rescale an `NV12` image to `RGB` so that it can be processed by the standard `mobilenet_v2_1.0_224_quant` model:
 
@@ -162,7 +176,7 @@ Class  Confidence  Description
   314        9.10  cockroach, roach
 ```
 
-The classification output is very close to what we get in [synap_cli_ic](#synap_cli_ic), the minor difference is due to the difference in the image rescaled from `NV12`. The bigger overall inference time is due to the processing required to perform rescale and conversion of the input 1920x1080 image.
+The classification output is very close to what we get in [synap_cli_ic](/docs/synap/inference#synap_cli_ic-application), the minor difference is due to the difference in the image rescaled from `NV12`. The bigger overall inference time is due to the processing required to perform rescale and conversion of the input 1920x1080 image.
 
 ## `synap_cli` application
 
@@ -190,9 +204,11 @@ Predict #3: 1.79 ms
 Inference timings (ms):  load: 55.91  init: 3.84  min: 1.78  median: 1.82  max: 2.68  stddev: 0.13  mean: 1.85
 ```
 
-```{note}
+:::note
+
 Specifying a `random` input is the only way to execute models requiring secure inputs.
-```
+
+:::
 
 ## `synap_init` application
 
@@ -206,13 +222,17 @@ $ synap_init -i --lock
 
 The lock is released when the program exits or is terminated.
 
-```{note}
-This prevents any process from accessing the NPU via both NNAPI and direct SyNAP API. Please refer to the next section to disable NPU access only for NNAPI.
-```
+:::note
 
-```{note}
+This prevents any process from accessing the NPU via both NNAPI and direct SyNAP API. Please refer to the next section to disable NPU access only for NNAPI.
+
+:::
+
+:::note
+
 While the NPU is locked it is still possible to create a Network from another process, but any attempts to do inference will fail. When this occurs, the appropriate error message is added to the system log:
-```
+
+:::
 
 ```
 $ synap_cli_ic

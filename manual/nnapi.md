@@ -6,8 +6,9 @@ Just-in-time compilation enables the execution of TensorFlow Lite models directl
 
 For embedded applications, it is recommended you use ahead-of-time compilation instead.
 
-> **Note:**  
-> JIT compilation is flexible, but initialization time can take a few seconds, and additional optimization and secure media paths are not available.
+:::note 
+JIT compilation is flexible, but initialization time can take a few seconds, and additional optimization and secure media paths are not available.
+:::
 
 ## Online Inference with NNAPI
 
@@ -17,9 +18,9 @@ When a model is loaded and executed via NNAPI, it is automatically converted to 
 
 The model compilation has been heavily optimized, but even so, it can take several milliseconds up to a few seconds for typical models, so it is suggested to execute an inference once just after the model has been loaded and prepared. One of the techniques used to speed up model compilation is caching. Some results of the computations performed to compile a model are cached in a file so that they don't have to be executed again the next time the same model is compiled.
 
-On Android, the cache file is saved by default to `/data/vendor/synap/nnhal.cache` and will contain up to 10,000 entries, which corresponds to a good setting for NNAPI utilization on an average system. The cache path and size can be changed by setting the properties `vendor.SYNAP_CACHE_PATH` and `vendor.SYNAP_CACHE_CAPACITY`. Setting the capacity to 0 will disable the cache. An additional possibility to speed up model compilation is to use the NNAPI cache, see [nnapi-caching](#nnapi-caching).
+On Android, the cache file is saved by default to `/data/vendor/synap/nnhal.cache` and will contain up to 10,000 entries, which corresponds to a good setting for NNAPI utilization on an average system. The cache path and size can be changed by setting the properties `vendor.SYNAP_CACHE_PATH` and `vendor.SYNAP_CACHE_CAPACITY`. Setting the capacity to 0 will disable the cache. An additional possibility to speed up model compilation is to use the NNAPI cache, see [NNAPI Compilation Caching](/docs/synap/nnapi#nnapi-compilation-caching).
 
-On Yocto Linux, there is no NNAPI cache, but we still have smaller per-process cache files named `synap-cache.<PROGRAM-NAME>` in the `/tmp/` directory.
+On Yocto Linux, there is no NNAPI cache, but we still have smaller per-process cache files named `synap-cache.[PROGRAM-NAME](PROGRAM-NAME)` in the `/tmp/` directory.
 
 ## Benchmarking Models with NNAPI
 
@@ -68,8 +69,11 @@ Benchmarking a model is quite simple:
     INFO: Memory footprint delta from the start of the tool (MB): init=7.40234 overall=7.83203
     ```
 
-> **Important:**  
-> NNAPI is the standard way to perform online inference on the NPU in Android, but it isn't the most efficient or the most flexible one. The suggested way to perform online inference on Synaptics platforms is via the `timvx` delegate. For more information see section [online_benchmarking_timvx](#online_benchmarking_timvx).
+:::important
+
+NNAPI is the standard way to perform online inference on the NPU in Android, but it isn't the most efficient or the most flexible one. The suggested way to perform online inference on Synaptics platforms is via the `timvx` delegate. For more information see section [Benchmarking Models with TimVx Delegate](/docs/synap/nnapi#benchmarking-models-with-timvx-delegate).
+
+:::
 
 If for any reason some of the layers in the model cannot be executed on the NPU, they will automatically fall back to CPU execution. This can occur, for example, in case of specific layer types, options, or data types not supported by NNAPI or SyNAP. In this case, the network graph will be partitioned into multiple delegate kernels as indicated in the output messages from `benchmark_model`, for example:
 ```
@@ -93,7 +97,7 @@ RESIZE_NEAREST_NEIGHBOR    0.052     0.058   0.899%   62.936%     0.000         
     TfLiteNnapiDelegate    2.244     2.396  37.064%  100.000%     0.000         1      []:65
 ```
 
-Execution of the model (or part of it) on the NPU can also be confirmed by looking at the SyNAP `inference_count` file in `sysfs` (see section [sysfs-inference-counter](#sysfs-inference-counter)).
+Execution of the model (or part of it) on the NPU can also be confirmed by looking at the SyNAP `inference_count` file in `sysfs` (see section [sysfs-inference-counter](/docs/synap/statistics#inference_count)).
 
 For an even more in-depth analysis, it is possible to obtain detailed layer-by-layer inference timing by setting the profiling property before running `benchmark_model`:
 ```
@@ -102,14 +106,13 @@ $ adb shell benchmark_model --graph=/data/local/tmp/mobilenet_v1_0.25_224_quant.
 ```
 On Android, the profiling information will be available in `/sys/class/misc/synap/device/misc/synap/statistics/network_profile` while `benchmark_model` is running. On Yocto Linux, the same information is in `/sys/class/misc/synap/statistics/network_profile`.
 
-> **Note:**  
-> When `vendor.NNAPI_SYNAP_PROFILE` is enabled, the network is executed step-by-step, so the overall inference time becomes meaningless and should be ignored.
+:::note
+When `vendor.NNAPI_SYNAP_PROFILE` is enabled, the network is executed step-by-step, so the overall inference time becomes meaningless and should be ignored.
+:::
 
 ## NNAPI Compilation Caching
 
-NNAPI compilation caching provides even greater speedup than the default SyNAP cache by caching entire compiled models, but it requires some support from the application (see [Android Neural Networks API Compilation Caching](https://source.android.com/devices/neural-networks/compilation-c
-
-aching)) and requires more disk space.
+NNAPI compilation caching provides even greater speedup than the default SyNAP cache by caching entire compiled models, but it requires some support from the application (see [Android Neural Networks API Compilation Caching](https://source.android.com/devices/neural-networks/compilation-caching)) and requires more disk space.
 
 NNAPI caching support must be enabled by setting the corresponding android property:
 ```
@@ -168,8 +171,9 @@ $ adb shell cat /sys/class/misc/synap/device/misc/synap/statistics/inference_cou
 0
 ```
 
-> **Note:**  
-> It will still be possible to perform online inference on the NPU using the *timvx* tflite delegate.
+:::note
+It will still be possible to perform online inference on the NPU using the *timvx* tflite delegate.
+:::
 
 ## Online Inference with *TimVx* Delegate
 
@@ -227,4 +231,4 @@ Benchmarking a model with `timvx` delegate is as simple as using NNAPI:
     INFO: Memory footprint delta from the start of the tool (MB): init=15.4688 overall=43.2852
     ```
 
-Comparing the timings with those in section [online_benchmarking_nnapi](#online_benchmarking_nnapi), we can notice that even for this simple model, `timvx` delegate provides better performances than NNAPI (average inference time 1096 us vs 1885).
+Comparing the timings with those in section [online Benchmarking Models with NNAPI](/docs/synap/nnapi#benchmarking-models-with-nnapi), we can notice that even for this simple model, `timvx` delegate provides better performances than NNAPI (average inference time 1096 us vs 1885).
