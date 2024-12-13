@@ -10,6 +10,8 @@ import urllib.request as rq
 
 BANNER_ANCHOR = '<div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">'
 VERSION_ANCHOR = '<script>'
+CANONICAL_ANCHOR = '<title>'
+
 DOWNLOAD_FOLDER = "v"
 TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "snippets")
 
@@ -120,6 +122,7 @@ def create_latest_version_link(base_dir):
 
     return latest_version
 
+
 def create_site():
 
     versions_cache_dir = "v"
@@ -150,6 +153,8 @@ def create_site():
     old_version_banner = load_template("old-release-header.html")
     dev_version_banner = load_template("dev-header.html")
 
+    canonical_header = load_template("canonical.html")
+
     latest_version_dir = os.path.join(versions_dir, latest_version)
 
     # update all the files
@@ -160,7 +165,7 @@ def create_site():
             if not file_name.endswith('.html'):
                 continue
 
-            file_path = os.path.join(root, file_name)
+            file_path = os.path.join(root, file_name)            
 
             if root.startswith(dev_version_dir):
                 # inject the development version warning in the latest version
@@ -172,6 +177,17 @@ def create_site():
 
             # inject the version bar in the doc we downloaded from the release
             inject_content_into_html(file_path, VERSION_ANCHOR, get_version_bar(versions_dir, file_path))
+
+            # inject the canonical header
+            path_parts = os.path.relpath(file_path, versions_dir).split('/')
+
+            if path_parts[-1] == 'index.html':
+                canonical_path = "/".join(path_parts[1:-1]) + ('/' if len(path_parts) > 2 else '')
+            else:
+                canonical_path = "/".join(path_parts[1:])
+
+            page_canonical_header = canonical_header.replace('%PAGE_PATH%', canonical_path)
+            inject_content_into_html(file_path, CANONICAL_ANCHOR, page_canonical_header)
 
             print(f"Processed {file_path}")
 
