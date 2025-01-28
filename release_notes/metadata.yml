@@ -5,16 +5,16 @@ project: 'SyNAP Release Notes'
 author: 'Synaptics'
 
 # document version
-version: '3.1.0'
+version: '3.2.0'
 
 # document release
-release: '3.1.0'
+release: '3.2.0'
 
 # part number
 part_number: '511-000xxx-01'
 
 # document revision
-revision: '3.1.0'
+revision: '3.2.0'
 
 # copyright years
 years: [2021,2022,2023,2024]

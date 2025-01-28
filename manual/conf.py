@@ -3,5 +3,5 @@ extensions = [
 ]
 
 preprocessor_variables = {
-    'SyNAP_Version': '3.1.0'
+    'SyNAP_Version': '3.2.0'
 }
