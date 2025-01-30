@@ -1,6 +1,27 @@
 SyNAP Release Notes
 *******************
 
+Version 3.2.0
+=============
+
+Toolkit
+-------
+
+- New features
+
+  - Added pip wheels for Python 3.12 and 3.10
+  - Introduced a new Detector class for post-processing YOLOv8 segmentation models
+  - Added a Python-based model export pipeline for YOLOv8, YOLOv9, and YOLO11
+
+- Improvements and updates
+
+  - Upgraded to Verisilicon Acuity 6.30.6
+  - Enhanced flexibility in requirements.txt to accommodate varying dependencies
+
+- Fixes
+
+  - Resolved mixed quantization issue with the OCR model
+
 Version 3.1.0
 =============
 
