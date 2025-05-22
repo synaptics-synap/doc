@@ -1,0 +1,3 @@
+[submodule "sources/runtime"]
+	path = sources/runtime
+	url = https://github.com/synaptics-synap/runtime
