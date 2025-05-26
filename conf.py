@@ -1,7 +1,7 @@
 project = 'SyNAP'
 copyright = '2024, Synaptics'
 author = 'Synaptics'
-release = '3.1.0'
+release = '3.2.0'
 
 extensions = [ 'synaptics_sphinx_theme' ]
 
