@@ -8,6 +8,10 @@ The actual inference will take place on different HW units (NPU, GPU, CPU or a c
 according to how the model has been compiled.
 
 
+.. warning::
+   The Synap framework API is not thread-safe. Access from multiple threads must be externally synchronized.
+
+
 .. highlight:: cpp
 
 
