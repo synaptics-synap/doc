@@ -27,6 +27,12 @@ The following network model formats are supported:
     PyTorch models can be saved in different formats, only `TorchScript` format is supported.
     see :ref:`working-with-pytorch-models-label` for more information.
 
+.. note::
+ 
+    For YOLO models in ``Tensorflow Lite`` format, we recommend selecting the ``float 32`` (fp32) model format. 
+    SyNAP will quantize and optimize this format to run efficiently on the NPU.
+ 
+    For YOLO models in ``ONNX`` format, we recommend using the ``kl_divergence`` algorithm to optimize prediction results.
 
 .. note::
 
