@@ -1,9 +1,33 @@
-Using Online Inference
-======================
+JIT Optimiztion
+===============
+
+Introduction
+------------
+
+Just-in-time compilation enables the execution of TensorFlow Lite models directly. For applications that require portability (e.g. must be able to run on an Astra embedded board or an Android phone), the JIT compilation approach offers flexibilty at the cost of performance. 
+
+For embedded applications, it is recommended you use ahead-of-time compilation instead. 
+
+.. note::
+
+    JIT compilation is flexible, but initialization time can take a few seconds, and additional optimization and secure media paths are not available.
+
+
+.. raw:: latex
+
+   JIT Optimization and execution
+
 
 
 Online Inference with NNAPI
 ---------------------------
+
+
+
+.. figure:: images/online_conversion.png
+
+   JIT Optimization and execution
+
 
 When a model is loaded and executed via NNAPI it is automatically converted to the internal 
 representation suitable for execution on the NPU. This conversion doesn't take place when the
@@ -213,6 +237,7 @@ NNAPI execution with NPU disabled::
     It will still be possible to perform online inference on the NPU using the *timvx* tflite delegate.
 
 
+.. _timvx_inference:
 
 Online Inference with *TimVx* delegate
 --------------------------------------
